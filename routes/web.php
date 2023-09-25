@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\divisionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('/frontend/dashboard');
 });
+
+Route::get('/devision', [divisionController::class, 'index']);
+Route::post('division-add', [divisionController::class, 'store']);
+Route::get('division-delete/{id_divisi}', [divisionController::class, 'delete']);
+Route::get('division-select-edit/{id_divisi}', [divisionController::class, 'select']);
