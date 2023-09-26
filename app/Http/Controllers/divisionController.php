@@ -10,7 +10,7 @@ class divisionController extends Controller
     public function index()
     {   
         $division = DB::table('tbl_divisi')->get();
-        return view('/frontend/division', ['tbl_divisi' => $division]);
+        return view('/backend/division', ['tbl_divisi' => $division]);
     }
 
     public function store(Request $request)
@@ -28,11 +28,11 @@ class divisionController extends Controller
         return redirect()->back();
     }
 
-    public function select($id)
+    public function update(Request $request)
     {
-        // $division_selected = DB::table('tbl_divisi')->where('id_divisi', $id)->get();
-        // return view('/frontend/division', ['tbl_divisi' => $division_selected]);
-
+        DB::table('tbl_divisi')->where('id_divisi', $request->id_divisi)->update([
+            'nama_divisi'=> $request->value_divisi,
+        ]);
         return redirect()->back();
     }
 }

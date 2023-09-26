@@ -1,5 +1,5 @@
 @extends('frontend.layout.main')
-<!-- @section('title', 'Dashboard') -->
+<!-- @section('title', 'Divison') -->
 @section('content')
     <div class="container-fluid">
         <div class="row page-titles mx-0">
@@ -40,14 +40,14 @@
             </div>
 
             <!-- form edit division -->
-            <!-- <div class="col-12" id="form-edit-division" style="display: none;">
+            <div class="col-12" id="form-edit-division" style="display: none;">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Edit Division</h4>
                     </div>
                     <div class="card-body">
                         <div class="basic-form">
-                            <form id="form-edit-value-division" action="{{ url('division-edit') }}" method="POST">
+                            <form id="form-edit-value-division" action="{{ url('division-update') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <input type="hidden" id="edit-id" name="id_divisi">
@@ -58,14 +58,14 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Division</h4>
                         @if (count($tbl_divisi) > 0)
-                            <button type="submit" class="btn btn-primary mt-3" id="new-division">+ Add new divisi</button>
+                            <button type="submit" class="btn btn-primary mt-3" id="new-division">+ Add new division</button>
                         @endif
                     </div>
                     <div class="card-body">
@@ -79,10 +79,10 @@
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_divisi as $d)
-                                        <tr>
-                                            <td contenteditable="true">{{$d->nama_divisi}}</td>
+                                        <tr data-id="{{$d->id_divisi}}">
+                                            <td class="division-name-selected">{{$d->nama_divisi}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" data-id="{{$d->id_divisi}}"><i class="fa fa-edit"> edit |</i></a>
+                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
                                                 <a href="division-delete/{{$d->id_divisi}}"><i class="fa fa-trash"> delete </i></a>
                                             </td>
                                         </tr>
@@ -115,6 +115,11 @@
             if (myForm.style.display === 'none') {
                 myForm.style.display = 'block';
             }
+
+            // close form edit
+            if (myEditForm.style.display === 'block') {
+                myEditForm.style.display = 'none';
+            }
         });
 
         toggleCloseFormButton.addEventListener('click', function() {
@@ -128,26 +133,41 @@
         });
 
         // script to show/hide edit form
-        // const toggleFormEditButton = document.getElementById('edit-button');
-        // const toggleCloseFormEditButton = document.getElementById('close-form-edit-division');
-        // const myEditForm = document.getElementById('form-edit-division');
+        const toggleFormEditButton = document.getElementById('edit-button');
+        const toggleCloseFormEditButton = document.getElementById('close-form-edit-division');
+        const myEditForm = document.getElementById('form-edit-division');
 
-        // toggleFormEditButton.addEventListener('click', function() {
-        //     var id = this.getAttribute("data-id");
-        //     var namaDivisi = this.parentNode.parentNode.querySelector("td:first-child").textContent;
+        // show edit form
+        var editButtons = document.querySelectorAll(".edit-button");
+        editButtons.forEach(function (button) {
+            button.addEventListener("click", function (event) {
+                event.preventDefault();
 
-        //     document.getElementById("edit-id").value = id;
-        //     document.getElementById("edit-division").value = namaDivisi;
+                // Mengambil data dari baris yang dipilih
+                var row = this.closest("tr");
+                var id = row.getAttribute("data-id");
+                var divisionName = row.querySelector(".division-name-selected").textContent;
 
-        //     if (myEditForm.style.display === 'none') {
-        //         myEditForm.style.display = 'block';
-        //     }
-        // });
+                // Mengisi data ke dalam formulir
+                document.getElementById("edit-id").value = id;
+                document.getElementById("edit-division").value = divisionName;
 
-        // toggleCloseFormEditButton.addEventListener('click', function() {
-        //     if (myEditForm.style.display === 'block') {
-        //         myEditForm.style.display = 'none';
-        //     }
-        // });
+                if (myEditForm.style.display === 'none') {
+                    myEditForm.style.display = 'block';
+                }
+
+                // close form add
+                if (myForm.style.display === 'block') {
+                    myForm.style.display = 'none';
+                }
+            });
+        });
+
+        // close edit form
+        toggleCloseFormEditButton.addEventListener('click', function() {
+            if (myEditForm.style.display === 'block') {
+                myEditForm.style.display = 'none';
+            }
+        });
     </script>
 @endsection
