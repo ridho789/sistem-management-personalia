@@ -44,12 +44,6 @@ Route::get('employee-status-delete/{id_perusahaan}', [employeestatusController::
 Route::post('employee-status-update', [employeestatusController::class, 'update']);
 
 // management
-Route::get('list-employee', [employeemanagementController::class, 'index']);
+Route::get('/list-employee', [employeemanagementController::class, 'index']);
+Route::get('/form-employee', [employeemanagementController::class, 'create']);
 Route::post('form-employee-add', [employeemanagementController::class, 'store']);
-Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::class, 'delete']);
-Route::post('form-employee-update', [employeemanagementController::class, 'update']);
-
-// link to page form employee
-Route::get('/form-employee', function () {
-    return view('/backend/employee/form_employee');
-});

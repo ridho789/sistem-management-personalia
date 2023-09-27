@@ -32,7 +32,7 @@
                     <i class="icon-user"></i><span class="nav-text">Employee</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="list-employee">List Employee</a></li>
+                    <li><a href="/list-employee">List Employee</a></li>
                     <li><a href="/form-employee">Form Employee</a></li>
                 </ul>
             </li>
