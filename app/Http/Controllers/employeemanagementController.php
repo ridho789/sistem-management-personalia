@@ -40,11 +40,11 @@ class employeemanagementController extends Controller
 
     public function store(Request $request)
     {   
-        // $request->validate([
-        //     'val_nik' => 'min:20',
-        //     'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        //     'val_idcard' => 'min:6',
-        // ]);
+        $request->validate([
+            'val_nik' => 'min:16',
+            'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'val_idcard' => 'min:6',
+        ]);
 
         $photo = $request->file('val_photo');
         if ($photo){

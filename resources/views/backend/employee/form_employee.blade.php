@@ -34,7 +34,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val_name" name="val_name" placeholder="Enter a name.." required>
+                                                <input type="text" class="form-control" 
+                                                id="val_name" name="val_name" placeholder="Enter a name.." value="{{ old('val_name') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -42,7 +43,11 @@
                                                     class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="number" class="form-control" id="val_nik" name="val_nik" placeholder="Enter a NIK.." required>
+                                                <input type="number" class="form-control @error('val_nik') is-invalid @enderror" 
+                                                id="val_nik" name="val_nik" placeholder="Enter a NIK.." value="{{ old('val_nik') }}" required>
+                                                @error('val_nik')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -50,7 +55,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." required>
+                                                <input type="text" class="form-control" 
+                                                id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." value="{{ old('val_place_birth') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -58,7 +64,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="date" class="form-control" id="val_date_birth" min="1980-01-01" name="val_date_birth" required>
+                                                <input type="date" class="form-control" 
+                                                id="val_date_birth" min="1980-01-01" name="val_date_birth" value="{{ old('val_date_birth') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -68,8 +75,8 @@
                                             <div class="col-lg-6">
                                                 <select class="form-control" id="val_gender" name="val_gender" required>
                                                     <option value="">Please select</option>
-                                                    <option value="male">Male</option>
-                                                    <option value="female">Female</option>
+                                                    <option value="male" {{ old('val_gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                                    <option value="female" {{ old('val_gender') == 'female' ? 'selected' : '' }}>Female</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -78,7 +85,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" required>
+                                                <input type="text" class="form-control" 
+                                                id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" value="{{ old('val_phone') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -86,7 +94,8 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <textarea class="form-control" id="val_address" name="val_address" rows="5" placeholder="Enter a address.." required></textarea>
+                                                <textarea class="form-control" id="val_address" name="val_address" rows="5" 
+                                                placeholder="Enter a address.." required>{{ old('val_address') }}</textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -96,7 +105,11 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="file" class="form-control" id="val_photo" name="val_photo" required>
+                                                <input type="file" class="form-control  @error('val_photo') is-invalid @enderror" 
+                                                id="val_photo" name="val_photo" required>
+                                                @error('val_photo')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -107,7 +120,7 @@
                                                 <select class="form-control" id="val_position" name="id_jabatan" required>
                                                     <option value="">Select a position...</option>
                                                     @foreach ($position as $p)
-                                                        <option value="{{ $p->id_jabatan }}">{{ $p->nama_jabatan }}</option>
+                                                        <option value="{{ $p->id_jabatan }}" {{ old('id_jabatan') == $p->id_jabatan ? 'selected' : '' }}>{{ $p->nama_jabatan }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -120,7 +133,7 @@
                                                 <select class="form-control" id="val_division" name="id_divisi" required>
                                                     <option value="">Select a division...</option>
                                                     @foreach ($division as $d)
-                                                        <option value="{{ $d->id_divisi }}">{{ $d->nama_divisi }}</option>
+                                                        <option value="{{ $d->id_divisi }}" {{ old('id_divisi') == $d->id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -133,7 +146,7 @@
                                                 <select class="form-control" id="val_company" name="id_perusahaan" required>
                                                     <option value="">Select a company...</option>
                                                     @foreach ($company as $c)
-                                                        <option value="{{ $c->id_perusahaan }}">{{ $c->nama_perusahaan }}</option>
+                                                        <option value="{{ $c->id_perusahaan }}" {{ old('id_perusahaan') == $c->id_perusahaan ? 'selected' : '' }}>{{ $c->nama_perusahaan }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -146,7 +159,7 @@
                                                 <select class="form-control" id="val_status" name="id_status" required>
                                                     <option value="">Select a status...</option>
                                                     @foreach ($statusEmployee as $s)
-                                                        <option value="{{ $s->id_status }}">{{ $s->nama_status }}</option>
+                                                        <option value="{{ $s->id_status }}" {{ old('id_status') == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -156,7 +169,11 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="number" class="form-control" id="val_idcard" name="val_idcard" placeholder="Enter a ID card.." required>
+                                                <input type="number" class="form-control @error('val_idcard') is-invalid @enderror" 
+                                                id="val_idcard" name="val_idcard" placeholder="Enter a ID card.." value="{{ old('val_idcard') }}" required>
+                                                @error('val_idcard')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -193,24 +210,27 @@
                 .then(data => {
                     // Isi data formulir secara otomatis dengan data yang diterima dari API
                     getData = data['results']['parse_data']
-                    
-                    // format tanggal lahir
-                    var dateOfBirth1 = getData['tanggal_lahir'];
-                    var dateParts = dateOfBirth1.split('/')
-                    var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
 
-                    // gender
-                    var gender = getData['jenis_kelamin']
-                    var jns_kelamin = ''
-
-                    if(gender == 'LAKI-LAKI'){
-                        jns_kelamin = 'male'
-                    }else{
-                        jns_kelamin = 'female'
+                    if (getData){
+                        // format tanggal lahir
+                        var dateOfBirth1 = getData['tanggal_lahir'];
+                        var dateParts = dateOfBirth1.split('/')
+                        var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+    
+                        // gender
+                        var gender = getData['jenis_kelamin']
+                        var jns_kelamin = ''
+    
+                        if(gender == 'LAKI-LAKI'){
+                            jns_kelamin = 'male'
+                        }else{
+                            jns_kelamin = 'female'
+                        }
+    
+                        document.getElementById('val_date_birth').value = formattedDate;
+                        document.getElementById('val_gender').value = jns_kelamin;
                     }
-
-                    document.getElementById('val_date_birth').value = formattedDate;
-                    document.getElementById('val_gender').value = jns_kelamin;
+                    
                 })
                 .catch(error => {
                     console.error('Error:', error);

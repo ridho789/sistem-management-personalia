@@ -24,8 +24,7 @@
                     <div class="card-header">
                         <h4 class="card-title">List Employee</h4>
                         @if (count($tbl_karyawan) > 0)
-                            <!-- <button type="submit" class="btn btn-primary mt-3" id="new-employee">+ Add new employee</button> -->
-                            <a href="/form-employee" class="btn btn-light mt-3" id="new-employee">click to add new employee</a>
+                            <a href="/form-employee" class="btn btn-primary mt-3" id="new-employee">+ Add new employee</a>
                         @endif
                     </div>
                     <div class="card-body">
@@ -68,7 +67,6 @@
                             <div class="mt-5">
                                 <span style="text-align: center;">
                                     <p>Sorry, no data that can be displayed yet. <br>
-                                        <!-- <button type="submit" class="btn btn-light mt-2" id="new-employee">click to add new employee</button> -->
                                         <a href="/form-employee" class="btn btn-light mt-2" id="new-employee">click to add new employee</a>
                                     </p>
                                 </span>
