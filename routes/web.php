@@ -6,6 +6,7 @@ use App\Http\Controllers\positionController;
 use App\Http\Controllers\companyController;
 use App\Http\Controllers\employeestatusController;
 use App\Http\Controllers\employeemanagementController;
+use App\Http\Controllers\importEmployeeexcel;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +44,13 @@ Route::post('employee-status-add', [employeestatusController::class, 'store']);
 Route::get('employee-status-delete/{id_perusahaan}', [employeestatusController::class, 'delete']);
 Route::post('employee-status-update', [employeestatusController::class, 'update']);
 
-// management
+// management - employee
 Route::get('/list-employee', [employeemanagementController::class, 'index']);
 Route::get('/form-employee', [employeemanagementController::class, 'create']);
 Route::post('form-employee-add', [employeemanagementController::class, 'store']);
+Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::class, 'delete']);
+Route::get('form-employee-edit/{id_karyawan}', [employeemanagementController::class, 'edit']);
+Route::post('form-employee-update', [employeemanagementController::class, 'update']);
+
+// import excel
+Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);

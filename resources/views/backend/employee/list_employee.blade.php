@@ -55,8 +55,8 @@
                                             <td>{{ $companies[$k->id_perusahaan] }}</td>
                                             <td>{{ $statuses[$k->id_status] }}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="#"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="form-employee-edit/{{$k->id_karyawan}}" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
+                                                <a href="list-employee-delete/{{$k->id_karyawan}}"><i class="fa fa-trash"> delete </i></a>
                                             </td>
                                         </tr>
                                         @endforeach 
@@ -64,7 +64,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="mt-5">
+                            <div class="mt-3">
                                 <span style="text-align: center;">
                                     <p>Sorry, no data that can be displayed yet. <br>
                                         <a href="/form-employee" class="btn btn-light mt-2" id="new-employee">click to add new employee</a>
