@@ -66,7 +66,7 @@
                                             <td>{{ $companies[$k->id_perusahaan] }}</td>
                                             <td>{{ $statuses[$k->id_status] }}</td>
                                             <td style="text-align:right;">
-                                                <a href="form-employee-edit/{{$k->id_karyawan}}" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
+                                                <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
                                                 <a href="list-employee-delete/{{$k->id_karyawan}}"><i class="fa fa-trash"> delete </i></a>
                                             </td>
                                         </tr>

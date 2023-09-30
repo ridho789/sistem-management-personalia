@@ -23,7 +23,7 @@ class divisionController extends Controller
     }
 
     public function delete($id)
-    {
+    {   
         DB::table('tbl_divisi')->where('id_divisi', $id)->delete();
         return redirect()->back();
     }

@@ -9,6 +9,7 @@ use App\Models\Divisi;
 use App\Models\Position;
 use App\Models\Company;
 use App\Models\StatusEmployee;
+use Illuminate\Support\Facades\Crypt;
 
 class employeemanagementController extends Controller
 {
@@ -93,7 +94,10 @@ class employeemanagementController extends Controller
     }
 
     public function edit($id)
-    {
+    {   
+        // Dekripsi ID
+        $id = Crypt::decrypt($id);
+
         // mengambil data karyawan berdasarkan ID
         $employee = DB::table('tbl_karyawan')->where('id_karyawan', $id)->first();
 
