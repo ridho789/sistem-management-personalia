@@ -155,4 +155,27 @@ class employeemanagementController extends Controller
             'statuses' => $statuses
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $employees = DB::table('tbl_karyawan')
+            ->where('nama_karyawan', 'like', "%$search%")
+            ->orWhere('id_card', 'like', "%$search%")
+            ->get();
+
+        $positions = Position::pluck('nama_jabatan', 'id_jabatan');
+        $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
+        $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
+        $statuses = StatusEmployee::pluck('nama_status', 'id_status');
+
+        return view('/backend/employee/list_employee', [
+            'tbl_karyawan' => $employees, 
+            'positions' => $positions, 
+            'divisions' => $divisions, 
+            'companies' => $companies, 
+            'statuses' => $statuses
+        ]);
+    }
 }

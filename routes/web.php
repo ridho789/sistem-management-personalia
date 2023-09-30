@@ -51,6 +51,7 @@ Route::post('form-employee-add', [employeemanagementController::class, 'store'])
 Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::class, 'delete']);
 Route::get('form-employee-edit/{id_karyawan}', [employeemanagementController::class, 'edit']);
 Route::post('form-employee-update', [employeemanagementController::class, 'update']);
+Route::get('list-employee-search', [employeemanagementController::class, 'search']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);
