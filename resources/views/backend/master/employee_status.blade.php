@@ -91,7 +91,7 @@
                                 </table>
                             </div>
                         @else
-                            <div class="mt-5">
+                            <div class="mt-3">
                                 <span style="text-align: center;">
                                     <p>Sorry, no data that can be displayed yet. <br>
                                         <button type="submit" class="btn btn-light mt-2" id="new-employee-status">click to add new employee status</button>

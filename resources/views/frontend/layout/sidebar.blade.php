@@ -19,7 +19,8 @@
                     <i class="icon icon-app-store"></i><span class="nav-text">Master Data</span>
                 </a>
                 <ul aria-expanded="false">
-                <li><a href="/company">Company</a></li>
+                    <li><a href="/category">Category</a></li>
+                    <li><a href="/company">Company</a></li>
                     <li><a href="/devision">Division</a></li>
                     <li><a href="/position">Position</a></li>
                     <li><a href="/employee-status">Employee Status</a></li>

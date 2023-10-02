@@ -10,7 +10,7 @@ class positionController extends Controller
     public function index()
     {   
         $position = DB::table('tbl_jabatan')->get();
-        return view('/backend/position', ['tbl_jabatan' => $position]);
+        return view('/backend/master/position', ['tbl_jabatan' => $position]);
     }
 
     public function store(Request $request)

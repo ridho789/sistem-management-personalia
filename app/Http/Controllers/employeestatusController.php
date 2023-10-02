@@ -10,7 +10,7 @@ class employeestatusController extends Controller
     public function index()
     {   
         $employee_statue = DB::table('tbl_status_kary')->get();
-        return view('/backend/employee_status', ['tbl_status_kary' => $employee_statue]);
+        return view('/backend/master/employee_status', ['tbl_status_kary' => $employee_statue]);
     }
 
     public function store(Request $request)

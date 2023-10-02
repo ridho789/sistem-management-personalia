@@ -10,7 +10,7 @@ class divisionController extends Controller
     public function index()
     {   
         $division = DB::table('tbl_divisi')->get();
-        return view('/backend/division', ['tbl_divisi' => $division]);
+        return view('/backend/master/division', ['tbl_divisi' => $division]);
     }
 
     public function store(Request $request)

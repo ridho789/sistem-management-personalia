@@ -7,6 +7,8 @@ use App\Http\Controllers\companyController;
 use App\Http\Controllers\employeestatusController;
 use App\Http\Controllers\employeemanagementController;
 use App\Http\Controllers\importEmployeeexcel;
+use App\Http\Controllers\categoryController;
+use App\Http\Controllers\subcategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,15 @@ Route::get('/employee-status', [employeestatusController::class, 'index']);
 Route::post('employee-status-add', [employeestatusController::class, 'store']);
 Route::get('employee-status-delete/{id_perusahaan}', [employeestatusController::class, 'delete']);
 Route::post('employee-status-update', [employeestatusController::class, 'update']);
+
+Route::get('/category', [categoryController::class, 'index']);
+Route::post('category-add', [categoryController::class, 'store']);
+Route::get('category-delete/{id_kategori}', [categoryController::class, 'delete']);
+Route::post('category-update', [categoryController::class, 'update']);
+
+Route::post('sub-category-add', [subcategoryController::class, 'store']);
+Route::get('sub-category-delete/{id_sub_kategori}', [subcategoryController::class, 'delete']);
+Route::post('sub-category-update', [subcategoryController::class, 'update']);
 
 // management - employee
 Route::get('/list-employee', [employeemanagementController::class, 'index']);
