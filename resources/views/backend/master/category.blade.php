@@ -127,7 +127,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary mt-3 submit-sub-category" id="close-form-new-sub-category">Submit</button>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
@@ -135,6 +134,9 @@
                                             <input type="text" id="name-sub-category" class="form-control input-new-category" name="input_sub_kategori" placeholder="input new sub category" required>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary mt-3 submit-sub-category" id="close-form-new-sub-category">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -165,7 +167,6 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary mt-3 submit-sub-category" id="close-form-edit-sub-category">Submit</button>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
@@ -174,6 +175,9 @@
                                             <input type="text" id="edit-sub-category" class="form-control input-edit-sub-category" name="value_sub_kategori" placeholder="input edit sub category" required>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary mt-3 submit-sub-category" id="close-form-edit-sub-category">Submit</button>
                                 </div>
                             </form>
                         </div>
