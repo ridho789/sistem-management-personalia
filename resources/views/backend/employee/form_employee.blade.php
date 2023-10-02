@@ -130,8 +130,11 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" 
-                                                id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" value="{{ old('val_phone', $employee->no_telp) }}" required>
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">+62</div>
+                                                    <input type="text" class="form-control" 
+                                                    id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" value="{{ old('val_phone', $employee->no_telp) }}" required>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -296,8 +299,11 @@
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" 
-                                                id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" value="{{ old('val_phone') }}" required>
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">+62</div>
+                                                    <input type="text" class="form-control" 
+                                                    id="val_phone" name="val_phone" placeholder="+62-000-0000-0000" value="{{ old('val_phone') }}" required>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
