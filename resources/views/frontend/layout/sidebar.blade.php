@@ -37,6 +37,40 @@
                     <li><a href="/form-employee">Form Employee</a></li>
                 </ul>
             </li>
+            @php
+                $dataCategory = DB::table('tbl_kategori')->get();
+            @endphp 
+            @if(isset($dataCategory))
+                <li>
+                    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <i class="icon icon-chart-bar-33"></i><span class="nav-text">Asset</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li>
+                            <a class="has-arrow" href="javascript:void()" aria-expanded="false">List Asset</a>
+                            <ul aria-expanded="false">
+                                @foreach($dataCategory as $kategori)
+                                    @php
+                                        $subKategori = DB::table('tbl_sub_kategori')->where('id_kategori', $kategori->id_kategori)->get();
+                                        $hasSubKategori = count($subKategori) > 0;
+                                    @endphp
+                                    <li>
+                                        <a href="javascript:void(0)" class="{{ $hasSubKategori ? 'has-arrow' : '' }}">{{$kategori->nama_kategori}}</a>
+                                        @if($hasSubKategori)
+                                            <ul>
+                                                @foreach($subKategori as $subItem)
+                                                    <li><a href="javascript:void(0)">{{$subItem->nama_sub_kategori}}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        <li><a href="#" aria-expanded="false">Form Asset</a></li>
+                    </ul>
+                </li>
+            @endif
         </ul>
     </div>
 </div>
