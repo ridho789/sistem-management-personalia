@@ -71,15 +71,17 @@
                     <div class="card-body">
                         @if (count($tbl_status_kary) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-employee-status" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-employee-status" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Employee Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_status_kary as $e)
                                         <tr data-id="{{$e->id_status}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="employee-status-name-selected">{{$e->nama_status}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>

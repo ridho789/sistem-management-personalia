@@ -72,15 +72,17 @@
                     <div class="card-body">
                         @if (count($tbl_kategori) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-category" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-category" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Category</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_kategori as $k)
                                         <tr data-id="{{$k->id_kategori}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="category-name-selected">{{$k->nama_kategori}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
@@ -197,9 +199,10 @@
                     <div class="card-body">
                         @if (count($tbl_sub_kategori) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-sub-category" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-sub-category" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Category</th>
                                             <th>Sub Category</th>
                                         </tr>
@@ -207,6 +210,7 @@
                                     <tbody>
                                         @foreach($tbl_sub_kategori as $sk)
                                         <tr data-id="{{$sk->id_sub_kategori}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="id-category-selected">{{ $dataCategories[$sk->id_kategori] }}</td>
                                             <td class="sub-category-name-selected">{{$sk->nama_sub_kategori}}</td>
                                             <td style="text-align:right;">

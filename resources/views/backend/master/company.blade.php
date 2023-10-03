@@ -85,9 +85,10 @@
                     <div class="card-body">
                         @if (count($tbl_perusahaan) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-company" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-company" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Company</th>
                                             <th>Address</th>
                                         </tr>
@@ -95,8 +96,9 @@
                                     <tbody>
                                         @foreach($tbl_perusahaan as $c)
                                         <tr data-id="{{$c->id_perusahaan}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="company-name-selected">{{$c->nama_perusahaan}}</td>
-                                            <td class="company-address-selected" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 325px;">{{$c->alamat_perusahaan}}</td>
+                                            <td class="company-address-selected" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 225px;">{{$c->alamat_perusahaan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
                                                 <a href="company-delete/{{$c->id_perusahaan}}"><i class="fa fa-trash"> delete </i></a>

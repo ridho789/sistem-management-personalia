@@ -71,15 +71,17 @@
                     <div class="card-body">
                         @if (count($tbl_divisi) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-division" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-division" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Division</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_divisi as $d)
                                         <tr data-id="{{$d->id_divisi}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="division-name-selected">{{$d->nama_divisi}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>

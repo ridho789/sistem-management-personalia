@@ -71,15 +71,17 @@
                     <div class="card-body">
                         @if (count($tbl_jabatan) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-position" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-position" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Position</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_jabatan as $j)
                                         <tr data-id="{{$j->id_jabatan}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td class="position-name-selected">{{$j->nama_jabatan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>

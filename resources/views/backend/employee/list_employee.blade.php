@@ -41,9 +41,10 @@
                     <div class="card-body">
                         @if (count($tbl_karyawan) > 0)
                             <div class="table-responsive">
-                                <table id="data-table-employee" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-employee" class="display" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Employee</th>
                                             <th>NIK</th>
                                             <th>Phone</th>
@@ -57,6 +58,7 @@
                                     <tbody>
                                         @foreach($tbl_karyawan as $k)
                                         <tr data-id="{{$k->id_karyawan}}">
+                                            <th>{{ $loop->iteration }}</th>
                                             <td>{{$k->nama_karyawan}}</td>
                                             <td>{{$k->nik}}</td>
                                             <td>{{$k->no_telp}}</td>
