@@ -23,7 +23,7 @@ class AddColumnForeignTableAset extends Migration
             $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategori');
 
             // table aset - sub_kategori (id_sub_kategori)
-            $table->unsignedBigInteger('id_sub_kategori')->after('id_kategori');
+            $table->unsignedBigInteger('id_sub_kategori')->nullable()->after('id_kategori');
             $table->foreign('id_sub_kategori')->references('id_sub_kategori')->on('tbl_sub_kategori');
         });
     }

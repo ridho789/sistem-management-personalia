@@ -21,8 +21,8 @@ class TableAset extends Migration
             $table->string('nopol', 15);
             $table->string('merk');
             $table->string('tahun');
-            $table->date('masa_pajak');
-            $table->date('masa_plat');
+            $table->date('masa_pajak')->nullable();
+            $table->date('masa_plat')->nullable();
             $table->timestamps();
         }); 
     }

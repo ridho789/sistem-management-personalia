@@ -9,6 +9,7 @@ use App\Http\Controllers\employeemanagementController;
 use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\categoryController;
 use App\Http\Controllers\subcategoryController;
+use App\Http\Controllers\assetmanagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,12 @@ Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::
 Route::get('form-employee-edit/{id_karyawan}', [employeemanagementController::class, 'edit']);
 Route::post('form-employee-update', [employeemanagementController::class, 'update']);
 Route::get('list-employee-search', [employeemanagementController::class, 'search']);
+
+// management - asset
+Route::get('/form-asset', [assetmanagementController::class, 'index']);
+Route::post('form-asset-add', [assetmanagementController::class, 'store']);
+// mengambil data sub category berdasarkan category yang dipilih
+Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class, 'getSubCategories']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);

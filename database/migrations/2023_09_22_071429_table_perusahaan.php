@@ -16,7 +16,7 @@ class TablePerusahaan extends Migration
         Schema::create('tbl_perusahaan', function (Blueprint $table) {
             $table->id('id_perusahaan');
             $table->string('nama_perusahaan');
-            $table->string('nama_alamat');
+            $table->string('alamat_perusahaan');
             $table->timestamps();
         });
     }
