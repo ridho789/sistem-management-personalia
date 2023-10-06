@@ -66,8 +66,13 @@ Route::post('form-employee-update', [employeemanagementController::class, 'updat
 Route::get('list-employee-search', [employeemanagementController::class, 'search']);
 
 // management - asset
-Route::get('/form-asset', [assetmanagementController::class, 'index']);
+Route::get('/list-asset', [assetmanagementController::class, 'index']);
+Route::get('/form-asset', [assetmanagementController::class, 'create']);
 Route::post('form-asset-add', [assetmanagementController::class, 'store']);
+Route::get('list-asset-delete/{id_asset}', [assetmanagementController::class, 'delete']);
+Route::get('form-asset-edit/{id_asset}', [assetmanagementController::class, 'edit']);
+Route::post('form-asset-update', [assetmanagementController::class, 'update']);
+Route::get('list-asset-search', [assetmanagementController::class, 'search']);
 // mengambil data sub category berdasarkan category yang dipilih
 Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class, 'getSubCategories']);
 

@@ -15,8 +15,7 @@ class employeemanagementController extends Controller
 {
     public function index()
     {   
-        $employee = DB::table('tbl_karyawan')->get();
-
+        $employee = Employee::all();
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
@@ -39,7 +38,9 @@ class employeemanagementController extends Controller
         $position = Position::all();
         $company = Company::all();
         $statusEmployee = StatusEmployee::all();
-        return view('/backend/employee/form_employee', compact('employee', 'division', 'position', 'company', 'statusEmployee', 'logErrors'));
+        return view('/backend/employee/form_employee', compact(
+            'employee', 'division', 'position', 'company', 'statusEmployee', 'logErrors'
+        ));
     }
 
     public function store(Request $request)
@@ -47,7 +48,7 @@ class employeemanagementController extends Controller
         $request->validate([
             'val_nik' => 'min:16|unique:tbl_karyawan,nik',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:6|unique:tbl_karyawan,id_card',
+            'val_idcard' => 'min:6|max:6|unique:tbl_karyawan,id_card',
         ]);
 
         $photo = $request->file('val_photo');
@@ -55,7 +56,7 @@ class employeemanagementController extends Controller
             $photoName = $photo->getClientOriginalName();
             $photoPath = $photo->storeAs('images', $photoName);
             
-            DB::table('tbl_karyawan')->insert([
+            Employee::insert([
                 'nama_karyawan'=> $request->val_name,
                 'nik'=> $request->val_nik,
                 'tempat_lahir'=> $request->val_place_birth,
@@ -72,25 +73,13 @@ class employeemanagementController extends Controller
             ]);
         }
 
-        $employee = DB::table('tbl_karyawan')->get();
-        $positions = Position::pluck('nama_jabatan', 'id_jabatan');
-        $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
-        $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
-        $statuses = StatusEmployee::pluck('nama_status', 'id_status');
-
-        return view('/backend/employee/list_employee', [
-            'tbl_karyawan' => $employee, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
+        return redirect('/list-employee');
     }
 
     public function delete($id)
     {
-        DB::table('tbl_karyawan')->where('id_karyawan', $id)->delete();
-        return redirect()->back();
+       Employee::where('id_karyawan', $id)->delete();
+        return redirect('/list-employee');
     }
 
     public function edit($id)
@@ -99,7 +88,7 @@ class employeemanagementController extends Controller
         $id = Crypt::decrypt($id);
 
         // mengambil data karyawan berdasarkan ID
-        $employee = DB::table('tbl_karyawan')->where('id_karyawan', $id)->first();
+        $employee = Employee::where('id_karyawan', $id)->first();
 
         $division = Divisi::all();
         $position = Position::all();
@@ -107,7 +96,9 @@ class employeemanagementController extends Controller
         $statusEmployee = StatusEmployee::all();
         $logErrors = '';
 
-        return view('/backend/employee/form_employee', compact('employee', 'division', 'position', 'company', 'statusEmployee', 'logErrors'));
+        return view('/backend/employee/form_employee', compact(
+            'employee', 'division', 'position', 'company', 'statusEmployee', 'logErrors'
+        ));
     }
 
     public function update(Request $request)
@@ -115,7 +106,7 @@ class employeemanagementController extends Controller
         $request->validate([
             'val_nik' => 'min:16',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:6',
+            'val_idcard' => 'min:6|max:6',
         ]);
 
         DB::table('tbl_karyawan')->where('id_karyawan', $request->id)->update([
@@ -140,24 +131,12 @@ class employeemanagementController extends Controller
             $photoPath = $photo->storeAs('images', $photoName);
             $newPhoto = $photoPath;
 
-            DB::table('tbl_karyawan')->where('id_karyawan', $request->id)->update([
+           Employee::where('id_karyawan', $request->id)->update([
                 'foto' => $newPhoto,
             ]);
         }
 
-        $employee = DB::table('tbl_karyawan')->get();
-        $positions = Position::pluck('nama_jabatan', 'id_jabatan');
-        $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
-        $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
-        $statuses = StatusEmployee::pluck('nama_status', 'id_status');
-
-        return view('/backend/employee/list_employee', [
-            'tbl_karyawan' => $employee, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
+        return redirect('/list-employee');
     }
 
     public function search(Request $request)
@@ -174,12 +153,24 @@ class employeemanagementController extends Controller
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
-        return view('/backend/employee/list_employee', [
+        if ($employees->count() === 0) {
+            $employees = Employee::all();
+            return view('/backend/employee/list_employee', [
             'tbl_karyawan' => $employees, 
             'positions' => $positions, 
             'divisions' => $divisions, 
             'companies' => $companies, 
             'statuses' => $statuses
         ]);
+
+        } else {
+            return view('/backend/employee/list_employee', [
+            'tbl_karyawan' => $employees, 
+            'positions' => $positions, 
+            'divisions' => $divisions, 
+            'companies' => $companies, 
+            'statuses' => $statuses
+        ]);
+        }
     }
 }

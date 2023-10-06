@@ -22,15 +22,17 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <form action="{{ url('list-employee-search') }}" method="GET">
-                            @csrf
-                            <div class="input-group">
-                                <input type="text" name="search" class="form-control" placeholder="Search Name or ID Card" value="{{ Request::get('search') }}">
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </span>
-                            </div>
-                        </form>
+                        @if (count($tbl_karyawan) > 0)
+                            <form action="{{ url('list-employee-search') }}" method="GET">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Search Name or ID Card" value="{{ Request::get('search') }}">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </span>
+                                </div>
+                            </form>
+                        @endif
                     </div>
                     <div class="card-header">                           
                         <h4 class="card-title">List Employee</h4>

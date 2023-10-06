@@ -46,7 +46,7 @@
                         <i class="icon icon-chart-bar-33"></i><span class="nav-text">Asset</span>
                     </a>
                     <ul aria-expanded="false">
-                        <li>
+                        <!-- <li>
                             <a class="has-arrow" href="javascript:void()" aria-expanded="false">List Asset</a>
                             <ul aria-expanded="false">
                                 @foreach($dataCategory as $kategori)
@@ -66,7 +66,8 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        </li>
+                        </li> -->
+                        <li><a href="/list-asset" aria-expanded="false">List Asset</a></li>
                         <li><a href="/form-asset" aria-expanded="false">Form Asset</a></li>
                     </ul>
                 </li>

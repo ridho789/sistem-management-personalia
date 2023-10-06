@@ -26,6 +26,161 @@
                     <div class="card-body">
                         <div class="form-validation-asset">
                             <!-- form edit asset -->
+                            @if($asset)
+                            <form class="form-valide-asset" action="{{ url('form-asset-update') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <!-- Tambahkan input tersembunyi untuk ID aset yang akan diedit -->
+                                <input type="hidden" name="id" value="{{ $asset->id_aset }}">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-group row">
+                                            <label class="col-lg-2 col-form-label" for="val_name">Name
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-10">
+                                                <input type="text" class="form-control" 
+                                                id="val_name" name="val_name" placeholder="Enter a name.." 
+                                                value="{{ old('val_name', $asset->nama_aset) }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_category">Category
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <select class="form-control" id="val_category" name="val_category" required>
+                                                    <option value="">Select a category...</option>
+                                                    @foreach ($category as $ca)
+                                                        <option value="{{ $ca->id_kategori }}" 
+                                                            {{ old('id_kategori', $asset->id_kategori) == $ca->id_kategori ? 'selected' : '' }}>
+                                                            {{ $ca->nama_kategori }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_sub_category">Sub Category
+                                                <span id="subCategoryLabel" class="text-primary">(Optional)</span>
+                                            </label>
+                                            <div class="col-lg-8">
+                                                <select class="form-control" id="val_sub_category" name="val_sub_category">
+                                                    <option value="">Select a sub category...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="form_vehicle">
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_nopol">Police Number
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_nopol" name="val_nopol" placeholder="Enter a police number.." 
+                                                value="{{ old('val_nopol', $asset->nopol) }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_merk">Vehicle Brand
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_merk" name="val_merk" placeholder="Enter a vehicle brand.." 
+                                                value="{{ old('val_merk', $asset->merk) }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_tahun">Vehicle Year<span
+                                                    class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="number" class="form-control" 
+                                                id="val_tahun" name="val_tahun" placeholder="Enter a vehicle year.." 
+                                                value="{{ old('val_tahun', $asset->tahun) }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_masa_pajak">Tax Expiration Date
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-8">
+                                                <input type="date" class="form-control" 
+                                                id="val_masa_pajak" min="1980-01-01" name="val_masa_pajak" 
+                                                value="{{ old('val_masa_pajak', $asset->masa_pajak) }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_masa_plat">Plate Expiration Date
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-8">
+                                                <input type="date" class="form-control" 
+                                                id="val_masa_plat" min="1980-01-01" name="val_masa_plat" 
+                                                value="{{ old('val_masa_pajak', $asset->masa_plat) }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_location">Location
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_location" name="val_location" placeholder="Enter a location.." 
+                                                value="{{ old('val_location', $asset->lokasi) }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row" id="column_specification">
+                                            <label class="col-lg-4 col-form-label" for="val_specification">Specification
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <textarea class="form-control" id="val_spesification" name="val_spesification" rows="5" 
+                                                placeholder="Enter a spesification.." required>{{ old('val_spesification', $asset->spesifikasi) }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_company">Company
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-8">
+                                                <select class="form-control" id="val_company" name="val_company" required>
+                                                    <option value="">Select a company...</option>
+                                                    @foreach ($company as $c)
+                                                        <option value="{{ $c->id_perusahaan }}" 
+                                                            {{ old('id_perusahaan', $asset->id_perusahaan) == $c->id_perusahaan ? 'selected' : '' }}>
+                                                            {{ $c->nama_perusahaan }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-8 ml-auto">
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            @else
                             <form class="form-valide-asset" action="{{ url('form-asset-add') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -164,6 +319,7 @@
                                     </div>
                                 </div>
                             </form>
+                            @endif
                         </div>
                     </div>
                 </div>

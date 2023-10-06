@@ -17,10 +17,10 @@ class TableAset extends Migration
             $table->id('id_aset');
             $table->string('nama_aset');
             $table->string('lokasi');
-            $table->string('spesifikasi');
-            $table->string('nopol', 15);
-            $table->string('merk');
-            $table->string('tahun');
+            $table->string('spesifikasi')->nullable();
+            $table->string('nopol', 15)->nullable();
+            $table->string('merk')->nullable();
+            $table->string('tahun')->nullable();
             $table->date('masa_pajak')->nullable();
             $table->date('masa_plat')->nullable();
             $table->timestamps();
