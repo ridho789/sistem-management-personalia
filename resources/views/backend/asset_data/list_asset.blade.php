@@ -43,6 +43,21 @@
                     <div class="card-body">
                         @if (count($asset) > 0)
                             <div class="table-responsive">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <input type="checkbox" class="mr-2" id="filterWarningExpiration">
+                                                <label>Show status warning deadline Expiration</label>
+
+                                            </div>
+                                            <div>
+                                                <input type="checkbox" class="mr-2" id="filterDangerExpiration">
+                                                <label>Show status danger deadline Expiration</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <table class="table table-responsive-sm" id="data-table-asset" class="display" style="width:100%">
                                     <thead>
                                         <tr>
@@ -73,10 +88,14 @@
                                             <td>{{$a->nopol ?? '-' }}</td>
                                             <td>{{$a->merk ?? '-' }}</td>
                                             <td>{{$a->tahun ?? '-' }}</td>
-                                            <td class="{{ $a->isTaxExpiring() === 'red' ? 'text-red' : ($a->isTaxExpiring() === 'orange' ? 'text-orange' : '') }}">
+                                            <td class="{{ $a->isTaxExpiring() === 'red' ? 
+                                                'text-red' : ($a->isTaxExpiring() === 'orange' ? 'text-orange' : '') }} tax-expiration" 
+                                                data-color="{{ $a->isTaxExpiring() }}">
                                                 {{$a->masa_pajak ?? '-' }}
                                             </td>
-                                            <td class="{{ $a->isPlateExpiring() === 'red' ? 'text-red' : ($a->isPlateExpiring() === 'orange' ? 'text-orange' : '') }}">
+                                            <td class="{{ $a->isPlateExpiring() === 'red' ? 
+                                                'text-red' : ($a->isPlateExpiring() === 'orange' ? 'text-orange' : '') }} plate-expiration" 
+                                                data-color="{{ $a->isPlateExpiring() }}">
                                                 {{$a->masa_plat ?? '-' }}
                                             </td>
                                             <td>{{$a->lokasi}}</td>
@@ -106,6 +125,7 @@
             </div>
         </div>
     </div>
+
     <style>
         .text-red {
             color: red;
@@ -115,4 +135,38 @@
             color: orange;
         }
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fungsi untuk menampilkan/menyembunyikan baris berdasarkan checkbox yang dipilih
+            function filterRows() {
+                var warningChecked = document.getElementById("filterWarningExpiration").checked;
+                var dangerChecked = document.getElementById("filterDangerExpiration").checked;
+
+                var tableRows = document.querySelectorAll("#data-table-asset tbody tr");
+
+                tableRows.forEach(function (row) {
+                    var taxExpirationColor = row.querySelector(".tax-expiration").getAttribute("data-color");
+                    var plateExpirationColor = row.querySelector(".plate-expiration").getAttribute("data-color");
+
+                    var shouldShow = (!warningChecked && !dangerChecked) ||
+                                    (warningChecked && (taxExpirationColor === "orange" || plateExpirationColor === "orange")) ||
+                                    (dangerChecked && (taxExpirationColor === "red" || plateExpirationColor === "red"));
+
+                    if (shouldShow) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            }
+
+            // Event handler untuk perubahan pada checkbox
+            document.getElementById("filterWarningExpiration").addEventListener("change", filterRows);
+            document.getElementById("filterDangerExpiration").addEventListener("change", filterRows);
+
+            // Inisialisasi filter saat halaman dimuat
+            filterRows();
+        });
+    </script>
 @endsection
