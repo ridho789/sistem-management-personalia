@@ -49,9 +49,10 @@ class assetmanagementController extends Controller
 
         // Menggunakan model Kategori untuk mendapatkan nama kategori
         $kategori = Category::where('id_kategori', $id_kategori)->first();
+        $nama_kategori = strtolower($kategori->nama_kategori);
 
         // Menentukan nilai spesifikasi berdasarkan kategori yang dipilih
-        if ($kategori && $kategori->nama_kategori == 'Kendaraan') {
+        if ($kategori && $nama_kategori == 'kendaraan') {
             $spesifikasi = '';
             $nopol = $request->val_nopol;
             $merk = $request->val_merk;
@@ -107,9 +108,10 @@ class assetmanagementController extends Controller
         
         // Menggunakan model Kategori untuk mendapatkan nama kategori
         $kategori = Category::where('id_kategori', $id_kategori)->first();
+        $nama_kategori = strtolower($kategori->nama_kategori);
 
         // Menentukan nilai spesifikasi berdasarkan kategori yang dipilih
-        if ($kategori && $kategori->nama_kategori == 'Kendaraan') {
+        if ($kategori && $nama_kategori == 'kendaraan') {
             $spesifikasi = '';
             $nopol = $request->val_nopol;
             $merk = $request->val_merk;
