@@ -5,6 +5,10 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Models\Employee;
+use App\Models\Company;
+use App\Models\Position;
+use App\Models\Divisi;
+use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -19,7 +23,14 @@ class EmployeesImport implements ToCollection
 
     public function collection(Collection $collection)
     {
+        $rowNumber = 0;
         foreach ($collection as $row){
+            // baris pertama tidak diproses karena header
+            if ($rowNumber === 0) {
+                $rowNumber++;
+                continue;
+            }
+
             // date format
             $dateText =  $row[3];
             $date = date_create_from_format('Y-m-d', $dateText);
@@ -27,6 +38,16 @@ class EmployeesImport implements ToCollection
 
             $this->currentRow++;
             $uniqueValues = []; // Array untuk menyimpan nilai unik
+
+            $namePosition = $row[7];
+            $nameDivision = $row[8];
+            $nameCompany = $row[9];
+            $nameStatus = $row[10];
+
+            $position = Position::where('nama_jabatan', $namePosition)->first();
+            $division = Divisi::where('nama_divisi', $nameDivision)->first();
+            $company = Company::where('nama_perusahaan', $nameCompany)->first();
+            $status = StatusEmployee::where('nama_status', $nameStatus)->first();
 
             foreach ($row as $columnIndex => $value) {
                 // Catat pesan kesalahan jika kolom kosong
@@ -49,21 +70,40 @@ class EmployeesImport implements ToCollection
                 Log::error('Error importing data: Nilai kolom tanggal bukan teks di baris ' . $this->currentRow);
             }
 
-            Employee::create([
-                'nama_karyawan' => $row[0],
-                'nik' => $row[1],
-                'tempat_lahir' => $row[2],
-                'tanggal_lahir' => $date_format,
-                'jenis_kelamin' => $row[4],
-                'no_telp' => $row[5],
-                'alamat' => $row[6],
-                'id_jabatan' => $row[7],
-                'id_divisi' => $row[8],
-                'id_perusahaan' => $row[9],
-                'id_status' => $row[10],
-                'id_card' => $row[11],
-                'foto' => '',
-            ]);
+            if ($position && $division && $company && $status){
+                Employee::create([
+                    'nama_karyawan' => $row[0],
+                    'nik' => $row[1],
+                    'tempat_lahir' => $row[2],
+                    'tanggal_lahir' => $date_format,
+                    'jenis_kelamin' => $row[4],
+                    'no_telp' => $row[5],
+                    'alamat' => $row[6],
+                    'id_jabatan' => $position->id_jabatan,
+                    'id_divisi' => $division->id_divisi,
+                    'id_perusahaan' => $company->id_perusahaan,
+                    'id_status' => $status->id_status,
+                    'id_card' => $row[11],
+                    'foto' => '',
+                ]);
+
+            } else {
+                if (empty($position)){
+                    Log::error('Error importing data: Nilai kolom Position/Jabatan tidak valid di baris ' . $this->currentRow);
+                }
+
+                if (empty($division)){
+                    Log::error('Error importing data: Nilai kolom Division/Divisi tidak valid di baris ' . $this->currentRow);
+                }
+
+                if (empty($company)){
+                    Log::error('Error importing data: Nilai kolom Company/Perusahaan tidak valid di baris ' . $this->currentRow);
+                }
+
+                if (empty($status)){
+                    Log::error('Error importing data: Nilai kolom Status tidak valid di baris ' . $this->currentRow);
+                }
+            } $rowNumber++;
         }
     }
 

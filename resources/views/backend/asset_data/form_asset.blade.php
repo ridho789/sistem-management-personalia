@@ -42,6 +42,24 @@
                         </div>
                     </div>
                 </div>
+                <!-- Log Importing Data -->
+                @if($logErrors)
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Error Log</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul>@if(is_array($logErrors))
+                                @foreach($logErrors as $logError)
+                                    <li>{{ $logError }}</li>
+                                @endforeach
+                            @else
+                            {{ $logErrors }}
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Form Asset</h4>

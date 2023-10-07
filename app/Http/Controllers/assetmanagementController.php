@@ -25,12 +25,13 @@ class assetmanagementController extends Controller
 
     public function create()
     {   
+        $logErrors = '';
         $asset = '';
         $company = Company::all();
         $category = Category::all();
         $subcategory = Subcategory::all();
 
-        return view('/backend/asset_data/form_asset', compact('asset', 'company', 'category', 'subcategory'));
+        return view('/backend/asset_data/form_asset', compact('asset', 'company', 'category', 'subcategory', 'logErrors'));
     }
 
     public function store(Request $request)
@@ -152,10 +153,11 @@ class assetmanagementController extends Controller
 
         // mengambil data asset berdasarkan ID
         $asset = Asset::where('id_aset', $id)->first();
+        $logErrors = '';
         $company = Company::all();
         $category = Category::all();
         $subcategory = Subcategory::all();
-        return view('/backend/asset_data/form_asset', compact('asset', 'company', 'category', 'subcategory'));
+        return view('/backend/asset_data/form_asset', compact('asset', 'company', 'category', 'subcategory', 'logErrors'));
     }
 
     public function search(Request $request)

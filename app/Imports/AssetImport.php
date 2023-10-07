@@ -8,17 +8,24 @@ use App\Models\Asset;
 use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Company;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AssetImport implements ToCollection
 {
     /**
     * @param Collection $collection
     */
+
+    private $currentRow = 0; // Inisialisasi nomor baris
+    private $logErrors = [];
+
     public function collection(Collection $collection)
     {   
         $rowNumber = 0;
+        $this->currentRow++;
         foreach ($collection as $row){
-            
+            // baris pertama tidak diproses karena header
             if ($rowNumber === 0) {
                 $rowNumber++;
                 continue;
@@ -69,14 +76,30 @@ class AssetImport implements ToCollection
                 
             } else {
                 if (empty($kategori)){
-                    echo "Baris ke-" . ($rowNumber + 2) . ": Nama Kategori Excel tidak valid: " . $namaKategori;
+                    Log::error('Error importing data: Nilai kolom Category/Kategori tidak valid di baris ' . $this->currentRow);
                 }
 
                 if (empty($perusahaan)){
-                    echo "Baris ke-" . ($rowNumber + 2) . ": Nama Perusahaan Excel tidak valid: " . $namaPerusahaan;
+                    Log::error('Error importing data: Nilai kolom Company/Perusahaan tidak valid di baris ' . $this->currentRow);
                 }
             }
+
             $rowNumber++;
         }
+    }
+
+    public function onError(Throwable $e)
+    {
+        // Catat pesan kesalahan ke log
+        $errorMessage = 'Error importing data: ' . $e->getMessage();
+        Log::error($errorMessage);
+
+        // Tambahkan pesan kesalahan ke dalam array logErrors
+        $this->logErrors[] = $errorMessage;
+    }
+
+    public function getLogErrors()
+    {
+        return $this->logErrors;
     }
 }

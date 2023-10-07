@@ -26,19 +26,7 @@ class importEmployeeexcel extends Controller
             
             try {
                 Excel::import($import, $file);
-                $employee = DB::table('tbl_karyawan')->get();
-                $positions = Position::pluck('nama_jabatan', 'id_jabatan');
-                $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
-                $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
-                $statuses = StatusEmployee::pluck('nama_status', 'id_status');
-                
-                return view('/backend/employee/list_employee', [
-                    'tbl_karyawan' => $employee, 
-                    'positions' => $positions, 
-                    'divisions' => $divisions, 
-                    'companies' => $companies, 
-                    'statuses' => $statuses,
-                ]);
+                return redirect('/list-employee');
                 
             } catch (\Exception $e) {
                 $logErrors = $import->getLogErrors();
