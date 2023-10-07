@@ -26,7 +26,8 @@
                             <form action="{{ url('list-employee-search') }}" method="GET">
                                 @csrf
                                 <div class="input-group">
-                                    <input type="text" name="search" class="form-control" placeholder="Search Name or ID Card" value="{{ Request::get('search') }}">
+                                    <input type="text" name="search" class="form-control" 
+                                    placeholder="Search name or ID card" value="{{ Request::get('search') }}">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary">Search</button>
                                     </span>
@@ -43,6 +44,27 @@
                     <div class="card-body">
                         @if (count($tbl_karyawan) > 0)
                             <div class="table-responsive">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label>Display employee data based on status</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                @foreach ($statuses as $statusId => $statusName)
+                                                    <div class="form-check form-check-inline">
+                                                        <label class="form-check-label">
+                                                            <input type="checkbox" class="form-check-input status-filter" 
+                                                            value="{{ $statusId }}">{{ $statusName }}
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <table class="table table-responsive-sm" id="data-table-employee" class="display" style="width:100%">
                                     <thead>
                                         <tr>
@@ -59,7 +81,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach($tbl_karyawan as $k)
-                                        <tr data-id="{{$k->id_karyawan}}">
+                                        <tr data-id="{{$k->id_karyawan}}" data-status-id="{{ $k->id_status }}">
                                             <th>{{ $loop->iteration }}</th>
                                             <td>{{$k->nama_karyawan}}</td>
                                             <td>{{$k->nik}}</td>
@@ -70,7 +92,9 @@
                                             <td>{{ $companies[$k->id_perusahaan] }}</td>
                                             <td>{{ $statuses[$k->id_status] }}</td>
                                             <td style="text-align:right;">
-                                                <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
+                                                <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" 
+                                                    id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i>
+                                                </a>
                                                 <a href="list-employee-delete/{{$k->id_karyawan}}"><i class="fa fa-trash"> delete </i></a>
                                             </td>
                                         </tr>
@@ -92,4 +116,41 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mengambil elemen tabel
+            var table = document.getElementById('data-table-employee');
+
+            // Mengambil semua baris dalam tabel
+            var rows = table.querySelectorAll('tbody tr');
+
+            // Event handler untuk checkbox status-filter
+            var statusCheckboxes = document.querySelectorAll('.status-filter');
+            statusCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    // Mengumpulkan status yang dicentang
+                    var selectedStatus = [];
+                    statusCheckboxes.forEach(function (checkbox) {
+                        if (checkbox.checked) {
+                            selectedStatus.push(checkbox.value);
+                        }
+                    });
+                    
+                    // Menampilkan atau menyembunyikan baris berdasarkan status yang dipilih
+                    rows.forEach(function (row) {
+                        var statusCell = row.querySelector('td:nth-child(9)');
+                        var statusValue = statusCell.textContent.trim();
+                        var statusId = row.getAttribute('data-status-id');
+
+                        // Memeriksa apakah status dalam baris ada dalam status yang dipilih
+                        var isVisible = selectedStatus.length === 0 || selectedStatus.includes(statusId );
+
+                        // Menampilkan atau menyembunyikan baris sesuai dengan hasil perbandingan
+                        row.style.display = isVisible ? '' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
 @endsection
