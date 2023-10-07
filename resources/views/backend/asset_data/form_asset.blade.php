@@ -19,6 +19,29 @@
         <!-- row -->
         <div class="row">
             <div class="col-lg-12">
+                <div id="button-create-excel" class="mb-3" style="display: block;">
+                    <a href="#" class="btn btn-light" id="button-create-asset-excel">Click to <b>create by Excel</b></a>
+                </div>
+                <div id="form-create-excel" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h4 class="card-title">Import File Excel</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form custom_file_input">
+                            <form action="{{ url('import-excel-asset') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="file" name="file" class="form-control">
+                                    <button class="btn btn-primary ml-1" type="submit">Import</button>
+                                    <button class="btn btn-dark ml-1" type="button" id="close-form-create-excel">Cancel</button>
+                                </div>
+                                @error('file')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Form Asset</h4>
@@ -328,6 +351,32 @@
     </div>
 
     <script>
+        // show/hide form create by excel
+        const toggleFormButton = document.getElementById('button-create-asset-excel');
+        const toggleCloseButton = document.getElementById('button-create-excel')
+        const toggleCloseFormButton = document.getElementById('close-form-create-excel');
+        const myForm = document.getElementById('form-create-excel');
+
+        toggleFormButton.addEventListener('click', function() {
+            if (myForm.style.display === 'none') {
+                myForm.style.display = 'block';
+            }
+
+            if (toggleCloseButton.style.display === 'block') {
+                toggleCloseButton.style.display = 'none';
+            }
+        });
+
+        toggleCloseFormButton.addEventListener('click', function() {
+            if (myForm.style.display === 'block') {
+                myForm.style.display = 'none';
+            }
+
+            if (toggleCloseButton.style.display === 'none') {
+                toggleCloseButton.style.display = 'block';
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Fungsi untuk menampilkan/menyembunyikan kolom Specification dan mengubah persyaratan required
             function toggleSpecificationField() {

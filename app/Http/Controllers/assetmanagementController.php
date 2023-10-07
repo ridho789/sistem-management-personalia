@@ -69,7 +69,7 @@ class assetmanagementController extends Controller
             $spesifikasi = $request->val_spesification;
         }
         
-        DB::table('tbl_aset')->insert([
+        Asset::insert([
             'nama_aset'=> $request->val_name,
             'lokasi'=> $request->val_location,
             'spesifikasi'=> $spesifikasi,
@@ -83,7 +83,7 @@ class assetmanagementController extends Controller
             'id_sub_kategori'=> $id_sub_kategori,
         ]);
 
-        return redirect('/list-asset');;
+        return redirect('/list-asset');
         
     }
 
@@ -128,7 +128,7 @@ class assetmanagementController extends Controller
             $spesifikasi = $request->val_spesification;
         }
         
-        DB::table('tbl_aset')->where('id_aset', $request->id)->update([
+        Asset::where('id_aset', $request->id)->update([
             'nama_aset'=> $request->val_name,
             'lokasi'=> $request->val_location,
             'spesifikasi'=> $spesifikasi,

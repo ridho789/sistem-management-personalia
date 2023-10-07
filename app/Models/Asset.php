@@ -11,6 +11,20 @@ class Asset extends Model
     use HasFactory;
     protected $table = 'tbl_aset';
 
+    protected $fillable = [
+        'nama_aset',
+        'id_kategori',
+        'id_sub_kategori',
+        'spesifikasi',
+        'nopol',
+        'merk',
+        'tahun',
+        'masa_pajak',
+        'masa_plat',
+        'lokasi',
+        'id_perusahaan',
+    ];
+
     public function isExpiring($expirationDate)
     {
         $expiration = Carbon::parse($expirationDate);

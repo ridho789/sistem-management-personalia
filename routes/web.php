@@ -6,10 +6,12 @@ use App\Http\Controllers\positionController;
 use App\Http\Controllers\companyController;
 use App\Http\Controllers\employeestatusController;
 use App\Http\Controllers\employeemanagementController;
-use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\categoryController;
 use App\Http\Controllers\subcategoryController;
 use App\Http\Controllers\assetmanagementController;
+
+use App\Http\Controllers\importEmployeeexcel;
+use App\Http\Controllers\importAssetexcel;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,3 +80,4 @@ Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);
+Route::post('import-excel-asset', [importAssetexcel::class, 'importExcel']);

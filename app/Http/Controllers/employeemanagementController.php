@@ -109,7 +109,7 @@ class employeemanagementController extends Controller
             'val_idcard' => 'min:6|max:6',
         ]);
 
-        DB::table('tbl_karyawan')->where('id_karyawan', $request->id)->update([
+        Employee::where('id_karyawan', $request->id)->update([
             'nama_karyawan' => $request->val_name,
             'nik' => $request->val_nik,
             'tempat_lahir' => $request->val_place_birth,
@@ -143,8 +143,8 @@ class employeemanagementController extends Controller
     {
         $search = $request->input('search');
 
-        $employees = DB::table('tbl_karyawan')
-            ->where('nama_karyawan', 'like', "%$search%")
+        $employees = Employee::
+            where('nama_karyawan', 'like', "%$search%")
             ->orWhere('id_card', 'like', "%$search%")
             ->get();
 
