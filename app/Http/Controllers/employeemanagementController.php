@@ -177,14 +177,34 @@ class employeemanagementController extends Controller
 
     public function print(Request $request)
     {
-        // Mendapatkan dataRow dari permintaan POST
+        // Mendapatkan dataRow & dataSearch dari permintaan POST
         $dataRow = $request->input('dataRow');
+        $dataSearch = $request->input('dataSearch');
 
-        // Membagi dataRow menjadi array id karyawan
-        $employeeIds = explode(',', $dataRow);
+        // cek apakah dataRow ada
+        if ($dataRow){
+            // Membagi dataRow menjadi array id karyawan
+            $employeeIds = explode(',', $dataRow);
+    
+            // Mencari data karyawan berdasarkan id
+            $employees = Employee::whereIn('id_karyawan', $employeeIds)->get();
 
-        // Mencari data karyawan berdasarkan id
-        $employees = Employee::whereIn('id_karyawan', $employeeIds)->get();
+        } else {
+
+            // cek apakah dataSearch ada
+            if ($dataSearch){
+                $employees = Employee::where('nama_karyawan', 'like', "%$dataSearch%")->get();
+
+                // jika tidak ada data hasil seacrh, tampilkan semua
+                if ($employees->count() === 0){
+                    $employees = Employee::all();
+                }
+
+            } else {
+                $employees = Employee::all();
+            }
+        }
+
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');

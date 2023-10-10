@@ -105,7 +105,7 @@
                             <div class="mt-3" id="download-pdf" style="display: block;">
                                 <form action="{{ url('list-employee-print') }}" method="POST" id="pdf-form">
                                     @csrf
-                                    <!-- Menambahkan input tersembunyi untuk dataRow -->
+                                    <input type="hidden" name="dataSearch" id="dataSearchInput">
                                     <input type="hidden" name="dataRow" id="dataRowInput">
                                     <button type="submit" id="button-download-pdf" class="btn btn-rounded btn-primary mt-3">
                                         <span class="btn-icon-left text-primary">
@@ -191,10 +191,21 @@
                 });
             });
 
+            // form download-pdf
             const pdfForm = document.getElementById('pdf-form');
             pdfForm.addEventListener('submit', function (event) {
                 // Menghentikan pengiriman formulir
                 event.preventDefault();
+
+                // Mengambil nilai dari input pencarian
+                var searchInput = document.querySelector('input[name="search"]');
+                if (searchInput){
+                    var searchData = searchInput.value;
+
+                    // Mengatur nilai input tersembunyi dalam formulir PDF
+                    var dataSearchInput = document.getElementById('dataSearchInput');
+                    dataSearchInput.value = searchData;
+                }
 
                 // Mengambil nilai dataRow dan mengatur nilainya pada input tersembunyi
                 var dataRowInput = document.getElementById('dataRowInput');
