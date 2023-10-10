@@ -102,6 +102,19 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="mt-3" id="download-pdf" style="display: block;">
+                                <form action="{{ url('list-employee-print') }}" method="POST" id="pdf-form">
+                                    @csrf
+                                    <!-- Menambahkan input tersembunyi untuk dataRow -->
+                                    <input type="hidden" name="dataRow" id="dataRowInput">
+                                    <button type="submit" id="button-download-pdf" class="btn btn-rounded btn-primary mt-3">
+                                        <span class="btn-icon-left text-primary">
+                                            <i class="fa fa-download color-primary"></i>
+                                        </span>Download PDF
+                                    </button>
+                                </form>
+                            </div>
+
                         @else
                             <div class="mt-3">
                                 <span style="text-align: center;">
@@ -124,6 +137,7 @@
 
             // Mengambil semua baris dalam tabel
             var rows = table.querySelectorAll('tbody tr');
+            var dataRow = [];
 
             // Event handler untuk checkbox status-filter
             var statusCheckboxes = document.querySelectorAll('.status-filter');
@@ -131,12 +145,17 @@
                 checkbox.addEventListener('change', function () {
                     // Mengumpulkan status yang dicentang
                     var selectedStatus = [];
+                    var statusRow = [];
+
                     statusCheckboxes.forEach(function (checkbox) {
                         if (checkbox.checked) {
                             selectedStatus.push(checkbox.value);
                         }
                     });
-                    
+
+                    // Mengosongkan array dataRow
+                    dataRow = [];
+
                     // Menampilkan atau menyembunyikan baris berdasarkan status yang dipilih
                     rows.forEach(function (row) {
                         var statusCell = row.querySelector('td:nth-child(9)');
@@ -144,13 +163,48 @@
                         var statusId = row.getAttribute('data-status-id');
 
                         // Memeriksa apakah status dalam baris ada dalam status yang dipilih
-                        var isVisible = selectedStatus.length === 0 || selectedStatus.includes(statusId );
+                        var isVisible = selectedStatus.length === 0 || selectedStatus.includes(statusId);
+
+                        // Tampung semua data-id dari row yang tampil
+                        if (isVisible) {
+                            dataRow.push(row.getAttribute('data-id'));
+                        }
+
+                        // Tampung semua status row yang tampil
+                        statusRow.push(isVisible);
 
                         // Menampilkan atau menyembunyikan baris sesuai dengan hasil perbandingan
                         row.style.display = isVisible ? '' : 'none';
                     });
+
+                    // hide button download pdf jika tidak ada data yang ditampilkan
+                    const buttonDownloadPDF = document.getElementById('download-pdf');
+                    if (statusRow.includes(true)) {
+                        if (buttonDownloadPDF.style.display === 'none') {
+                            buttonDownloadPDF.style.display = 'block';
+                        }
+                    } else {
+                        if (buttonDownloadPDF.style.display === 'block') {
+                            buttonDownloadPDF.style.display = 'none';
+                        }
+                    }
                 });
             });
+
+            const pdfForm = document.getElementById('pdf-form');
+            pdfForm.addEventListener('submit', function (event) {
+                // Menghentikan pengiriman formulir
+                event.preventDefault();
+
+                // Mengambil nilai dataRow dan mengatur nilainya pada input tersembunyi
+                var dataRowInput = document.getElementById('dataRowInput');
+                dataRowInput.value = dataRow.join(',');
+
+                // Sekarang formulir siap untuk dikirim
+                pdfForm.submit();
+            });
+
         });
+
     </script>
 @endsection

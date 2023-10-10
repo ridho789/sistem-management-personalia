@@ -10,6 +10,7 @@ use App\Models\Position;
 use App\Models\Company;
 use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Crypt;
+use PDF;
 
 class employeemanagementController extends Controller
 {
@@ -172,5 +173,44 @@ class employeemanagementController extends Controller
             'statuses' => $statuses
         ]);
         }
+    }
+
+    public function print(Request $request)
+    {
+        // Mendapatkan dataRow dari permintaan POST
+        $dataRow = $request->input('dataRow');
+
+        // Membagi dataRow menjadi array id karyawan
+        $employeeIds = explode(',', $dataRow);
+
+        // Mencari data karyawan berdasarkan id
+        $employees = Employee::whereIn('id_karyawan', $employeeIds)->get();
+        $positions = Position::pluck('nama_jabatan', 'id_jabatan');
+        $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
+        $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
+        $statuses = StatusEmployee::pluck('nama_status', 'id_status');
+
+        foreach ($employees as $karyawan) {
+            $data[] = [
+                'Nama Karyawan' => $karyawan->nama_karyawan,
+                'NIK' => $karyawan->nik,
+                'Phone' => $karyawan->no_telp,
+                'ID Card' => $karyawan->id_card,
+                'Position' => $positions[$karyawan->id_jabatan],
+                'Division' => $divisions[$karyawan->id_divisi],
+                'Company' => $companies[$karyawan->id_perusahaan],
+                'Status' => $statuses[$karyawan->id_status],
+            ];
+        }
+
+        $pdf = PDF::loadView('backend.employee.pdf_employee', [
+            'tbl_karyawan' => $employees, 
+            'positions' => $positions, 
+            'divisions' => $divisions, 
+            'companies' => $companies, 
+            'statuses' => $statuses
+        ]);
+
+        return $pdf->download('Data Employee.pdf');
     }
 }

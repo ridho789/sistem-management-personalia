@@ -66,6 +66,7 @@ Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::
 Route::get('form-employee-edit/{id_karyawan}', [employeemanagementController::class, 'edit']);
 Route::post('form-employee-update', [employeemanagementController::class, 'update']);
 Route::get('list-employee-search', [employeemanagementController::class, 'search']);
+Route::post('list-employee-print', [employeemanagementController::class, 'print']);
 
 // management - asset
 Route::get('/list-asset', [assetmanagementController::class, 'index']);
