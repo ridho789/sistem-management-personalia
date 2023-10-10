@@ -7,9 +7,7 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use App\Models\Company;
 use App\Models\Asset;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx\Rels;
 
 class assetmanagementController extends Controller
 {
@@ -54,7 +52,7 @@ class assetmanagementController extends Controller
 
         // Menentukan nilai spesifikasi berdasarkan kategori yang dipilih
         if ($kategori && $nama_kategori == 'kendaraan') {
-            $spesifikasi = '';
+            $spesifikasi = null;
             $nopol = $request->val_nopol;
             $merk = $request->val_merk;
             $tahun = $request->val_tahun;
@@ -62,9 +60,9 @@ class assetmanagementController extends Controller
             $masa_plat = $request->val_masa_plat;
 
         } else {
-            $nopol = '';
-            $merk = '';
-            $tahun = '';
+            $nopol = null;
+            $merk = null;
+            $tahun = null;
             $masa_pajak = null;
             $masa_plat = null;
             $spesifikasi = $request->val_spesification;
@@ -113,7 +111,7 @@ class assetmanagementController extends Controller
 
         // Menentukan nilai spesifikasi berdasarkan kategori yang dipilih
         if ($kategori && $nama_kategori == 'kendaraan') {
-            $spesifikasi = '';
+            $spesifikasi = null;
             $nopol = $request->val_nopol;
             $merk = $request->val_merk;
             $tahun = $request->val_tahun;
@@ -121,9 +119,9 @@ class assetmanagementController extends Controller
             $masa_plat = $request->val_masa_plat;
 
         } else {
-            $nopol = '';
-            $merk = '';
-            $tahun = '';
+            $nopol = null;
+            $merk = null;
+            $tahun = null;
             $masa_pajak = null;
             $masa_plat = null;
             $spesifikasi = $request->val_spesification;
