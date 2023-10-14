@@ -5,10 +5,13 @@ use App\Http\Controllers\divisionController;
 use App\Http\Controllers\positionController;
 use App\Http\Controllers\companyController;
 use App\Http\Controllers\employeestatusController;
-use App\Http\Controllers\employeemanagementController;
 use App\Http\Controllers\categoryController;
 use App\Http\Controllers\subcategoryController;
+use App\Http\Controllers\leavetypeController;
+
 use App\Http\Controllers\assetmanagementController;
+use App\Http\Controllers\employeemanagementController;
+use App\Http\Controllers\attendancemanagementController;
 
 use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\importAssetexcel;
@@ -58,6 +61,11 @@ Route::post('sub-category-add', [subcategoryController::class, 'store']);
 Route::get('sub-category-delete/{id_sub_kategori}', [subcategoryController::class, 'delete']);
 Route::post('sub-category-update', [subcategoryController::class, 'update']);
 
+Route::get('/type-leave', [leavetypeController::class, 'index']);
+Route::post('type-leave-add', [leavetypeController::class, 'store']);
+Route::get('type-leave-delete/{id_tipe_cuti}', [leavetypeController::class, 'delete']);
+Route::post('type-leave-update', [leavetypeController::class, 'update']);
+
 // management - employee
 Route::get('/list-employee', [employeemanagementController::class, 'index']);
 Route::get('/form-employee', [employeemanagementController::class, 'create']);
@@ -78,6 +86,13 @@ Route::post('form-asset-update', [assetmanagementController::class, 'update']);
 Route::get('list-asset-search', [assetmanagementController::class, 'search']);
 // mengambil data sub category berdasarkan category yang dipilih
 Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class, 'getSubCategories']);
+
+// management - attendance
+
+// attendance - leave
+Route::get('/leave-request', [attendancemanagementController::class, 'create']);
+Route::get('/leaves-summary', [attendancemanagementController::class, 'index']);
+Route::post('leave-request-add', [attendancemanagementController::class, 'store']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);

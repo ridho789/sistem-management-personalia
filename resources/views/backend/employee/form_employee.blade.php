@@ -159,7 +159,7 @@
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                                 @if($employee->foto)
-                                                    <img src="{{ asset($employee->foto) }}" alt="Employee Photo" width="100">
+                                                    <img src="{{ asset('storage/'. $employee->foto) }}" alt="Employee Photo" width="100">
                                                 @else
                                                     <p>No photo available.</p>
                                                 @endif

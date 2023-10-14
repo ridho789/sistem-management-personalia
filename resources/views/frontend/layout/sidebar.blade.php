@@ -24,6 +24,7 @@
                     <li><a href="/devision">Division</a></li>
                     <li><a href="/position">Position</a></li>
                     <li><a href="/employee-status">Employee Status</a></li>
+                    <li><a href="/type-leave">Type Leave</a></li>
                 </ul>
             </li> 
 
@@ -72,6 +73,27 @@
                     </ul>
                 </li>
             @endif
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-time-3"></i><span class="nav-text">Attendance</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="#">List Attendance</a></li>
+                    <li><a href="#">Form Attendance</a></li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
+                        <ul aria-expanded="false">
+                            <li><a href="/leave-request">Leave Request</a></li>
+                            <li><a href="/leaves-summary">Leaves Summary</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-payment"></i><span class="nav-text">Payroll</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
