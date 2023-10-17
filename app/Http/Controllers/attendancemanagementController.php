@@ -8,6 +8,8 @@ use App\Models\Position;
 use App\Models\Divisi;
 use App\Models\DataLeave;
 use App\Models\TypeLeave;
+use Illuminate\Support\Facades\Crypt;
+use PDF;
 
 class attendancemanagementController extends Controller
 {
@@ -18,7 +20,7 @@ class attendancemanagementController extends Controller
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
-        return view('/backend/attendance/leave/leaves_summary', [
+        return view('/backend/leave/leaves_summary', [
             'dataleave' => $dataleave,
             'employee' => $employee,
             'idcard' => $idcard,
@@ -27,11 +29,13 @@ class attendancemanagementController extends Controller
     }
 
     public function create(){
+        $dataleave = '';
         $employee = Employee::all();
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
-        return view('/backend/attendance/leave/leave_request', [
+        return view('/backend/leave/leave_request', [
+            'dataleave' => $dataleave,
             'employee' => $employee,
             'position' => $position,
             'division' => $division,
@@ -58,7 +62,100 @@ class attendancemanagementController extends Controller
                 'selesai_cuti'=> $request->datetimeend,
                 'durasi_cuti'=> $request->duration,
                 'file'=> $filePath,
-                'status_cuti' => 'To Submit'
+                'status_cuti' => 'To Approved',
+                'file_approved' => null
+            ]);
+        }
+
+        return redirect('/leaves-summary');
+    }
+
+    public function edit($id){
+        // Dekripsi ID
+        $id = Crypt::decrypt($id);
+
+        $dataleave = DataLeave::where('id_data_cuti', $id)->first();
+        $employee = Employee::all();
+        $position = Position::pluck('nama_jabatan', 'id_jabatan');
+        $division = Divisi::pluck('nama_divisi', 'id_divisi');
+        $typeLeave = TypeLeave::all();
+        return view('/backend/leave/leave_request', [
+            'dataleave' => $dataleave,
+            'employee' => $employee,
+            'position' => $position,
+            'division' => $division,
+            'typeLeave' => $typeLeave
+        ]);
+    }
+
+    public function update(Request $request){
+        $request->validate([
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        DataLeave::where('id_data_cuti', $request->id)->update([
+            'id_karyawan'=> $request->id_karyawan,
+            'id_penangung_jawab'=> $request->id_penangung_jawab,
+            'deskripsi'=> $request->deskripsi,
+            'id_tipe_cuti'=> $request->id_tipe_cuti,
+            'mulai_cuti'=> $request->datetimestart,
+            'selesai_cuti'=> $request->datetimeend,
+            'durasi_cuti'=> $request->duration,
+        ]);
+
+        $file = $request->file('file');
+        if ($file){
+            $fileName = $file->getClientOriginalName();
+            $filePath = $file->storeAs('images/leave', $fileName);
+
+            DataLeave::where('id_data_cuti', $request->id)->update([
+                'file'=> $filePath,
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function print(Request $request){
+        $dataleave = DataLeave::where('id_data_cuti', $request->id_data_cuti)->first();
+        $employee = Employee::where('id_karyawan', $dataleave['id_karyawan'])->first();
+        $responsible = Employee::where('id_karyawan', $dataleave['id_penangung_jawab'])->first();
+        $position = Position::pluck('nama_jabatan', 'id_jabatan');
+        $division = Divisi::pluck('nama_divisi', 'id_divisi');
+        $typeLeave = TypeLeave::where('id_tipe_cuti', $dataleave['id_tipe_cuti'])->first();
+
+        // Dapatkan nama karyawan & ID card & typeleave
+        $employeeName = $employee->nama_karyawan;
+        $employeeIDcard = $employee->id_card;
+        $typeLeaveName = $typeLeave->nama_tipe_cuti;
+
+        $pdf = PDF::loadView('backend.leave.pdf_leave_request', [
+            'dataleave' => $dataleave,
+            'employee' => $employee,
+            'responsible' => $responsible,
+            'position' => $position,
+            'division' => $division,
+            'typeLeave' => $typeLeave
+        ]);
+
+        $filename = 'Leave Request - ' . $employeeName . '_' . $employeeIDcard . ' (' . $typeLeaveName . ')' . '.pdf';
+        return $pdf->download($filename);
+
+    }
+
+    public function upload(Request $request){
+        $request->validate([
+            'file_approved' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $file_upload = $request->file('file_approved');
+        if ($file_upload){
+            $fileName = $file_upload->getClientOriginalName();
+            $filePath = $file_upload->storeAs('images/approved', $fileName);
+
+            DataLeave::where('id_data_cuti', $request->id_data_cuti)->update([
+                'file_approved'=> $filePath,
+                'status_cuti' => 'Approved'
             ]);
         }
 

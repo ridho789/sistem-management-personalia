@@ -38,10 +38,10 @@
                     <li><a href="/form-employee">Form Employee</a></li>
                 </ul>
             </li>
-            @php
+            <!-- @php
                 $dataCategory = DB::table('tbl_kategori')->get();
             @endphp 
-            @if(isset($dataCategory))
+            @if(isset($dataCategory)) -->
                 <li>
                     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                         <i class="icon icon-chart-bar-33"></i><span class="nav-text">Asset</span>
@@ -75,18 +75,20 @@
             @endif
             <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-time-3"></i><span class="nav-text">Attendance</span>
+                    <i class="icon icon-time"></i><span class="nav-text">Attendance</span>
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="#">List Attendance</a></li>
                     <li><a href="#">Form Attendance</a></li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">Leave</a>
-                        <ul aria-expanded="false">
-                            <li><a href="/leave-request">Leave Request</a></li>
-                            <li><a href="/leaves-summary">Leaves Summary</a></li>
-                        </ul>
-                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon icon-attach-87"></i><span class="nav-text">Leave</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="/leave-request">Leave Request</a></li>
+                    <li><a href="/leaves-summary">Leaves Summary</a></li>
                 </ul>
             </li>
             <li>

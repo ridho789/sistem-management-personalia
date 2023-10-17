@@ -12,8 +12,6 @@
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Management</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Attendance</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Leave</a></li>
                     <li class="breadcrumb-item active"><a href="javascript:void(0)">Leaves Summary</a></li>
                 </ol>
             </div>
@@ -59,9 +57,15 @@
                                                 <td>{{ $dl->mulai_cuti }}</td>
                                                 <td>{{ $dl->durasi_cuti }}</td>
                                                 <td>{{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}</td>
-                                                <td>{{ $dl->status_cuti }}</td>
+                                                @if($dl->status_cuti == 'To Submit')
+                                                    <td><span class="badge badge-warning">{{ $dl->status_cuti }}</span></td>
+                                                @elseif($dl->status_cuti == 'To Approved')
+                                                    <td><span class="badge badge-secondary">{{ $dl->status_cuti }}</span></td>
+                                                @elseif($dl->status_cuti == 'Approved')
+                                                    <td><span class="badge badge-primary">{{ $dl->status_cuti }}</span></td>
+                                                @endif
                                                 <td>
-                                                    <a href="list-employee-delete" class="btn btn-secondary">
+                                                    <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dl->id_data_cuti)]) }}" class="btn btn-dark btn-sm">
                                                         <i class="icon icon-edit-72"> </i>
                                                     </a>
                                                 </td>

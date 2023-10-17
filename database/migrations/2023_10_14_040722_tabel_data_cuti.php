@@ -18,8 +18,9 @@ class TabelDataCuti extends Migration
             $table->string('deskripsi');
             $table->dateTime('mulai_cuti');
             $table->dateTime('selesai_cuti');
-            $table->bigInteger('durasi_cuti', 3)->autoIncrement(false);
+            $table->string('durasi_cuti');
             $table->string('file');
+            $table->string('file_approved')->nullable();
             $table->string('status_cuti');
             $table->timestamps();
         });
