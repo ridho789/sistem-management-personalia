@@ -68,7 +68,8 @@
                         <div class="form-validation-employee">
                             <!-- form edit employee -->
                             @if($employee)
-                            <form class="form-valide-employee" action="{{ url('form-employee-update') }}" method="POST" enctype="multipart/form-data">
+                            <form class="form-valide-employee" action="{{ url('form-employee-update') }}" 
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <!-- Tambahkan input tersembunyi untuk ID karyawan yang akan diedit -->
                                 <input type="hidden" name="id" value="{{ $employee->id_karyawan }}">
@@ -80,7 +81,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
-                                                id="val_name" name="val_name" placeholder="Enter a name.." value="{{ old('val_name', $employee->nama_karyawan) }}" required>
+                                                id="val_name" name="val_name" placeholder="Enter a name.." 
+                                                value="{{ old('val_name', $employee->nama_karyawan) }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -89,7 +91,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_nik') is-invalid @enderror" 
-                                                id="val_nik" name="val_nik" placeholder="Enter a NIK.." value="{{ old('val_nik', $employee->nik) }}" required>
+                                                id="val_nik" name="val_nik" placeholder="Enter a NIK.." 
+                                                value="{{ old('val_nik', $employee->nik) }}" required>
                                                 @error('val_nik')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -101,7 +104,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
-                                                id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." value="{{ old('val_place_birth', $employee->tempat_lahir) }}" required>
+                                                id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." 
+                                                value="{{ old('val_place_birth', $employee->tempat_lahir) }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -110,7 +114,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="date" class="form-control" 
-                                                id="val_date_birth" min="1980-01-01" name="val_date_birth" value="{{ old('val_date_birth', $employee->tanggal_lahir) }}" required>
+                                                id="val_date_birth" min="1980-01-01" name="val_date_birth" 
+                                                value="{{ old('val_date_birth', $employee->tanggal_lahir) }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -120,8 +125,12 @@
                                             <div class="col-lg-6">
                                                 <select class="form-control" id="val_gender" name="val_gender" required>
                                                     <option value="">Please select</option>
-                                                    <option value="male" {{ old('val_gender', $employee->jenis_kelamin) == 'male' ? 'selected' : '' }}>Male</option>
-                                                    <option value="female" {{ old('val_gender', $employee->jenis_kelamin) == 'female' ? 'selected' : '' }}>Female</option>
+                                                    <option value="male" {{ old('val_gender', $employee->
+                                                        jenis_kelamin) == 'male' ? 'selected' : '' }}>Male
+                                                    </option>
+                                                    <option value="female" {{ old('val_gender', $employee->
+                                                        jenis_kelamin) == 'female' ? 'selected' : '' }}>Female
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -133,7 +142,8 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">+62</div>
                                                     <input type="text" class="form-control" 
-                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" value="{{ old('val_phone', $employee->no_telp) }}" required>
+                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" 
+                                                    value="{{ old('val_phone', $employee->no_telp) }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +153,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <textarea class="form-control" id="val_address" name="val_address" rows="5" 
-                                                placeholder="Enter a address.." required>{{ old('val_address', $employee->alamat) }}</textarea>
+                                                    placeholder="Enter a address.." required>{{ old('val_address', $employee->alamat) }}
+                                                </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +184,9 @@
                                                 <select class="form-control" id="val_position" name="id_jabatan" required>
                                                     <option value="">Select a position...</option>
                                                     @foreach ($position as $p)
-                                                        <option value="{{ $p->id_jabatan }}" {{ old('id_jabatan', $employee->id_jabatan) == $p->id_jabatan ? 'selected' : '' }}>{{ $p->nama_jabatan }}</option>
+                                                        <option value="{{ $p->id_jabatan }}" {{ old('id_jabatan', $employee->
+                                                            id_jabatan) == $p->id_jabatan ? 'selected' : '' }}>{{ $p->nama_jabatan }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -186,7 +199,9 @@
                                                 <select class="form-control" id="val_division" name="id_divisi" required>
                                                     <option value="">Select a division...</option>
                                                     @foreach ($division as $d)
-                                                        <option value="{{ $d->id_divisi }}" {{ old('id_divisi', $employee->id_divisi) == $d->id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}</option>
+                                                        <option value="{{ $d->id_divisi }}" {{ old('id_divisi', $employee->id_divisi) == $d->
+                                                            id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -199,7 +214,9 @@
                                                 <select class="form-control" id="val_company" name="id_perusahaan" required>
                                                     <option value="">Select a company...</option>
                                                     @foreach ($company as $c)
-                                                        <option value="{{ $c->id_perusahaan }}" {{ old('id_perusahaan', $employee->id_perusahaan) == $c->id_perusahaan ? 'selected' : '' }}>{{ $c->nama_perusahaan }}</option>
+                                                        <option value="{{ $c->id_perusahaan }}" {{ old('id_perusahaan', $employee->id_perusahaan) == $c->
+                                                            id_perusahaan ? 'selected' : '' }}>{{ $c->nama_perusahaan }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -212,18 +229,54 @@
                                                 <select class="form-control" id="val_status" name="id_status" required>
                                                     <option value="">Select a status...</option>
                                                     @foreach ($statusEmployee as $s)
-                                                        <option value="{{ $s->id_status }}" {{ old('id_status', $employee->id_status) == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}</option>
+                                                        <option value="{{ $s->id_status }}" data-status="{{ $s->nama_status }}" 
+                                                            {{ old('id_status', $employee->id_status) == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="mb-4" id="contract_status" style="display: none;">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Term Contract</label>
+                                                    <input type="text" class="form-control" 
+                                                    id="val_term_contract" name="val_term_contract" placeholder="Enter a term contract.." 
+                                                    value="{{ old('val_term_contract', $employee->lama_kontrak) }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Start of Contract Period</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_start_contract" name="val_start_contract" 
+                                                    value="{{ old('val_start_contract', $employee->awal_masa_kontrak) }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>End of Contract Period</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_end_contract" name="val_end_contract" 
+                                                    value="{{ old('val_end_contract', $employee->akhir_masa_kontrak) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val_idcard">ID Card
                                                 <span class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_idcard') is-invalid @enderror" 
-                                                id="val_idcard" name="val_idcard" placeholder="Enter a ID card.." value="{{ old('val_idcard', $employee->id_card) }}" required>
+                                                id="val_idcard" name="val_idcard" placeholder="Enter a ID card.." 
+                                                value="{{ old('val_idcard', $employee->id_card) }}" required>
                                                 @error('val_idcard')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -239,7 +292,8 @@
                             </form>
                             @else
                             <!-- form create new employee -->
-                            <form class="form-valide-employee" action="{{ url('form-employee-add') }}" method="POST" enctype="multipart/form-data">
+                            <form class="form-valide-employee" action="{{ url('form-employee-add') }}" 
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-xl-6">
@@ -249,7 +303,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
-                                                id="val_name" name="val_name" placeholder="Enter a name.." value="{{ old('val_name') }}" required>
+                                                id="val_name" name="val_name" placeholder="Enter a name.." 
+                                                value="{{ old('val_name') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -258,7 +313,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_nik') is-invalid @enderror" 
-                                                id="val_nik" name="val_nik" placeholder="Enter a NIK.." value="{{ old('val_nik') }}" required>
+                                                id="val_nik" name="val_nik" placeholder="Enter a NIK.." 
+                                                value="{{ old('val_nik') }}" required>
                                                 @error('val_nik')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -270,7 +326,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
-                                                id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." value="{{ old('val_place_birth') }}" required>
+                                                id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." 
+                                                value="{{ old('val_place_birth') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -279,7 +336,8 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="date" class="form-control" 
-                                                id="val_date_birth" min="1980-01-01" name="val_date_birth" value="{{ old('val_date_birth') }}" required>
+                                                id="val_date_birth" min="1980-01-01" name="val_date_birth" 
+                                                value="{{ old('val_date_birth') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -302,7 +360,8 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">+62</div>
                                                     <input type="text" class="form-control" 
-                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" value="{{ old('val_phone') }}" required>
+                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" 
+                                                    value="{{ old('val_phone') }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,7 +396,9 @@
                                                 <select class="form-control" id="val_position" name="id_jabatan" required>
                                                     <option value="">Select a position...</option>
                                                     @foreach ($position as $p)
-                                                        <option value="{{ $p->id_jabatan }}" {{ old('id_jabatan') == $p->id_jabatan ? 'selected' : '' }}>{{ $p->nama_jabatan }}</option>
+                                                        <option value="{{ $p->id_jabatan }}" 
+                                                            {{ old('id_jabatan') == $p->id_jabatan ? 'selected' : '' }}>{{ $p->nama_jabatan }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -350,7 +411,9 @@
                                                 <select class="form-control" id="val_division" name="id_divisi" required>
                                                     <option value="">Select a division...</option>
                                                     @foreach ($division as $d)
-                                                        <option value="{{ $d->id_divisi }}" {{ old('id_divisi') == $d->id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}</option>
+                                                        <option value="{{ $d->id_divisi }}" 
+                                                            {{ old('id_divisi') == $d->id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -363,7 +426,9 @@
                                                 <select class="form-control" id="val_company" name="id_perusahaan" required>
                                                     <option value="">Select a company...</option>
                                                     @foreach ($company as $c)
-                                                        <option value="{{ $c->id_perusahaan }}" {{ old('id_perusahaan') == $c->id_perusahaan ? 'selected' : '' }}>{{ $c->nama_perusahaan }}</option>
+                                                        <option value="{{ $c->id_perusahaan }}" 
+                                                            {{ old('id_perusahaan') == $c->id_perusahaan ? 'selected' : '' }}>{{ $c->nama_perusahaan }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -376,11 +441,44 @@
                                                 <select class="form-control" id="val_status" name="id_status" required>
                                                     <option value="">Select a status...</option>
                                                     @foreach ($statusEmployee as $s)
-                                                        <option value="{{ $s->id_status }}" {{ old('id_status') == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}</option>
+                                                        <option value="{{ $s->id_status }}" data-status="{{ $s->nama_status }}" 
+                                                            {{ old('id_status') == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div class="mb-4" id="contract_status" style="display: none;">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Term Contract</label>
+                                                    <input type="text" class="form-control" 
+                                                    id="val_term_contract" name="val_term_contract" placeholder="Enter a term contract.." 
+                                                    value="{{ old('val_term_contract') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Start of Contract Period</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_start_contract" name="val_start_contract" value="{{ old('val_start_contract') }}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>End of Contract Period</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_end_contract" name="val_end_contract" value="{{ old('val_end_contract') }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val_idcard">ID Card
                                                 <span class="text-danger">*</span>
@@ -411,50 +509,50 @@
 
     <script>
         // API Indonesian Identification Card (KTP)
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('val_nik').addEventListener('blur', function () {
-                // Ambil NIK yang dimasukkan oleh pengguna
-                var nik = document.getElementById('val_nik').value;
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     document.getElementById('val_nik').addEventListener('blur', function () {
+        //         // Ambil NIK yang dimasukkan oleh pengguna
+        //         var nik = document.getElementById('val_nik').value;
 
-                // Kirim permintaan ke API KTP
-                fetch('https://indonesian-identification-card-ktp.p.rapidapi.com/api/check?nik=' + nik, {
-                    method: 'GET',
-                    headers: {
-                        'X-RapidAPI-Host': 'indonesian-identification-card-ktp.p.rapidapi.com',
-                        'X-RapidAPI-Key': 'bb98f2613fmsh4953f916c3d0c17p1e4126jsn872e2cabdbf7',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Isi data formulir secara otomatis dengan data yang diterima dari API
-                    getData = data['results']['parse_data']
+        //         // Kirim permintaan ke API KTP
+        //         fetch('https://indonesian-identification-card-ktp.p.rapidapi.com/api/check?nik=' + nik, {
+        //             method: 'GET',
+        //             headers: {
+        //                 'X-RapidAPI-Host': 'indonesian-identification-card-ktp.p.rapidapi.com',
+        //                 'X-RapidAPI-Key': 'bb98f2613fmsh4953f916c3d0c17p1e4126jsn872e2cabdbf7',
+        //             },
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             // Isi data formulir secara otomatis dengan data yang diterima dari API
+        //             getData = data['results']['parse_data']
 
-                    if (getData){
-                        // format tanggal lahir
-                        var dateOfBirth1 = getData['tanggal_lahir'];
-                        var dateParts = dateOfBirth1.split('/')
-                        var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+        //             if (getData){
+        //                 // format tanggal lahir
+        //                 var dateOfBirth1 = getData['tanggal_lahir'];
+        //                 var dateParts = dateOfBirth1.split('/')
+        //                 var formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
     
-                        // gender
-                        var gender = getData['jenis_kelamin']
-                        var jns_kelamin = ''
+        //                 // gender
+        //                 var gender = getData['jenis_kelamin']
+        //                 var jns_kelamin = ''
     
-                        if(gender == 'LAKI-LAKI'){
-                            jns_kelamin = 'male'
-                        }else{
-                            jns_kelamin = 'female'
-                        }
+        //                 if(gender == 'LAKI-LAKI'){
+        //                     jns_kelamin = 'male'
+        //                 }else{
+        //                     jns_kelamin = 'female'
+        //                 }
     
-                        document.getElementById('val_date_birth').value = formattedDate;
-                        document.getElementById('val_gender').value = jns_kelamin;
-                    }
+        //                 document.getElementById('val_date_birth').value = formattedDate;
+        //                 document.getElementById('val_gender').value = jns_kelamin;
+        //             }
                     
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-        });
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //         });
+        //     });
+        // });
 
         var divisionSelect = document.getElementById("val_division");
         divisionSelect.addEventListener("change", function() {
@@ -464,6 +562,33 @@
                 selectedDivision = '0'+ selectedDivision
             }
             $('#val_idcard').val(selectedDivision);
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // show-hide element term contract, start contract, and end contract
+            const valStatus = document.getElementById('val_status');
+            const contractStatus = document.getElementById('contract_status');
+
+            function toggleContractStatus() {
+                const selectedStatus = valStatus.value;
+                const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"]`);
+
+                if (selectedStatus) {
+                    const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
+
+                    // Show or hide contractStatus based on the selected status
+                    if (selectedNameStatus === 'kontrak') {
+                        contractStatus.style.display = 'block';
+                    } else {
+                        contractStatus.style.display = 'none';
+                    }
+                }
+            }
+
+            valStatus.addEventListener('change', toggleContractStatus);
+
+            // Set initial state based on the value of val_status on page load
+            toggleContractStatus();
         });
 
         // show/hide form create by excel

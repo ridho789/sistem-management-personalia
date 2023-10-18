@@ -55,22 +55,38 @@ class employeemanagementController extends Controller
         if ($photo){
             $photoName = $photo->getClientOriginalName();
             $photoPath = $photo->storeAs('images', $photoName);
+
+            $dataStatus = StatusEmployee::where('id_status', $request->id_status)->first();
+            $namaStatus = strtolower($dataStatus->nama_status);
+
+            $employeeData = [
+                'nama_karyawan' => $request->val_name,
+                'nik' => $request->val_nik,
+                'tempat_lahir' => $request->val_place_birth,
+                'tanggal_lahir' => $request->val_date_birth,
+                'jenis_kelamin' => $request->val_gender,
+                'no_telp' => $request->val_phone,
+                'alamat' => $request->val_address,
+                'foto' => $photoPath,
+                'id_card' => $request->val_idcard,
+                'id_jabatan' => $request->id_jabatan,
+                'id_divisi' => $request->id_divisi,
+                'id_perusahaan' => $request->id_perusahaan,
+                'id_status' => $request->id_status,
+            ];
             
-            Employee::insert([
-                'nama_karyawan'=> $request->val_name,
-                'nik'=> $request->val_nik,
-                'tempat_lahir'=> $request->val_place_birth,
-                'tanggal_lahir'=> $request->val_date_birth,
-                'jenis_kelamin'=> $request->val_gender,
-                'no_telp'=> $request->val_phone,
-                'alamat'=> $request->val_address,
-                'foto'=> $photoPath,
-                'id_card'=> $request->val_idcard,
-                'id_jabatan'=> $request->id_jabatan,
-                'id_divisi'=> $request->id_divisi,
-                'id_perusahaan'=> $request->id_perusahaan,
-                'id_status'=> $request->id_status,
-            ]);
+            if ($dataStatus && $namaStatus == 'kontrak') {
+                $employeeData['lama_kontrak'] = $request->val_term_contract;
+                $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
+                $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;
+
+            } else {
+                $employeeData['lama_kontrak'] = null;
+                $employeeData['awal_masa_kontrak'] = null;
+                $employeeData['akhir_masa_kontrak'] = null;
+            }
+            
+            Employee::insert($employeeData);
         }
 
         return redirect('/list-employee');
@@ -109,7 +125,7 @@ class employeemanagementController extends Controller
             'val_idcard' => 'min:6|max:6',
         ]);
 
-        Employee::where('id_karyawan', $request->id)->update([
+        $employeeData = [
             'nama_karyawan' => $request->val_name,
             'nik' => $request->val_nik,
             'tempat_lahir' => $request->val_place_birth,
@@ -122,19 +138,28 @@ class employeemanagementController extends Controller
             'id_perusahaan' => $request->id_perusahaan,
             'id_status' => $request->id_status,
             'id_card' => $request->val_idcard,
-        ]);
-
+            'lama_kontrak' => null,
+            'awal_masa_kontrak' => null,
+            'akhir_masa_kontrak' => null
+        ];
+        
         $photo = $request->file('val_photo');
-        if ($photo)
-        {
+        if ($photo) {
             $photoName = $photo->getClientOriginalName();
             $photoPath = $photo->storeAs('images', $photoName);
-            $newPhoto = $photoPath;
-
-           Employee::where('id_karyawan', $request->id)->update([
-                'foto' => $newPhoto,
-            ]);
+            $employeeData['foto'] = $photoPath;
         }
+        
+        $dataStatus = StatusEmployee::where('id_status', $request->id_status)->first();
+        $namaStatus = strtolower($dataStatus->nama_status);
+        
+        if ($dataStatus && $namaStatus == 'kontrak') {
+            $employeeData['lama_kontrak'] = $request->val_term_contract;
+            $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
+            $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;
+        }
+        
+        Employee::where('id_karyawan', $request->id)->update($employeeData);
 
         return redirect('/list-employee');
     }

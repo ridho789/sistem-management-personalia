@@ -22,6 +22,9 @@ class TableKaryawan extends Migration
             $table->string('jenis_kelamin')->notNull();
             $table->bigInteger('no_telp', 15)->notNullable()->autoIncrement(false);
             $table->string('alamat')->notNull();
+            $table->string('lama_kontrak')->nullable();
+            $table->date('awal_masa_kontrak')->nullable();
+            $table->date('akhir_masa_kontrak')->nullable();
             $table->string('foto')->notNull();
             $table->bigInteger('id_card', 10)->notNullable()->autoIncrement(false);
             $table->timestamps();

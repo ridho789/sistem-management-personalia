@@ -8,6 +8,7 @@ use App\Models\Position;
 use App\Models\Divisi;
 use App\Models\DataLeave;
 use App\Models\TypeLeave;
+use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Crypt;
 use PDF;
 
@@ -30,7 +31,9 @@ class attendancemanagementController extends Controller
 
     public function create(){
         $dataleave = '';
-        $employee = Employee::all();
+        // filter hanya karyawan status kontrak
+        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('kontrak')")->value('id_status');
+        $employee = Employee::where('id_status', $statusEmployee)->get();
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
@@ -158,7 +161,7 @@ class attendancemanagementController extends Controller
                 'status_cuti' => 'Approved'
             ]);
         }
-
+ 
         return redirect('/leaves-summary');
     }
 }
