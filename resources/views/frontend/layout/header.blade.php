@@ -7,14 +7,14 @@
             <div class="collapse navbar-collapse justify-content-between">
                 <div class="header-left">
                     <div class="search_bar dropdown">
-                        <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+                        <!-- <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
                             <i class="mdi mdi-magnify"></i>
                         </span>
                         <div class="dropdown-menu p-0 m-0">
                             <form>
                                 <input class="form-control" type="search" placeholder="Search" aria-label="Search">
                             </form>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 

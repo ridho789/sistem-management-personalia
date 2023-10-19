@@ -27,9 +27,9 @@
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" 
                                     placeholder="Search name or polnum" value="{{ Request::get('search') }}">
-                                    <span class="input-group-btn">
+                                    <!-- <span class="input-group-btn">
                                         <button type="submit" class="btn btn-primary">Search</button>
-                                    </span>
+                                    </span> -->
                                 </div>
                             </form>
                         @endif
