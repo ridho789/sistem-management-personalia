@@ -199,7 +199,8 @@
                                                 <select class="form-control" id="val_division" name="id_divisi" required>
                                                     <option value="">Select a division...</option>
                                                     @foreach ($division as $d)
-                                                        <option value="{{ $d->id_divisi }}" {{ old('id_divisi', $employee->id_divisi) == $d->
+                                                        <option value="{{ $d->id_divisi }}" data-code-division="{{ $d->kode_divisi }}" 
+                                                            {{ old('id_divisi', $employee->id_divisi) == $d->
                                                             id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}
                                                         </option>
                                                     @endforeach
@@ -230,10 +231,23 @@
                                                     <option value="">Select a status...</option>
                                                     @foreach ($statusEmployee as $s)
                                                         <option value="{{ $s->id_status }}" data-status="{{ $s->nama_status }}" 
+                                                            data-code-status="{{ $s->kode_status }}" 
                                                             {{ old('id_status', $employee->id_status) == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4" id="start_joining" style="display: none;">
+                                            <div class="form-group row">
+                                                 <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Start Joining</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_start_joining" name="val_start_joining" 
+                                                    value="{{ old('val_start_joining', $employee->awal_bergabung) }}">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -411,7 +425,7 @@
                                                 <select class="form-control" id="val_division" name="id_divisi" required>
                                                     <option value="">Select a division...</option>
                                                     @foreach ($division as $d)
-                                                        <option value="{{ $d->id_divisi }}" 
+                                                        <option value="{{ $d->id_divisi }}" data-code-division="{{ $d->kode_divisi }}"
                                                             {{ old('id_divisi') == $d->id_divisi ? 'selected' : '' }}>{{ $d->nama_divisi }}
                                                         </option>
                                                     @endforeach
@@ -442,10 +456,22 @@
                                                     <option value="">Select a status...</option>
                                                     @foreach ($statusEmployee as $s)
                                                         <option value="{{ $s->id_status }}" data-status="{{ $s->nama_status }}" 
+                                                            data-code-status="{{ $s->kode_status }}" 
                                                             {{ old('id_status') == $s->id_status ? 'selected' : '' }}>{{ $s->nama_status }}
                                                         </option>
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4" id="start_joining" style="display: none;">
+                                            <div class="form-group row">
+                                                 <label class="col-lg-4 col-form-label"></label>
+                                                <div class="col-lg-6">
+                                                    <label>Start Joining</label>
+                                                    <input type="date" class="form-control" 
+                                                    id="val_start_joining" name="val_start_joining" value="{{ old('val_start_joining') }}">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -554,42 +580,123 @@
         //     });
         // });
 
-        var divisionSelect = document.getElementById("val_division");
-        divisionSelect.addEventListener("change", function() {
-            // Ambil nilai terpilih dari <select>
-            var selectedDivision = divisionSelect.value;
-            if(divisionSelect.value.length == 1){
-                selectedDivision = '0'+ selectedDivision
-            }
-            $('#val_idcard').val(selectedDivision);
-        });
+        // var divisionSelect = document.getElementById("val_division");
+        // divisionSelect.addEventListener("change", function() {
+        //     // Ambil nilai terpilih dari <select>
+        //     var selectedDivision = divisionSelect.value;
+        //     if(divisionSelect.value.length == 1){
+        //         selectedDivision = '0'+ selectedDivision
+        //     }
+        //     $('#val_idcard').val(selectedDivision);
+        // });
 
         document.addEventListener('DOMContentLoaded', function () {
-            // show-hide element term contract, start contract, and end contract
-            const valStatus = document.getElementById('val_status');
-            const contractStatus = document.getElementById('contract_status');
+        // show-hide element term contract, start contract, and end contract
+        const valStatus = document.getElementById('val_status');
+        const valDivision = document.getElementById('val_division');
 
-            function toggleContractStatus() {
-                const selectedStatus = valStatus.value;
-                const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"]`);
+        const contractStatus = document.getElementById('contract_status');
+        const startJoining = document.getElementById('start_joining');
 
-                if (selectedStatus) {
-                    const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
+        const startJoiningColumn = document.getElementById('val_start_joining');
+        const termContractColumn = document.getElementById('val_term_contract');
+        const startContractColumn = document.getElementById('val_start_contract');
+        const endContractColumn = document.getElementById('val_end_contract');
+        const valIdCard = document.getElementById('val_idcard');
 
-                    // Show or hide contractStatus based on the selected status
-                    if (selectedNameStatus === 'kontrak') {
-                        contractStatus.style.display = 'block';
-                    } else {
-                        contractStatus.style.display = 'none';
-                    }
+        function updateIdCard() {
+            const selectedStatus = valStatus.value;
+            const selectedDivision = valDivision.value;
+            
+            const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+            const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
+
+            if (selectedDivision || selectedStatus) {
+                // ambil data kode divisi dan status
+                const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+                const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
+
+                // Dapatkan nilai tanggal berdasarkan kolom yang sesuai
+                let dateColumn;
+                if (selectedStatusOption.getAttribute("data-status").toLowerCase() === 'kontrak') {
+                    dateColumn = startContractColumn;
+                } else {
+                    dateColumn = startJoiningColumn;
+                }
+
+                function updateIdCardValue() {
+                    const selectedStatus = valStatus.value;
+                    const selectedDivision = valDivision.value;
+                    
+                    const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+                    const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
+
+                    // ambil data kode divisi dan status
+                    const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+                    const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
+
+                    var startDate = dateColumn.value;
+                    var year = new Date(startDate).getFullYear();
+                    var twoDigitYear = year % 100;
+                    var randomDigits = (Math.floor(Math.random() * 100)).toString().padStart(2, '0');
+
+                    // set value id card
+                    var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
+                        (selectedCodeStatus ? selectedCodeStatus : '00') +
+                        (selectedCodeDivision ? selectedCodeDivision : '00') + 
+                        randomDigits;
+                    valIdCard.value = idcardValue;
+                }
+
+                // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
+                valStatus.addEventListener('change', updateIdCardValue);
+                valDivision.addEventListener('change', updateIdCardValue);
+
+                // Panggil fungsi untuk mengupdate ID card saat input di dateColumn
+                dateColumn.addEventListener("input", updateIdCardValue);
+                
+                // Panggil fungsi pertama kali untuk menginisialisasi nilai ID card
+                // updateIdCardValue();
+            }
+        }
+
+        function toggleContractStatus() {
+            const selectedStatus = valStatus.value;
+            const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+
+            if (selectedStatus) {
+                const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
+                // Show or hide contractStatus based on the selected status
+                if (selectedNameStatus === 'kontrak') {
+                    startJoiningColumn.removeAttribute('required');
+                    termContractColumn.setAttribute('required', 'required');
+                    startContractColumn.setAttribute('required', 'required');
+                    endContractColumn.setAttribute('required', 'required');
+
+                    contractStatus.style.display = 'block';
+                    startJoining.style.display = 'none';
+
+                } else {
+                    startJoiningColumn.setAttribute('required', 'required');
+                    termContractColumn.removeAttribute('required');
+                    startContractColumn.removeAttribute('required');
+                    endContractColumn.removeAttribute('required');
+
+                    contractStatus.style.display = 'none';
+                    startJoining.style.display = 'block';
                 }
             }
+            
+            // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
+            updateIdCard();
+        }
 
-            valStatus.addEventListener('change', toggleContractStatus);
+        valStatus.addEventListener('change', toggleContractStatus);
+        valDivision.addEventListener('change', toggleContractStatus);
 
-            // Set initial state based on the value of val_status on page load
-            toggleContractStatus();
-        });
+        // Set initial state based on the value of val_status on page load
+        toggleContractStatus();
+    });
 
         // show/hide form create by excel
         const toggleFormButton = document.getElementById('button-create-employee-excel');

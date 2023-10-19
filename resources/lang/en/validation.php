@@ -145,6 +145,10 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+
+        'val_idcard' => [
+            'unique' => 'The :attribute has already been taken. Just change the last 2 digits of the number',
+        ],
     ],
 
     /*

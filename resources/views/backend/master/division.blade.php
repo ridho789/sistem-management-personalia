@@ -30,8 +30,17 @@
                             <form action="{{ url('division-add') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="text" id="name-division" class="form-control input-new-division" name="input_divisi" placeholder="input new division" required>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-division" id="close-form-new-division">Submit</button>
+                                    <div class="mb-3">
+                                        <label for="name-division">Name Division</label>
+                                        <input type="text" id="name-division" class="form-control input-new-division" 
+                                            name="input_divisi" placeholder="input new division" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="code-division">Code Division</label>
+                                        <input type="text" id="code-division" class="form-control input-new-code-division" 
+                                            name="input_code_divisi" placeholder="input new code division" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary submit-division" id="close-form-new-division">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -51,8 +60,17 @@
                                 @csrf
                                 <div class="form-group">
                                     <input type="hidden" id="edit-id" name="id_divisi">
-                                    <input type="text" id="edit-division" class="form-control input-edit-division" name="value_divisi" placeholder="input edit division" required>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-division" id="close-form-edit-division">Submit</button>
+                                    <div class="mb-3">
+                                        <label for="edit-division">Name Division</label>
+                                        <input type="text" id="edit-division" class="form-control input-edit-division" 
+                                            name="value_divisi" placeholder="input edit division" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="edit-code-division">Code Division</label>
+                                        <input type="text" id="edit-code-division" class="form-control input-edit-code-division" 
+                                            name="value_code_divisi" placeholder="input edit code division" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary submit-division" id="close-form-edit-division">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -76,6 +94,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Division</th>
+                                            <th>Code</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,6 +102,7 @@
                                         <tr data-id="{{$d->id_divisi}}">
                                             <th>{{ $loop->iteration }}</th>
                                             <td class="division-name-selected">{{$d->nama_divisi}}</td>
+                                            <td class="division-code-selected">{{$d->kode_divisi}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
                                                 <a href="division-delete/{{$d->id_divisi}}"><i class="fa fa-trash"> delete </i></a>
@@ -149,10 +169,12 @@
                 var row = this.closest("tr");
                 var id = row.getAttribute("data-id");
                 var divisionName = row.querySelector(".division-name-selected").textContent;
+                var divisionCode = row.querySelector(".division-code-selected").textContent;
 
                 // Mengisi data ke dalam formulir
                 document.getElementById("edit-id").value = id;
                 document.getElementById("edit-division").value = divisionName;
+                document.getElementById("edit-code-division").value = divisionCode;
 
                 if (myEditForm.style.display === 'none') {
                     myEditForm.style.display = 'block';

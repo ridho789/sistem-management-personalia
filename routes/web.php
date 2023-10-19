@@ -11,7 +11,7 @@ use App\Http\Controllers\leavetypeController;
 
 use App\Http\Controllers\assetmanagementController;
 use App\Http\Controllers\employeemanagementController;
-use App\Http\Controllers\attendancemanagementController;
+use App\Http\Controllers\leavemanagementController;
 
 use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\importAssetexcel;
@@ -90,13 +90,13 @@ Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class
 // management - attendance
 
 // attendance - leave
-Route::get('/leave-request', [attendancemanagementController::class, 'create']);
-Route::get('/leaves-summary', [attendancemanagementController::class, 'index']);
-Route::post('leave-request-add', [attendancemanagementController::class, 'store']);
-Route::get('leave-request-edit/{id_data_cuti}', [attendancemanagementController::class, 'edit']);
-Route::post('leave-request-update', [attendancemanagementController::class, 'update']);
-Route::post('leave-request-print', [attendancemanagementController::class, 'print']);
-Route::post('leave-request-upload', [attendancemanagementController::class, 'upload']);
+Route::get('/leave-request', [leavemanagementController::class, 'create']);
+Route::get('/leaves-summary', [leavemanagementController::class, 'index']);
+Route::post('leave-request-add', [leavemanagementController::class, 'store']);
+Route::get('leave-request-edit/{id_data_cuti}', [leavemanagementController::class, 'edit']);
+Route::post('leave-request-update', [leavemanagementController::class, 'update']);
+Route::post('leave-request-print', [leavemanagementController::class, 'print']);
+Route::post('leave-request-upload', [leavemanagementController::class, 'upload']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);

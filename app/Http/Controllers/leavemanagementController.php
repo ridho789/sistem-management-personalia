@@ -9,10 +9,12 @@ use App\Models\Divisi;
 use App\Models\DataLeave;
 use App\Models\TypeLeave;
 use App\Models\StatusEmployee;
+use App\Models\AllocationRequest;
 use Illuminate\Support\Facades\Crypt;
 use PDF;
+use Ramsey\Uuid\Type\Integer;
 
-class attendancemanagementController extends Controller
+class leavemanagementController extends Controller
 {
     // leave
     public function index(){
@@ -159,7 +161,26 @@ class attendancemanagementController extends Controller
             DataLeave::where('id_data_cuti', $request->id_data_cuti)->update([
                 'file_approved'=> $filePath,
                 'status_cuti' => 'Approved'
-            ]);
+            ]); 
+            
+            // $dataCuti = DataLeave::where('id_data_cuti', $request->id_data_cuti)->first();
+            // // Mengambil semua data cuti dengan id karyawan yang sama
+            // $dataCutiSamaKaryawan = DataLeave::where('id_karyawan', $dataCuti['id_karyawan'])->get();
+            // dd($dataCutiSamaKaryawan['id_karyawan']);
+
+            // // Menghitung total durasi
+            // $totalDurasi = $dataCutiSamaKaryawan->sum('durasi_cuti');
+
+            // // Mengurangi total durasi dari sisa cuti yang ada di tabel alokasi request
+            // $sisacuti = 12 - $totalDurasi;
+
+            // // Update tabel alokasi request
+            // AllocationRequest::insert([
+            //     'id_karyawan' => $dataCuti['id_karyawan'],
+            //     'id_data_cuti' => $request->id_data_cuti,
+            //     'sisa_cuti' => $sisacuti,
+            // ]);
+
         }
  
         return redirect('/leaves-summary');

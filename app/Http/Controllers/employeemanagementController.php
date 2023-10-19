@@ -48,7 +48,7 @@ class employeemanagementController extends Controller
         $request->validate([
             'val_nik' => 'min:16|unique:tbl_karyawan,nik',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:6|max:6|unique:tbl_karyawan,id_card',
+            'val_idcard' => 'min:8|max:8|unique:tbl_karyawan,id_card',
         ]);
 
         $photo = $request->file('val_photo');
@@ -79,11 +79,13 @@ class employeemanagementController extends Controller
                 $employeeData['lama_kontrak'] = $request->val_term_contract;
                 $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
                 $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;
+                $employeeData['awal_bergabung'] = null;
 
             } else {
                 $employeeData['lama_kontrak'] = null;
                 $employeeData['awal_masa_kontrak'] = null;
                 $employeeData['akhir_masa_kontrak'] = null;
+                $employeeData['awal_bergabung'] = $request->val_start_joining;
             }
             
             Employee::insert($employeeData);
@@ -119,11 +121,29 @@ class employeemanagementController extends Controller
 
     public function update(Request $request)
     {   
-        $request->validate([
+        // Mengambil data karyawan berdasarkan ID
+        $existingEmployee = Employee::where('id_karyawan', $request->id)->first();
+
+        // Mengambil id card | nik saat ini dari data yang ada
+        $currentIdCard = $existingEmployee->id_card;
+        $currentNIK = $existingEmployee->nik;
+
+        $rules = [
             'val_nik' => 'min:16',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:6|max:6',
-        ]);
+            'val_idcard' => 'min:8|max:8',
+        ];
+    
+        // Hanya menjalankan validasi unique jika id card | nik berubah atau tidak sama dengan id card | nik saat ini
+        if ($request->val_idcard != $currentIdCard) {
+            $rules['val_idcard'] .= '|unique:tbl_karyawan,id_card';
+        }
+
+        if ($request->val_nik != $currentNIK) {
+            $rules['val_nik'] .= '|unique:tbl_karyawan,nik';
+        }
+    
+        $request->validate($rules);
 
         $employeeData = [
             'nama_karyawan' => $request->val_name,
@@ -138,6 +158,7 @@ class employeemanagementController extends Controller
             'id_perusahaan' => $request->id_perusahaan,
             'id_status' => $request->id_status,
             'id_card' => $request->val_idcard,
+            'awal_bergabung' => $request->val_start_joining,
             'lama_kontrak' => null,
             'awal_masa_kontrak' => null,
             'akhir_masa_kontrak' => null
@@ -154,6 +175,7 @@ class employeemanagementController extends Controller
         $namaStatus = strtolower($dataStatus->nama_status);
         
         if ($dataStatus && $namaStatus == 'kontrak') {
+            $employeeData['awal_bergabung'] = null;
             $employeeData['lama_kontrak'] = $request->val_term_contract;
             $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
             $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;

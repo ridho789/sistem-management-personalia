@@ -17,6 +17,7 @@ class divisionController extends Controller
     {   
         DB::table('tbl_divisi')->insert([
             'nama_divisi'=> $request->input_divisi,
+            'kode_divisi'=> $request->input_code_divisi,
         ]);
 
         return redirect()->back();
@@ -32,6 +33,7 @@ class divisionController extends Controller
     {
         DB::table('tbl_divisi')->where('id_divisi', $request->id_divisi)->update([
             'nama_divisi'=> $request->value_divisi,
+            'kode_divisi'=> $request->value_code_divisi,
         ]);
         return redirect()->back();
     }
