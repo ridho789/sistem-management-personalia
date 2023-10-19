@@ -48,7 +48,7 @@ class employeemanagementController extends Controller
         $request->validate([
             'val_nik' => 'min:16|unique:tbl_karyawan,nik',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:8|max:8|unique:tbl_karyawan,id_card',
+            'val_idcard' => 'min:9|max:9|unique:tbl_karyawan,id_card',
         ]);
 
         $photo = $request->file('val_photo');
@@ -131,7 +131,7 @@ class employeemanagementController extends Controller
         $rules = [
             'val_nik' => 'min:16',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'val_idcard' => 'min:8|max:8',
+            'val_idcard' => 'min:9|max:9',
         ];
     
         // Hanya menjalankan validasi unique jika id card | nik berubah atau tidak sama dengan id card | nik saat ini

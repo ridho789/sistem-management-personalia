@@ -638,8 +638,8 @@
                     var startDate = dateColumn.value;
                     var year = new Date(startDate).getFullYear();
                     var twoDigitYear = year % 100;
-                    var randomDigits = (Math.floor(Math.random() * 100)).toString().padStart(2, '0');
-
+                    var randomDigits = (Math.floor(Math.random() * 1000)).toString().padStart(2, '0');
+                    
                     // set value id card
                     var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
                         (selectedCodeStatus ? selectedCodeStatus : '00') +
