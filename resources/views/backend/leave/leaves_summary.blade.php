@@ -57,9 +57,7 @@
                                                 <td>{{ $dl->mulai_cuti }}</td>
                                                 <td>{{ $dl->durasi_cuti }}</td>
                                                 <td>{{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}</td>
-                                                @if($dl->status_cuti == 'To Submit')
-                                                    <td><span class="badge badge-warning">{{ $dl->status_cuti }}</span></td>
-                                                @elseif($dl->status_cuti == 'To Approved')
+                                                @if($dl->status_cuti == 'To Approved')
                                                     <td><span class="badge badge-secondary">{{ $dl->status_cuti }}</span></td>
                                                 @elseif($dl->status_cuti == 'Approved')
                                                     <td><span class="badge badge-primary">{{ $dl->status_cuti }}</span></td>

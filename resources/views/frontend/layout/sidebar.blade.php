@@ -87,7 +87,7 @@
                     <i class="icon icon-attach-87"></i><span class="nav-text">Leave</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Allocation Requests</a></li>
+                    <li><a href="/allocation-request">Allocation Requests</a></li>
                     <li><a href="/leave-request">Leave Request</a></li>
                     <li><a href="/leaves-summary">Leaves Summary</a></li>
                 </ul>
