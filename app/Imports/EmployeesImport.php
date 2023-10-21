@@ -36,6 +36,33 @@ class EmployeesImport implements ToCollection
             $date = date_create_from_format('Y-m-d', $dateText);
             $date_format = date_format($date, 'Y-m-d');
 
+            // date format (awal bergabung)
+            $dateTextStartJoining =  $row[14];
+            if ($dateTextStartJoining) {
+                $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
+                if ($dateStartJoining !== false) {
+                    $dateFormatStartJoining = date_format($dateStartJoining, 'Y-m-d');
+                }
+            }
+
+            // date format (awal kontrak)
+            $dateTextStartContract =  $row[12];
+            if ($dateTextStartContract) {
+                $dateStartContract = date_create_from_format('Y-m-d', $dateTextStartContract);
+                if ($dateStartContract !== false) {
+                    $dateFormatStartContract = date_format($dateStartContract, 'Y-m-d');
+                }
+            }
+
+            // date format (selesai kontrak)
+            $dateTextEndContract =  $row[13];
+            if ($dateTextEndContract) {
+                $dateEndContract = date_create_from_format('Y-m-d', $dateTextEndContract);
+                if ($dateEndContract !== false) {
+                    $dateFormatEndContract = date_format($dateEndContract, 'Y-m-d');
+                }
+            }
+
             $this->currentRow++;
             $uniqueValues = []; // Array untuk menyimpan nilai unik
 
@@ -70,8 +97,8 @@ class EmployeesImport implements ToCollection
                 Log::error('Error importing data: Nilai kolom tanggal bukan teks di baris ' . $this->currentRow);
             }
 
-            if ($position && $division && $company && $status){
-                Employee::create([
+            if ($position && $division && $company && $status) {
+                $employeeData = [
                     'nama_karyawan' => $row[0],
                     'nik' => $row[1],
                     'tempat_lahir' => $row[2],
@@ -83,9 +110,18 @@ class EmployeesImport implements ToCollection
                     'id_divisi' => $division->id_divisi,
                     'id_perusahaan' => $company->id_perusahaan,
                     'id_status' => $status->id_status,
-                    'id_card' => $row[11],
-                    'foto' => '',
-                ]);
+                    'id_card' => $row[15],
+                    'foto' => ''
+                ];
+            
+                if (strtolower($status->nama_status) == 'kontrak') {
+                    $employeeData['lama_kontrak'] = $row[11];
+                    $employeeData['awal_masa_kontrak'] = $dateFormatStartContract;
+                    $employeeData['akhir_masa_kontrak'] = $dateFormatEndContract;
+                } else {
+                    $employeeData['awal_bergabung'] = $dateFormatStartJoining;
+                }
+                Employee::create($employeeData);
 
             } else {
                 if (empty($position)){

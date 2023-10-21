@@ -72,6 +72,11 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="mt-3">
+                                <span style="font-size: small;">
+                                    <p><b>Note</b>: click on the data in the <b>DATE LEAVE</b> column to view more detailed.</p>
+                                </span>
+                            </div>
                         @else
                             <div class="mt-3">
                                 <span style="text-align: center;">

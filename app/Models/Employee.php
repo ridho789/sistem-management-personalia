@@ -18,11 +18,16 @@ class Employee extends Model
         'jenis_kelamin',
         'no_telp',
         'alamat',
-        'foto',
-        'id_card',
         'id_jabatan',
         'id_divisi',
         'id_perusahaan',
         'id_status',
+        'lama_kontrak',
+        'awal_masa_kontrak',
+        'akhir_masa_kontrak',
+        'awal_bergabung',
+        'id_card',
+        'foto',
     ];
+    
 }
