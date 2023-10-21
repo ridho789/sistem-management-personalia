@@ -121,6 +121,19 @@ class leavemanagementController extends Controller
         return redirect()->back();
     }
 
+    public function delete($id)
+    {
+        // Hapus DataLeave berdasarkan id_data_cuti
+        DataLeave::where('id_data_cuti', $id)->delete();
+
+        // Hapus AllocationRequest yang tidak memiliki DataLeave yang sesuai
+        AllocationRequest::whereNotIn('id_karyawan', function ($query) {
+            $query->select('id_karyawan')->from('tbl_data_cuti');
+        })->delete();
+
+        return redirect()->back();
+    }
+
     public function print(Request $request){
         $dataleave = DataLeave::where('id_data_cuti', $request->id_data_cuti)->first();
         $employee = Employee::where('id_karyawan', $dataleave['id_karyawan'])->first();
@@ -183,36 +196,10 @@ class leavemanagementController extends Controller
                 ['sisa_cuti' => $sisacuti]
             );
 
-            // Update tabel alokasi request
-            // AllocationRequest::insert([
-            //     'id_karyawan' => $dataCuti['id_karyawan'],
-            //     'id_data_cuti' => $request->id_data_cuti,
-            //     'sisa_cuti' => $sisacuti,
-            // ]);
-
         }
  
-        return redirect('/leaves-summary');
+        return redirect('/allocation-request');
     }
-
-    // public function allocation() {
-    //     $allocationRequest = AllocationRequest::all();
-    //     $id_karyawan_array = $allocationRequest->pluck('id_karyawan')->toArray();
-
-    //     $employee = Employee::pluck('nama_karyawan', 'id_karyawan');   
-    //     $idcard = Employee::pluck('id_card', 'id_karyawan');
-    //     $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
-
-    //     $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)->get();
-
-    //     return view('/backend/leave/allocation_request', [
-    //         'allocationRequest' => $allocationRequest,
-    //         'employee' => $employee,
-    //         'idcard' => $idcard,
-    //         'dataCuti' => $dataCuti,
-    //         'typeleave' => $typeleave
-    //     ]);
-    // }
 
     public function allocation() {
         $allocationRequest = AllocationRequest::all();
@@ -224,24 +211,39 @@ class leavemanagementController extends Controller
 
         $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)->get();
         $totalDurasiCutiPerKaryawan = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
-        ->groupBy('id_karyawan')
-        ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
-        ->get();
+            ->groupBy('id_karyawan')
+            ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
+            ->get();
 
         foreach ($totalDurasiCutiPerKaryawan as $data) {
             $id_karyawan = $data->id_karyawan;
             $totalDurasiCuti = $data->total_durasi_cuti;
-        
+
             if ($totalDurasiCuti >= 1) {
                 $sisaCuti = 12 - $totalDurasiCuti;
-        
-                // Lakukan penyimpanan/update sisa cuti di tabel yang sesuai
-                // Misalnya, jika menggunakan model AllocationRequest:
+
                 $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
+
                 if ($allocationRequestData) {
-                    allocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData['id_alokasi_sisa_cuti'])->update([
-                        'sisa_cuti'=> $sisaCuti,
-                    ]);
+                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
+                        ->update([
+                            'sisa_cuti' => $sisaCuti,
+                        ]);
+                }
+            }
+        }
+
+        // Penanganan jika tidak ada data dalam totalDurasiCutiPerKaryawan
+        if (count($totalDurasiCutiPerKaryawan) === 0) {
+            // Loop melalui id_karyawan_array dan set sisa_cuti ke 12
+            foreach ($id_karyawan_array as $id_karyawan) {
+                $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
+                
+                if ($allocationRequestData) {
+                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
+                        ->update([
+                            'sisa_cuti' => 12,
+                        ]);
                 }
             }
         }

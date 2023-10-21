@@ -100,12 +100,12 @@
                                     <tbody>
                                         @foreach($tbl_divisi as $d)
                                         <tr data-id="{{$d->id_divisi}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td class="division-name-selected">{{$d->nama_divisi}}</td>
                                             <td class="division-code-selected">{{$d->kode_divisi}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="division-delete/{{$d->id_divisi}}"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
+                                                <!-- <a href="division-delete/{{$d->id_divisi}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

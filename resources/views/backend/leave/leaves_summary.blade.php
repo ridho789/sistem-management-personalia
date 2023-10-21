@@ -24,7 +24,7 @@
                         <h4 class="card-title">Leaves Summary</h4>
                         @if (count($dataleave) > 0)
                             <a href="/leave-request" class="btn btn-primary mt-3" 
-                                id="new-data-leave">+ New leave request
+                                id="new-data-leave">+ Create request
                             </a>
                         @endif
                     </div>
@@ -48,7 +48,7 @@
                                     <tbody>
                                         @foreach($dataleave as $dl)
                                             <tr data-id="{{$dl->id_data_cuti}}">
-                                                <th>{{ $loop->iteration }}</th>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $employee[$dl->id_karyawan] }} - {{ $idcard[$dl->id_karyawan] }}</td>
                                                 <td>{{ $typeleave[$dl->id_tipe_cuti] }}</td>
                                                 <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">
@@ -63,9 +63,11 @@
                                                     <td><span class="badge badge-primary">{{ $dl->status_cuti }}</span></td>
                                                 @endif
                                                 <td>
-                                                    <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dl->id_data_cuti)]) }}" class="btn btn-dark btn-sm">
+                                                    <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dl->id_data_cuti)]) }}" 
+                                                        class="btn btn-secondary btn-sm">
                                                         <i class="icon icon-edit-72"> </i>
                                                     </a>
+                                                    <!-- <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                                 </td>
                                             </tr>
                                         @endforeach 

@@ -100,12 +100,12 @@
                                     <tbody>
                                         @foreach($tbl_status_kary as $e)
                                         <tr data-id="{{$e->id_status}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td class="employee-status-name-selected">{{$e->nama_status}}</td>
                                             <td class="employee-status-code-selected">{{$e->kode_status}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="employee-status-delete/{{$e->id_status}}"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
+                                                <!-- <a href="employee-status-delete/{{$e->id_status}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

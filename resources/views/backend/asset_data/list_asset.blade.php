@@ -78,7 +78,7 @@
                                     <tbody>
                                         @foreach($asset as $a)
                                         <tr data-id="{{$a->id_aset}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{$a->nama_aset}}</td>
                                             <td>{{ $category[$a->id_kategori] }}</td>
                                             <td>{{ isset($subcategory[$a->id_sub_kategori]) ? $subcategory[$a->id_sub_kategori] : '-' }}</td>
@@ -100,11 +100,11 @@
                                             </td>
                                             <td>{{$a->lokasi}}</td>
                                             <td>{{ $company[$a->id_perusahaan] }}</td>
-                                            <td style="text-align:right;">
+                                            <td>
                                                 <a href="{{ url('form-asset-edit', ['id' => Crypt::encrypt($a->id_aset)]) }}" 
-                                                    id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i>
+                                                    id="edit-button" class="btn btn-secondary btn-sm edit-button mr-2"><i class="icon icon-edit-72"></i>
                                                 </a>
-                                                <a href="list-asset-delete/{{$a->id_aset}}"><i class="fa fa-trash"> delete </i></a>
+                                                <!-- <a href="list-asset-delete/{{$a->id_aset}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

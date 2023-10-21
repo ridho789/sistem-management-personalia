@@ -96,6 +96,7 @@ Route::get('/allocation-request', [leavemanagementController::class, 'allocation
 Route::post('leave-request-add', [leavemanagementController::class, 'store']);
 Route::get('leave-request-edit/{id_data_cuti}', [leavemanagementController::class, 'edit']);
 Route::post('leave-request-update', [leavemanagementController::class, 'update']);
+Route::get('leave-request-delete/{id_data_cuti}', [leavemanagementController::class, 'delete']);
 Route::post('leave-request-print', [leavemanagementController::class, 'print']);
 Route::post('leave-request-upload', [leavemanagementController::class, 'upload']);
 

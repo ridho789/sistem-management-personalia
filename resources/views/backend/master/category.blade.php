@@ -82,11 +82,11 @@
                                     <tbody>
                                         @foreach($tbl_kategori as $k)
                                         <tr data-id="{{$k->id_kategori}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td class="category-name-selected">{{$k->nama_kategori}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="category-delete/{{$k->id_kategori}}"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
+                                                <!-- <a href="category-delete/{{$k->id_kategori}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 
@@ -210,12 +210,12 @@
                                     <tbody>
                                         @foreach($tbl_sub_kategori as $sk)
                                         <tr data-id="{{$sk->id_sub_kategori}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td class="id-category-selected">{{ $dataCategories[$sk->id_kategori] }}</td>
                                             <td class="sub-category-name-selected">{{$sk->nama_sub_kategori}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-sub-button" class="edit-sub-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="sub-category-delete/{{$sk->id_sub_kategori}}"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="#" id="edit-sub-button" class="btn btn-secondary btn-sm edit-sub-button"><i class="fa fa-edit"></i></a>
+                                                <!-- <a href="sub-category-delete/{{$sk->id_sub_kategori}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

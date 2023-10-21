@@ -81,11 +81,11 @@
                                     <tbody>
                                         @foreach($tbl_jabatan as $j)
                                         <tr data-id="{{$j->id_jabatan}}">
-                                            <th>{{ $loop->iteration }}</th>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td class="position-name-selected">{{$j->nama_jabatan}}</td>
                                             <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="edit-button"><i class="fa fa-edit"> edit |</i></a>
-                                                <a href="position-delete/{{$j->id_jabatan}}"><i class="fa fa-trash"> delete </i></a>
+                                                <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
+                                                <!-- <a href="position-delete/{{$j->id_jabatan}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 
