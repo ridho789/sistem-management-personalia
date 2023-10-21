@@ -204,12 +204,12 @@ class leavemanagementController extends Controller
     public function allocation() {
         $allocationRequest = AllocationRequest::all();
         $id_karyawan_array = $allocationRequest->pluck('id_karyawan')->toArray();
+        $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)->get();
 
-        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');   
+        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
-        $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)->get();
         $totalDurasiCutiPerKaryawan = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
             ->groupBy('id_karyawan')
             ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
@@ -219,34 +219,32 @@ class leavemanagementController extends Controller
             $id_karyawan = $data->id_karyawan;
             $totalDurasiCuti = $data->total_durasi_cuti;
 
-            if ($totalDurasiCuti >= 1) {
-                $sisaCuti = 12 - $totalDurasiCuti;
+            $sisaCuti = ($totalDurasiCuti >= 1) ? (12 - $totalDurasiCuti) : 12;
 
-                $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
+            $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
 
-                if ($allocationRequestData) {
-                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
-                        ->update([
-                            'sisa_cuti' => $sisaCuti,
-                        ]);
-                }
+            if ($allocationRequestData) {
+                AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
+                    ->update([
+                        'sisa_cuti' => $sisaCuti,
+                    ]);
             }
         }
 
-        // Penanganan jika tidak ada data dalam totalDurasiCutiPerKaryawan
-        if (count($totalDurasiCutiPerKaryawan) === 0) {
-            // Loop melalui id_karyawan_array dan set sisa_cuti ke 12
-            foreach ($id_karyawan_array as $id_karyawan) {
-                $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
+        // // Penanganan jika tidak ada data dalam totalDurasiCutiPerKaryawan
+        // if (count($totalDurasiCutiPerKaryawan) === 0) {
+        //     // Loop melalui id_karyawan_array dan set sisa_cuti ke 12
+        //     foreach ($id_karyawan_array as $id_karyawan) {
+        //         $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
                 
-                if ($allocationRequestData) {
-                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
-                        ->update([
-                            'sisa_cuti' => 12,
-                        ]);
-                }
-            }
-        }
+        //         if ($allocationRequestData) {
+        //             AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
+        //                 ->update([
+        //                     'sisa_cuti' => 12,
+        //                 ]);
+        //         }
+        //     }
+        // }
 
         return view('/backend/leave/allocation_request', [
             'allocationRequest' => $allocationRequest,
