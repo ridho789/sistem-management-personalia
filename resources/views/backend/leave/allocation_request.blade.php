@@ -20,6 +20,17 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    <div class="card-header">
+                        @if (count($allocationRequest) > 0)
+                            <form action="{{ url('allocation-request-search') }}" method="GET">
+                            @csrf
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" 
+                                    placeholder="Search employee" value="{{ Request::get('search') }}">
+                                </div>
+                            </form>
+                        @endif
+                    </div>
                     <div class="card-header">                           
                         <h4 class="card-title">Allocation Request</h4>
                     </div>

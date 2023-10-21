@@ -231,21 +231,6 @@ class leavemanagementController extends Controller
             }
         }
 
-        // // Penanganan jika tidak ada data dalam totalDurasiCutiPerKaryawan
-        // if (count($totalDurasiCutiPerKaryawan) === 0) {
-        //     // Loop melalui id_karyawan_array dan set sisa_cuti ke 12
-        //     foreach ($id_karyawan_array as $id_karyawan) {
-        //         $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
-                
-        //         if ($allocationRequestData) {
-        //             AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
-        //                 ->update([
-        //                     'sisa_cuti' => 12,
-        //                 ]);
-        //         }
-        //     }
-        // }
-
         return view('/backend/leave/allocation_request', [
             'allocationRequest' => $allocationRequest,
             'employee' => $employee,
@@ -254,4 +239,35 @@ class leavemanagementController extends Controller
             'typeleave' => $typeleave
         ]);
     }
+
+    public function allocation_search(Request $request) {
+        $search = $request->input('search');
+        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
+        $idcard = Employee::pluck('id_card', 'id_karyawan');
+        $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+    
+        // Cari id karyawan yang sesuai dengan nama karyawan yang dicari
+        $id_employee = Employee::where('nama_karyawan', 'like', "%$search%")->pluck('id_karyawan')->toArray();
+    
+        // Jika tidak ada hasil pencarian, tampilkan semua AllocationRequest
+        if (empty($id_employee)) {
+            $allocationRequest = AllocationRequest::all();
+            
+        } else {
+            // Temukan AllocationRequest yang sesuai dengan id karyawan
+            $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->get();
+        }
+        
+        // Temukan DataLeave berdasarkan id karyawan yang ada di AllocationRequest
+        $dataCuti = DataLeave::whereIn('id_karyawan', $allocationRequest->pluck('id_karyawan')->toArray())->get();
+    
+        return view('/backend/leave/allocation_request', [
+            'allocationRequest' => $allocationRequest,
+            'employee' => $employee,
+            'idcard' => $idcard,
+            'dataCuti' => $dataCuti,
+            'typeleave' => $typeleave
+        ]);
+    }
+    
 }
