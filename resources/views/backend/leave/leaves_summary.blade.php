@@ -28,6 +28,25 @@
                             </a>
                         @endif
                     </div>
+                    <div class="card-header">
+                        @if (count($dataleave) > 0)
+                            <form action="{{ url('leaves-summary-search') }}" method="GET">
+                                @csrf
+                                <input type="hidden" id="start_date" name="start_date">
+                                <input type="hidden" id="end_date" name="end_date">
+                                <div class="input-group">
+                                    <div class="mb-1" id="reportrange" style="background: #fff; cursor: pointer; 
+                                        padding: 5.5px 10px; border: 1px solid #ccc;">
+                                        <i class="fa fa-calendar"> </i>&nbsp;<span id="reportrange_display"> Display data based on date range </span> 
+                                        <i class="fa fa-caret-down"></i>
+                                    </div>
+                                    <div class="mb-1">
+                                        <button type="submit" class="btn btn-dark">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        @endif
+                    </div>
                     <div class="card-body">
                         @if (count($dataleave) > 0)
                             <div class="table-responsive">
@@ -90,4 +109,50 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var reportrange = document.getElementById('reportrange');
+            var span = reportrange.querySelector('span');
+            var startInput = document.getElementById('start_date');
+            var endInput = document.getElementById('end_date');
+            var reportrangeDisplay = document.getElementById('reportrange_display');
+
+            // Mengecek apakah ada nilai yang tersimpan dalam local storage
+            var storedRange = localStorage.getItem('selected_range');
+            if (storedRange) {
+                reportrangeDisplay.innerHTML = storedRange;
+            }
+
+            var start = moment().subtract(29, 'days');
+            var end = moment();
+
+            function cb(start, end) {
+                var rangeText = span.innerHTML = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
+                startInput.value = start.format('YYYY-MM-DD');
+                endInput.value = end.format('YYYY-MM-DD');
+                reportrangeDisplay.innerHTML = rangeText;
+
+                // Menyimpan nilai dalam local storage
+                localStorage.setItem('selected_range', rangeText);
+            }
+
+            function applyDateRangePicker() {
+                new daterangepicker(reportrange, {
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), 
+                            moment().subtract(1, 'month').endOf('month')]
+                    }
+                }, cb);
+            }
+
+            applyDateRangePicker();
+        });
+    </script>
 @endsection

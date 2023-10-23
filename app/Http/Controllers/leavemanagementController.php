@@ -16,12 +16,46 @@ use Ramsey\Uuid\Type\Integer;
 
 class leavemanagementController extends Controller
 {
-    // leave
     public function index(){
         $dataleave = DataLeave::all();
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+
+        return view('/backend/leave/leaves_summary', [
+            'dataleave' => $dataleave,
+            'employee' => $employee,
+            'idcard' => $idcard,
+            'typeleave' => $typeleave
+        ]);
+    }
+
+    public function leave_summary_search(Request $request){
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
+        $idcard = Employee::pluck('id_card', 'id_karyawan');
+        $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+
+        $id_data_cuti = [];
+
+        // Cari id karyawan yang sesuai dengan rentang tanggal yang dicari
+        if ($startDate && $endDate) {
+            $id_data_cuti = DataLeave::whereDate('mulai_cuti', '>=', $startDate)
+                ->whereDate('mulai_cuti', '<=', $endDate)
+                ->pluck('id_data_cuti')
+                ->toArray();
+        }
+
+        // Jika tidak ada hasil pencarian, tampilkan semua
+        if (empty($id_data_cuti)) {
+            $dataleave = DataLeave::all();
+            
+        } else {
+            // Temukan yang sesuai dengan id karyawan
+            $dataleave = DataLeave::whereIn('id_data_cuti', $id_data_cuti)->get();
+        }
 
         return view('/backend/leave/leaves_summary', [
             'dataleave' => $dataleave,
@@ -204,13 +238,16 @@ class leavemanagementController extends Controller
     public function allocation() {
         $allocationRequest = AllocationRequest::all();
         $id_karyawan_array = $allocationRequest->pluck('id_karyawan')->toArray();
-        $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)->get();
+        $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
+            ->where('status_cuti', 'Approved')
+            ->get();
 
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
         $totalDurasiCutiPerKaryawan = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
+            ->where('status_cuti', 'Approved')
             ->groupBy('id_karyawan')
             ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
             ->get();

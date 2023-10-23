@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="{{ asset('') }}asset/vendor/owl-carousel/css/owl.theme.default.min.css">
     <link href="{{ asset('') }}asset/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
     <link href="{{ asset('') }}asset/css/style.css" rel="stylesheet">
+
+    <!-- Daterange picker -->
+    <link href="{{ asset('') }}asset/vendor/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 </head>
 
 <body>
@@ -106,6 +109,14 @@
     <script src="{{ asset('') }}asset/vendor/jquery.counterup/jquery.counterup.min.js"></script>
 
     <script src="{{ asset('') }}asset/js/dashboard/dashboard-1.js"></script>
+
+    <!-- Daterangepicker -->
+    <!-- momment js is must -->
+    <script src="{{ asset('') }}asset/vendor/moment/moment.min.js"></script>
+    <script src="{{ asset('') }}asset/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <!-- Daterangepicker -->
+    <script src="{{ asset('') }}asset/js/plugins-init/bs-daterange-picker-init.js"></script>
 
 </body>
 

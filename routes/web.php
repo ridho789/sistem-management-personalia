@@ -92,6 +92,7 @@ Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class
 // attendance - leave
 Route::get('/leave-request', [leavemanagementController::class, 'create']);
 Route::get('/leaves-summary', [leavemanagementController::class, 'index']);
+Route::get('leaves-summary-search', [leavemanagementController::class, 'leave_summary_search']);
 Route::get('/allocation-request', [leavemanagementController::class, 'allocation']);
 Route::get('allocation-request-search', [leavemanagementController::class, 'allocation_search']);
 Route::post('leave-request-add', [leavemanagementController::class, 'store']);
