@@ -283,9 +283,12 @@ class leavemanagementController extends Controller
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
     
-        // Cari id karyawan yang sesuai dengan nama karyawan yang dicari
-        $id_employee = Employee::where('nama_karyawan', 'like', "%$search%")->pluck('id_karyawan')->toArray();
-    
+        // Cari id karyawan yang sesuai dengan nama karyawan / id card yang dicari
+        $id_employee = Employee::where(function($query) use ($search) {
+            $query->where('nama_karyawan', 'like', "%$search%")
+                  ->orWhere('id_card', 'like', "%$search%");
+        })->pluck('id_karyawan')->toArray();
+        
         // Jika tidak ada hasil pencarian, tampilkan semua AllocationRequest
         if (empty($id_employee)) {
             $allocationRequest = AllocationRequest::all();

@@ -58,7 +58,8 @@
                                             <th>Employee</th>
                                             <th>Type Leave</th>
                                             <th>Description</th>
-                                            <th>Date-Time Leave (Start)</th>
+                                            <th>Date Leave (Start)</th>
+                                            <th></th>
                                             <th>Duration (Day)</th>
                                             <th>Responsible</th>
                                             <th>Status</th>
@@ -73,7 +74,7 @@
                                                 <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">
                                                     {{ $dl->deskripsi }}
                                                 </td>
-                                                <td>{{ $dl->mulai_cuti }}</td>
+                                                <td colspan="2">{{ date('l, Y-m-d', strtotime($dl->mulai_cuti)) }}</td>
                                                 <td>{{ $dl->durasi_cuti }}</td>
                                                 <td>{{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}</td>
                                                 @if($dl->status_cuti == 'To Approved')

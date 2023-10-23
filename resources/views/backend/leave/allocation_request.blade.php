@@ -26,7 +26,7 @@
                             @csrf
                                 <div class="input-group">
                                     <input type="text" name="search" class="form-control" 
-                                    placeholder="Search employee" value="{{ Request::get('search') }}">
+                                    placeholder="Search employee / idcard" value="{{ Request::get('search') }}">
                                 </div>
                             </form>
                         @endif
@@ -46,7 +46,7 @@
                                             <th>Remaining Leave</th>
                                             <th>Leave Type</th>
                                             <th>Duration</th>
-                                            <th>Date Leave (Start)</th>
+                                            <th>Date Leave (Start/Click)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
