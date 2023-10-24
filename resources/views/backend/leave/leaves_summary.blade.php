@@ -55,13 +55,13 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Employee</th>
+                                            <th>Employee (C)</th>
                                             <th>Type Leave</th>
                                             <th>Description</th>
                                             <th>Date Leave (Start)</th>
                                             <th></th>
                                             <th>Duration (Day)</th>
-                                            <th>Responsible</th>
+                                            <th>Responsible (C)</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -69,14 +69,20 @@
                                         @foreach($dataleave as $dl)
                                             <tr data-id="{{$dl->id_data_cuti}}">
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $employee[$dl->id_karyawan] }} - {{ $idcard[$dl->id_karyawan] }}</td>
+                                                <td><a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($dl->id_karyawan)]) }}">
+                                                    {{ $employee[$dl->id_karyawan] }} - {{ $idcard[$dl->id_karyawan] }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $typeleave[$dl->id_tipe_cuti] }}</td>
                                                 <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">
                                                     {{ $dl->deskripsi }}
                                                 </td>
                                                 <td colspan="2">{{ date('l, Y-m-d', strtotime($dl->mulai_cuti)) }}</td>
                                                 <td>{{ $dl->durasi_cuti }}</td>
-                                                <td>{{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}</td>
+                                                <td><a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($dl->id_penangung_jawab)]) }}">
+                                                    {{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}
+                                                    </a>
+                                                </td>
                                                 @if($dl->status_cuti == 'To Approved')
                                                     <td><span class="badge badge-secondary">{{ $dl->status_cuti }}</span></td>
                                                 @elseif($dl->status_cuti == 'Approved')

@@ -42,11 +42,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Employee</th>
+                                            <th>Employee (C)</th>
                                             <th>Remaining Leave</th>
                                             <th>Leave Type</th>
                                             <th>Duration</th>
-                                            <th>Date Leave (Start/Click)</th>
+                                            <th>Date Leave (C)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -60,7 +60,9 @@
                                                         {{ $loop->iteration }}
                                                     </td>
                                                     <td rowspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">
-                                                        {{ $employee[$ar->id_karyawan] }} - {{ $idcard[$ar->id_karyawan] }}
+                                                        <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($ar->id_karyawan)]) }}">
+                                                            {{ $employee[$ar->id_karyawan] }} - {{ $idcard[$ar->id_karyawan] }}
+                                                        </a>
                                                     </td>
                                                     <td rowspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">
                                                         {{ $ar->sisa_cuti }}
@@ -97,11 +99,6 @@
                                         @endforeach 
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="mt-3">
-                                <span style="font-size: small;">
-                                    <p><b>Note</b>: click on the data in the <b>DATE LEAVE</b> column to view more detailed.</p>
-                                </span>
                             </div>
                         @else
                             <div class="mt-3">
