@@ -39,11 +39,11 @@
     <body>
 
         <div style="width: 95%; margin: 0 auto;">
-            <div style="float: left; margin-left:-17px;">
-                <h4>Data Employee</h4>
-            </div>
             <div style="float:right;margin-top:-10px;">
                 <b>PT. SATRIA UTAMA GROUP <br>
+            </div>
+            <div style="float: left; margin-left:-25px;">
+                <h4>Data Employee</h4>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
             <tbody>
                 @foreach($tbl_karyawan as $k)
                 <tr data-id="{{$k->id_karyawan}}" data-status-id="{{ $k->id_status }}">
-                    <th>{{ $loop->iteration }}</th>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{$k->nama_karyawan}}</td>
                     <td>{{$k->nik}}</td>
                     <td>{{$k->no_telp}}</td>

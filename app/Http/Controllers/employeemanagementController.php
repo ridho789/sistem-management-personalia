@@ -275,7 +275,7 @@ class employeemanagementController extends Controller
             'divisions' => $divisions, 
             'companies' => $companies, 
             'statuses' => $statuses
-        ]);
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->download('Data Employee.pdf');
     }
