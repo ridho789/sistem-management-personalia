@@ -37,6 +37,7 @@
                                             <th>Sign In</th>
                                             <th>Late</th>
                                             <th>Sign Out</th>
+                                            <th>Information</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -45,14 +46,23 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $nameEmployee[$at->employee] }}</td>
                                             <td>{{$at->id_card}}</td>
-                                            <td>{{ date('l, Y-m-d', strtotime($at->attandance_date)) }}</td>
+                                            <td>{{ date('l, Y-m-d', strtotime($at->attendance_date)) }}</td>
                                             <td>{{$at->sign_in ?? '-'}}</td>
                                             @if ($at->sign_in_late)
                                                 <td style="color: red;">{{$at->sign_in_late}}</td>
                                             @else
-                                            <td>{{$at->sign_in_late ?? '-'}}</td>
+                                                <td>{{$at->sign_in_late ?? '-'}}</td>
                                             @endif
                                             <td>{{$at->sign_out ?? '-'}}</td>
+                                            <td>
+                                                @if ($at->information && (stristr($at->information, 'leave') || stristr($at->information, 'other')))
+                                                    <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($at->id_data_cuti)]) }}">
+                                                        Leave - {{$at->information}} (C)
+                                                    </a>
+                                                @else
+                                                    {{$at->information ?? '-'}}
+                                                @endif
+                                            </td>
                                         </tr>
                                         @endforeach 
                                     </tbody>

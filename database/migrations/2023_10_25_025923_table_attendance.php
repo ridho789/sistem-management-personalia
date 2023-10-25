@@ -17,7 +17,8 @@ class TableAttendance extends Migration
             $table->id('id_attendance');
             $table->string('employee');
             $table->string('id_card');
-            $table->date('attandance_date');
+            $table->string('information')->nullable();
+            $table->date('attendance_date');
             $table->time('sign_in')->nullable();
             $table->time('sign_out')->nullable();
             $table->time('sign_in_late')->nullable();

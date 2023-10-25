@@ -10,8 +10,10 @@ use App\Models\DataLeave;
 use App\Models\TypeLeave;
 use App\Models\StatusEmployee;
 use App\Models\AllocationRequest;
+use App\Models\Attendance; 
 use Illuminate\Support\Facades\Crypt;
 use PDF;
+use Carbon\Carbon;
 use Ramsey\Uuid\Type\Integer;
 
 class leavemanagementController extends Controller
@@ -211,6 +213,26 @@ class leavemanagementController extends Controller
             ]); 
             
             $dataCuti = DataLeave::where('id_data_cuti', $request->id_data_cuti)->first();
+            $typeLeave = TypeLeave::where('id_tipe_cuti', $dataCuti['id_tipe_cuti'])->first();
+            $dataEmployee = Employee::where('id_karyawan', $dataCuti['id_karyawan'])->first();
+
+            $startLeave = Carbon::parse($dataCuti->mulai_cuti);
+            $endLeave = Carbon::parse($dataCuti->selesai_cuti);
+
+            $difference = $startLeave->diff($endLeave);
+
+            // Jika data leave terbuat, maka akan terbuat data baru di attendance
+            for ($i = 0; $i <= $difference->d; $i++) {
+                $startLeave->addDays($i);
+                Attendance::insert([
+                    'id_data_cuti' => $request->id_data_cuti,
+                    'employee' => $dataCuti['id_karyawan'],
+                    'id_card' => $dataEmployee->id_card,
+                    'information' => $typeLeave->nama_tipe_cuti,
+                    'attendance_date' => $startLeave->toDateString(),
+                ]);
+            }
+
             // Mengambil semua data cuti dengan id karyawan yang sama
             $dataCutiSamaKaryawan = DataLeave::where('id_karyawan', $dataCuti['id_karyawan'])
             ->where(function ($query) {
@@ -229,7 +251,6 @@ class leavemanagementController extends Controller
                 ['id_karyawan' => $id_karyawan],
                 ['sisa_cuti' => $sisacuti]
             );
-
         }
  
         return redirect('/allocation-request');
