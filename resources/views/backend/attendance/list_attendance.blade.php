@@ -31,7 +31,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Employee</th>
+                                            <th>Employee (C)</th>
                                             <th>ID Card</th>
                                             <th>Attendance Date</th>
                                             <th>Sign In</th>
@@ -44,7 +44,11 @@
                                         @foreach($allattendance as $at)
                                         <tr data-id="{{$at->id_attendance}}">
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $nameEmployee[$at->employee] }}</td>
+                                            <td>
+                                                <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($at->employee)]) }}">
+                                                    {{ $nameEmployee[$at->employee] }}
+                                                </a>
+                                            </td>
                                             <td>{{$at->id_card}}</td>
                                             <td>{{ date('l, Y-m-d', strtotime($at->attendance_date)) }}</td>
                                             <td>{{$at->sign_in ?? '-'}}</td>
@@ -57,7 +61,7 @@
                                             <td>
                                                 @if ($at->information && (stristr($at->information, 'leave') || stristr($at->information, 'other')))
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($at->id_data_cuti)]) }}">
-                                                        Leave - {{$at->information}} (C)
+                                                        {{$at->information}} (C)
                                                     </a>
                                                 @else
                                                     {{$at->information ?? '-'}}
