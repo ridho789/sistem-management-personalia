@@ -67,7 +67,8 @@ class attendanceController extends Controller
 
                 $sign_in = ($timeHour >= 6 && $timeHour <= 9) ? $timeFormat : null;
 
-                if ($dayOfWeek == 6 && $divisi && $nameDivisi == 'marketing') {
+                // Jika divisi keuangan, personalia / admin dan marketing
+                if ($dayOfWeek == 6 && $divisi && in_array($nameDivisi, ['keuangan', 'personalia / admin', 'marketing'])) {
                     $sign_out = ($timeHour >= 12 && $timeHour <= 22) ? $timeFormat : null;
                 } else {
                     $sign_out = ($timeHour >= 17 && $timeHour <= 22) ? $timeFormat : null;
