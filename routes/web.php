@@ -12,6 +12,7 @@ use App\Http\Controllers\leavetypeController;
 use App\Http\Controllers\assetmanagementController;
 use App\Http\Controllers\employeemanagementController;
 use App\Http\Controllers\leavemanagementController;
+use App\Http\Controllers\attendanceController;
 
 use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\importAssetexcel;
@@ -88,6 +89,7 @@ Route::get('list-asset-search', [assetmanagementController::class, 'search']);
 Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class, 'getSubCategories']);
 
 // management - attendance
+Route::get('/list-attendance', [attendanceController::class, 'index']);
 
 // attendance - leave
 Route::get('/leave-request', [leavemanagementController::class, 'create']);

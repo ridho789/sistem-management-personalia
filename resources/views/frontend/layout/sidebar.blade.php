@@ -84,9 +84,12 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                     <i class="icon icon-time"></i><span class="nav-text">Attendance</span>
                 </a>
+                <ul aria-expanded="false">
+                    <li><a href="/list-attendance">List Attendance</a></li>
+                </ul>
             </li>
             <li>
                 <a href="javascript:void()" aria-expanded="false">

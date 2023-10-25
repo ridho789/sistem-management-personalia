@@ -147,7 +147,7 @@ return [
         ],
 
         'val_idcard' => [
-            'unique' => 'The :attribute has already been taken. Just change the last 2 digits of the number',
+            'unique' => 'The :attribute has already been taken. Just change the last 3 digits of the number',
         ],
     ],
 
