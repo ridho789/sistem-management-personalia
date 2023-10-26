@@ -396,7 +396,7 @@
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="file" class="form-control  @error('val_photo') is-invalid @enderror" 
-                                                id="val_photo" name="val_photo" required>
+                                                id="val_photo" name="val_photo">
                                                 @error('val_photo')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
