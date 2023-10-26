@@ -161,7 +161,7 @@
                                     <div class="col-xl-6">
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val_photo">Photo
-                                                <span class="text-danger">*</span>
+                                                <span class="text-primary">(Optional)</span>
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="file" class="form-control  @error('val_photo') is-invalid @enderror" 
@@ -392,7 +392,7 @@
                                     <div class="col-xl-6">
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val_photo">Photo
-                                                <span class="text-danger">*</span>
+                                                <span class="text-primary">(Optional)</span>
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="file" class="form-control  @error('val_photo') is-invalid @enderror" 
