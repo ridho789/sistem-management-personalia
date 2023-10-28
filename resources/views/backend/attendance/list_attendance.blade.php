@@ -57,7 +57,11 @@
                                             @else
                                                 <td>{{$at->sign_in_late ?? '-'}}</td>
                                             @endif
-                                            <td>{{$at->sign_out ?? '-'}}</td>
+                                            @if ($at->information && $at->sign_out && (stristr($at->information, 'malam')))
+                                                <td>{{$at->sign_out ?? '-'}} (+1)</td>
+                                            @else
+                                                <td>{{$at->sign_out ?? '-'}}</td>
+                                            @endif
                                             <td>
                                                 @if ($at->information && (stristr($at->information, 'leave') || stristr($at->information, 'other')))
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($at->id_data_cuti)]) }}">
