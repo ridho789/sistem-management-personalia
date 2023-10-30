@@ -70,8 +70,8 @@ class leavemanagementController extends Controller
     public function create(){
         $dataleave = '';
         // filter hanya karyawan status kontrak
-        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('kontrak')")->value('id_status');
-        $employee = Employee::where('id_status', $statusEmployee)->get();
+        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
+        $employee = Employee::where('id_status', '!=', $statusEmployee)->get();
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
@@ -159,6 +159,9 @@ class leavemanagementController extends Controller
 
     public function delete($id)
     {
+        // Hapus data attendance yang berkaitan dengan data cuti
+        Attendance::where('id_data_cuti',  $id)->delete();
+        
         // Hapus DataLeave berdasarkan id_data_cuti
         DataLeave::where('id_data_cuti', $id)->delete();
 
@@ -166,6 +169,7 @@ class leavemanagementController extends Controller
         AllocationRequest::whereNotIn('id_karyawan', function ($query) {
             $query->select('id_karyawan')->from('tbl_data_cuti');
         })->delete();
+
 
         return redirect()->back();
     }

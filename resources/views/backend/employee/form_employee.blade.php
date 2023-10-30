@@ -239,14 +239,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="mb-4" id="start_joining" style="display: none;">
+                                        <div id="start_joining">
                                             <div class="form-group row">
-                                                 <label class="col-lg-4 col-form-label"></label>
+                                                <label class="col-lg-4 col-form-label">Start Joining
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6">
-                                                    <label>Start Joining</label>
                                                     <input type="date" class="form-control" 
                                                     id="val_start_joining" name="val_start_joining" 
-                                                    value="{{ old('val_start_joining', $employee->awal_bergabung) }}">
+                                                    value="{{ old('val_start_joining', $employee->awal_bergabung) }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -464,13 +465,14 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="mb-4" id="start_joining" style="display: none;">
+                                        <div id="start_joining">
                                             <div class="form-group row">
-                                                 <label class="col-lg-4 col-form-label"></label>
+                                                <label class="col-lg-4 col-form-label">Start Joining
+                                                    <span class="text-danger">*</span>
+                                                </label>
                                                 <div class="col-lg-6">
-                                                    <label>Start Joining</label>
                                                     <input type="date" class="form-control" 
-                                                    id="val_start_joining" name="val_start_joining" value="{{ old('val_start_joining') }}">
+                                                    id="val_start_joining" name="val_start_joining" value="{{ old('val_start_joining') }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -602,63 +604,98 @@
         const termContractColumn = document.getElementById('val_term_contract');
         const startContractColumn = document.getElementById('val_start_contract');
         const endContractColumn = document.getElementById('val_end_contract');
+        const dateBirthColumn = document.getElementById('val_date_birth');
         const valIdCard = document.getElementById('val_idcard');
 
-        function updateIdCard() {
-            const selectedStatus = valStatus.value;
-            const selectedDivision = valDivision.value;
+        // tidak digunakan ganti format
+        // function updateIdCard() {
+        //     const selectedStatus = valStatus.value;
+        //     const selectedDivision = valDivision.value;
             
-            const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
-            const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
+        //     const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+        //     const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
 
-            if (selectedDivision || selectedStatus) {
-                // ambil data kode divisi dan status
-                const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
-                const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
+        //     if (selectedDivision || selectedStatus) {
+        //         // ambil data kode divisi dan status
+        //         const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+        //         const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
 
-                // Dapatkan nilai tanggal berdasarkan kolom yang sesuai
-                let dateColumn;
-                if (selectedStatusOption.getAttribute("data-status").toLowerCase() === 'kontrak') {
-                    dateColumn = startContractColumn;
-                } else {
-                    dateColumn = startJoiningColumn;
-                }
+        //         // Dapatkan nilai tanggal berdasarkan kolom yang sesuai
+        //         let dateColumn;
+        //         if (selectedStatusOption.getAttribute("data-status").toLowerCase() === 'kontrak') {
+        //             dateColumn = startContractColumn;
+        //         } else {
+        //             dateColumn = startJoiningColumn;
+        //         }
 
-                function updateIdCardValue() {
-                    const selectedStatus = valStatus.value;
-                    const selectedDivision = valDivision.value;
+        //         function updateIdCardValue() {
+        //             const selectedStatus = valStatus.value;
+        //             const selectedDivision = valDivision.value;
                     
-                    const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
-                    const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
+        //             const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+        //             const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
 
-                    // ambil data kode divisi dan status
-                    const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
-                    const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
+        //             // ambil data kode divisi dan status
+        //             const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+        //             const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
 
-                    var startDate = dateColumn.value;
-                    var year = new Date(startDate).getFullYear();
-                    var twoDigitYear = year % 100;
-                    var randomDigits = (Math.floor(Math.random() * 1000)).toString().padStart(2, '0');
+        //             var startDate = dateColumn.value;
+        //             var year = new Date(startDate).getFullYear();
+        //             var twoDigitYear = year % 100;
+        //             var randomDigits = (Math.floor(Math.random() * 1000)).toString().padStart(2, '0');
                     
-                    // set value id card
-                    var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
-                        (selectedCodeStatus ? selectedCodeStatus : '00') +
-                        (selectedCodeDivision ? selectedCodeDivision : '00') + 
-                        randomDigits;
-                    valIdCard.value = idcardValue;
-                }
+        //             // set value id card
+        //             var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
+        //                 (selectedCodeStatus ? selectedCodeStatus : '00') +
+        //                 (selectedCodeDivision ? selectedCodeDivision : '00') + 
+        //                 randomDigits;
+        //             valIdCard.value = idcardValue;
+        //         }
 
-                // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
-                valStatus.addEventListener('change', updateIdCardValue);
-                valDivision.addEventListener('change', updateIdCardValue);
+        //         // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
+        //         valStatus.addEventListener('change', updateIdCardValue);
+        //         valDivision.addEventListener('change', updateIdCardValue);
 
-                // Panggil fungsi untuk mengupdate ID card saat input di dateColumn
-                dateColumn.addEventListener("input", updateIdCardValue);
+        //         // Panggil fungsi untuk mengupdate ID card saat input di dateColumn
+        //         dateColumn.addEventListener("input", updateIdCardValue);
                 
-                // Panggil fungsi pertama kali untuk menginisialisasi nilai ID card
-                // updateIdCardValue();
+        //         // Panggil fungsi pertama kali untuk menginisialisasi nilai ID card
+        //         // updateIdCardValue();
+        //     }
+        // }
+
+        function updateIdCardValue() {
+            const dateBirth = dateBirthColumn.value;
+            const startDate = startJoiningColumn.value;
+
+            const getTwoDigitYear = (date) => {
+                const year = new Date(date).getFullYear();
+                return year % 100;
+            };
+
+            const twoDigitYearBirth = getTwoDigitYear(dateBirth);
+            const twoDigitYearJoin = getTwoDigitYear(startDate);
+            const randomDigits = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+
+            const idcardValue = String(twoDigitYearJoin || '00') + String(twoDigitYearBirth || '00') + String(randomDigits || '000');
+            valIdCard.value = idcardValue;
+        }
+
+        // Fungsi yang memeriksa apakah ada perubahan tahun di dalam input
+        function checkYearChange(event) {
+            const inputElement = event.target;
+            const currentValue = inputElement.value;
+            const previousValue = inputElement.getAttribute('data-previous-value') || '';
+
+            if (currentValue !== previousValue) {
+                inputElement.setAttribute('data-previous-value', currentValue);
+                updateIdCardValue();
             }
         }
+
+        // Tambahkan event listener untuk kedua kolom input (dateBirthColumn / startJoiningColumn)
+        dateBirthColumn.addEventListener("input", checkYearChange);
+        startJoiningColumn.addEventListener("input", checkYearChange);
 
         function toggleContractStatus() {
             const selectedStatus = valStatus.value;
@@ -668,27 +705,20 @@
                 const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
                 // Show or hide contractStatus based on the selected status
                 if (selectedNameStatus === 'kontrak') {
-                    startJoiningColumn.removeAttribute('required');
                     termContractColumn.setAttribute('required', 'required');
                     startContractColumn.setAttribute('required', 'required');
                     endContractColumn.setAttribute('required', 'required');
 
                     contractStatus.style.display = 'block';
-                    startJoining.style.display = 'none';
 
                 } else {
-                    startJoiningColumn.setAttribute('required', 'required');
                     termContractColumn.removeAttribute('required');
                     startContractColumn.removeAttribute('required');
                     endContractColumn.removeAttribute('required');
 
                     contractStatus.style.display = 'none';
-                    startJoining.style.display = 'block';
                 }
             }
-            
-            // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
-            updateIdCard();
         }
 
         valStatus.addEventListener('change', toggleContractStatus);

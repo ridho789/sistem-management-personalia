@@ -16,6 +16,8 @@ class TableJabatan extends Migration
         Schema::create('tbl_jabatan', function (Blueprint $table) {
             $table->id('id_jabatan');
             $table->string('nama_jabatan');
+            $table->string('gaji_pokok', 30);
+            $table->string('tunjangan_jabatan', 30);
             $table->timestamps();
         });
 

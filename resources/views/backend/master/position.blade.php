@@ -29,9 +29,29 @@
                         <div class="basic-form">
                             <form action="{{ url('position-add') }}" method="POST">
                                 @csrf
-                                <div class="form-group">
-                                    <input type="text" id="name-position" class="form-control input-new-position" name="input_jabatan" placeholder="input new position" required>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-new-position">Submit</button>
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <label for="name-position">Position</label>
+                                                <input type="text" id="name-position" class="form-control input-new-position" 
+                                                name="input_jabatan" placeholder="input new position" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-6">
+                                                <label for="basic-salary-position">Basic Salary</label>
+                                                <input type="text" id="basic-salary-position" class="form-control input-new-basic-salary-position" 
+                                                name="input_gaji_pokok" placeholder="input new basic salary position" required>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="position-allowance">Position Allowance</label>
+                                                <input type="text" id="position-allowance" class="form-control input-new-position-allowance" 
+                                                name="input_tunjangan_jabatan" placeholder="input new position allowance" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-new-position">Submit</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -49,10 +69,30 @@
                         <div class="basic-form">
                             <form id="form-edit-value-position" action="{{ url('position-update') }}" method="POST">
                                 @csrf
-                                <div class="form-group">
-                                    <input type="hidden" id="edit-id" name="id_jabatan">
-                                    <input type="text" id="edit-position" class="form-control input-edit-position" name="value_jabatan" placeholder="input edit position" required>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-edit-position">Submit</button>
+                                <div class="row">
+                                    <div class="col-xl-12"> 
+                                        <input type="hidden" id="edit-id" name="id_jabatan">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <label for="name-position">Position</label>
+                                                <input type="text" id="edit-position" class="form-control input-edit-position" 
+                                                name="value_jabatan" placeholder="input edit position" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-6">
+                                                <label for="basic-salary-position">Basic Salary</label>
+                                                <input type="text" id="edit-basic-salary-position" class="form-control input-edit-basic-salary-position" 
+                                                name="value_gaji_pokok" placeholder="input edit basic salary position" required>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label for="position-allowance">Position Allowance</label>
+                                                <input type="text" id="edit-position-allowance" class="form-control input-edit-position-allowance" 
+                                                name="value_tunjangan_jabatan" placeholder="input edit position allowance" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-edit-position">Submit</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -76,6 +116,8 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Position</th>
+                                            <th>Basic Salary</th>
+                                            <th>Position Allowance</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,6 +125,8 @@
                                         <tr data-id="{{$j->id_jabatan}}">
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="position-name-selected">{{$j->nama_jabatan}}</td>
+                                            <td class="basic-salary-selected">{{$j->gaji_pokok}}</td>
+                                            <td class="position-allowance-selected">{{$j->tunjangan_jabatan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
                                                 <!-- <a href="position-delete/{{$j->id_jabatan}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
@@ -144,15 +188,19 @@
         editButtons.forEach(function (button) {
             button.addEventListener("click", function (event) {
                 event.preventDefault();
-
+                
                 // Mengambil data dari baris yang dipilih
                 var row = this.closest("tr");
                 var id = row.getAttribute("data-id");
                 var positionName = row.querySelector(".position-name-selected").textContent;
+                var basicSalary = row.querySelector(".basic-salary-selected").textContent;
+                var positionAllowance = row.querySelector(".position-allowance-selected").textContent;
 
                 // Mengisi data ke dalam formulir
                 document.getElementById("edit-id").value = id;
                 document.getElementById("edit-position").value = positionName;
+                document.getElementById("edit-basic-salary-position").value = basicSalary;
+                document.getElementById("edit-position-allowance").value = positionAllowance;
 
                 if (myEditForm.style.display === 'none') {
                     myEditForm.style.display = 'block';
@@ -171,5 +219,38 @@
                 myEditForm.style.display = 'none';
             }
         });
+
+        // Fungsi untuk mengubah angka ke format IDR
+        function formatToIDR(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+        }
+
+        // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
+        function updateIDRFormat(inputElement) {
+            const value = inputElement.value;
+            const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+
+            if (!isNaN(numericValue)) {
+                inputElement.value = formatToIDR(numericValue);
+            }
+        }
+
+        // Event listener untuk memanggil fungsi saat input berhenti diedit
+        const inputSelectors = [
+            '.form-control.input-new-basic-salary-position',
+            '.form-control.input-new-position-allowance',
+            '.form-control.input-edit-basic-salary-position',
+            '.form-control.input-edit-position-allowance'
+        ];
+
+        inputSelectors.forEach(function (selector) {
+            const inputElements = document.querySelectorAll(selector);
+            inputElements.forEach(function (inputElement) {
+                inputElement.addEventListener('blur', function () {
+                    updateIDRFormat(this);
+                });
+            });
+        });
+
     </script>
 @endsection
