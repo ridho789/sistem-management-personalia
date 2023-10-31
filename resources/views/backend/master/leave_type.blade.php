@@ -111,7 +111,6 @@
     <script>
         // script to show/hide form add new leave type
         const toggleFormButton = document.getElementById('new-type-leave');
-        const toggleCloseFormButton = document.getElementById('close-form-new-type-leave');
         const myForm = document.getElementById('form-new-type-leave');
 
         toggleFormButton.addEventListener('click', function() {
@@ -125,19 +124,8 @@
             }
         });
 
-        toggleCloseFormButton.addEventListener('click', function() {
-            var nameTypeLeaveInput = document.getElementById("name-type-leave");
-            var nameTypeLeaveValue = nameTypeLeaveInput.value;
-            if (nameTypeLeaveValue){
-                if (myForm.style.display === 'block') {
-                    myForm.style.display = 'none';
-                }
-            }
-        });
-
         // script to show/hide edit form
         const toggleFormEditButton = document.getElementById('edit-button');
-        const toggleCloseFormEditButton = document.getElementById('close-form-edit-type-leave');
         const myEditForm = document.getElementById('form-edit-type-leave');
 
         // show edit form
@@ -164,13 +152,6 @@
                     myForm.style.display = 'none';
                 }
             });
-        });
-
-        // close edit form
-        toggleCloseFormEditButton.addEventListener('click', function() {
-            if (myEditForm.style.display === 'block') {
-                myEditForm.style.display = 'none';
-            }
         });
     </script>
 @endsection

@@ -70,7 +70,7 @@
                                         <input type="text" id="edit-code-employee-status" class="form-control input-edit-code-employee-status" 
                                             name="kode_status" placeholder="input edit code employee status" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-employee-status" id="close-form-edit-employee-status">Submit</button>
+                                    <button type="submit" class="btn btn-primary submit-employee-status" id="close-form-edit-employee-status">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -130,7 +130,6 @@
     <script>
         // script to show/hide form add new employee-status
         const toggleFormButton = document.getElementById('new-employee-status');
-        const toggleCloseFormButton = document.getElementById('close-form-new-employee-status');
         const myForm = document.getElementById('form-new-employee-status');
 
         toggleFormButton.addEventListener('click', function() {
@@ -144,19 +143,8 @@
             }
         });
 
-        toggleCloseFormButton.addEventListener('click', function() {
-            var nameemployee_statusInput = document.getElementById("name-employee-status");
-            var nameemployee_statusValue = nameemployee_statusInput.value;
-            if (nameemployee_statusValue){
-                if (myForm.style.display === 'block') {
-                    myForm.style.display = 'none';
-                }
-            }
-        });
-
         // script to show/hide edit form
         const toggleFormEditButton = document.getElementById('edit-button');
-        const toggleCloseFormEditButton = document.getElementById('close-form-edit-employee-status');
         const myEditForm = document.getElementById('form-edit-employee-status');
 
         // show edit form
@@ -185,13 +173,6 @@
                     myForm.style.display = 'none';
                 }
             });
-        });
-
-        // close edit form
-        toggleCloseFormEditButton.addEventListener('click', function() {
-            if (myEditForm.style.display === 'block') {
-                myEditForm.style.display = 'none';
-            }
         });
     </script>
 @endsection

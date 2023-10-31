@@ -38,7 +38,7 @@
                                         <label for="address-company">Address Company</label>
                                         <input type="text" id="alamat-company" class="form-control input-new-address-company" name="alamat_perusahaan" placeholder="input new address company" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-company" id="close-form-new-company">Submit</button>
+                                    <button type="submit" class="btn btn-primary submit-company" id="close-form-new-company">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -66,7 +66,7 @@
                                         <label for="edit-address-company">Address Company</label>
                                         <input type="text" id="edit-address-company" class="form-control input-edit-address-company" name="alamat_perusahaan" placeholder="input edit address company" required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary mt-3 submit-company" id="close-form-edit-company">Submit</button>
+                                    <button type="submit" class="btn btn-primary submit-company" id="close-form-edit-company">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -126,7 +126,6 @@
     <script>
         // script to show/hide form add new company
         const toggleFormButton = document.getElementById('new-company');
-        const toggleCloseFormButton = document.getElementById('close-form-new-company');
         const myForm = document.getElementById('form-new-company');
 
         toggleFormButton.addEventListener('click', function() {
@@ -140,19 +139,8 @@
             }
         });
 
-        toggleCloseFormButton.addEventListener('click', function() {
-            var namecompanyInput = document.getElementById("name-company");
-            var namecompanyValue = namecompanyInput.value;
-            if (namecompanyValue){
-                if (myForm.style.display === 'block') {
-                    myForm.style.display = 'none';
-                }
-            }
-        });
-
         // script to show/hide edit form
         const toggleFormEditButton = document.getElementById('edit-button');
-        const toggleCloseFormEditButton = document.getElementById('close-form-edit-company');
         const myEditForm = document.getElementById('form-edit-company');
 
         // show edit form
@@ -181,13 +169,6 @@
                     myForm.style.display = 'none';
                 }
             });
-        });
-
-        // close edit form
-        toggleCloseFormEditButton.addEventListener('click', function() {
-            if (myEditForm.style.display === 'block') {
-                myEditForm.style.display = 'none';
-            }
         });
     </script>
 @endsection

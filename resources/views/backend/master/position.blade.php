@@ -50,7 +50,7 @@
                                                 name="input_tunjangan_jabatan" placeholder="input new position allowance" required>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-new-position">Submit</button>
+                                        <button type="submit" class="btn btn-primary submit-position" id="close-form-new-position">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -91,7 +91,7 @@
                                                 name="value_tunjangan_jabatan" placeholder="input edit position allowance" required>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary mt-3 submit-position" id="close-form-edit-position">Submit</button>
+                                        <button type="submit" class="btn btn-primary submit-position" id="close-form-edit-position">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -154,7 +154,6 @@
     <script>
         // script to show/hide form add new position
         const toggleFormButton = document.getElementById('new-position');
-        const toggleCloseFormButton = document.getElementById('close-form-new-position');
         const myForm = document.getElementById('form-new-position');
 
         toggleFormButton.addEventListener('click', function() {
@@ -168,19 +167,8 @@
             }
         });
 
-        toggleCloseFormButton.addEventListener('click', function() {
-            var namepositionInput = document.getElementById("name-position");
-            var namepositionValue = namepositionInput.value;
-            if (namepositionValue){
-                if (myForm.style.display === 'block') {
-                    myForm.style.display = 'none';
-                }
-            }
-        });
-
         // script to show/hide edit form
         const toggleFormEditButton = document.getElementById('edit-button');
-        const toggleCloseFormEditButton = document.getElementById('close-form-edit-position');
         const myEditForm = document.getElementById('form-edit-position');
 
         // show edit form
@@ -211,13 +199,6 @@
                     myForm.style.display = 'none';
                 }
             });
-        });
-
-        // close edit form
-        toggleCloseFormEditButton.addEventListener('click', function() {
-            if (myEditForm.style.display === 'block') {
-                myEditForm.style.display = 'none';
-            }
         });
 
         // Fungsi untuk mengubah angka ke format IDR

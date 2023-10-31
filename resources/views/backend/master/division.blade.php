@@ -142,7 +142,6 @@
     <script>
         // script to show/hide form add new division
         const toggleFormButton = document.getElementById('new-division');
-        const toggleCloseFormButton = document.getElementById('close-form-new-division');
         const myForm = document.getElementById('form-new-division');
 
         toggleFormButton.addEventListener('click', function() {
@@ -156,19 +155,8 @@
             }
         });
 
-        toggleCloseFormButton.addEventListener('click', function() {
-            var nameDivisionInput = document.getElementById("name-division");
-            var nameDivisionValue = nameDivisionInput.value;
-            if (nameDivisionValue){
-                if (myForm.style.display === 'block') {
-                    myForm.style.display = 'none';
-                }
-            }
-        });
-
         // script to show/hide edit form
         const toggleFormEditButton = document.getElementById('edit-button');
-        const toggleCloseFormEditButton = document.getElementById('close-form-edit-division');
         const myEditForm = document.getElementById('form-edit-division');
 
         // show edit form
@@ -199,13 +187,6 @@
                     myForm.style.display = 'none';
                 }
             });
-        });
-
-        // close edit form
-        toggleCloseFormEditButton.addEventListener('click', function() {
-            if (myEditForm.style.display === 'block') {
-                myEditForm.style.display = 'none';
-            }
         });
     </script>
 @endsection
