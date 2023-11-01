@@ -17,7 +17,7 @@ class TableDivisi extends Migration
             $table->id('id_divisi');
             $table->string('nama_divisi');
             $table->string('kode_divisi', 5);
-            $table->integer('jumlah_hari_kerja', 2);
+            $table->integer('jumlah_hari_kerja', 2)->autoIncrement(false);
             $table->timestamps();
         });
     }
