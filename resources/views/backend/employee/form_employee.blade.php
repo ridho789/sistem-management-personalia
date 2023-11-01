@@ -693,8 +693,10 @@
                 const startDate = startJoiningColumn.value;
 
                 const getTwoDigitYear = (date) => {
-                    const year = new Date(date).getFullYear();
-                    return year % 100;
+                    const year = parseInt(date);
+                    if (!isNaN(year)) {
+                        return String(year % 100).padStart(2, '0');
+                    }
                 };
 
                 const twoDigitYearBirth = getTwoDigitYear(dateBirth);
