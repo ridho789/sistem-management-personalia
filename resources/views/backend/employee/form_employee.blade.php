@@ -239,6 +239,18 @@
                                             </div>
                                         </div>
 
+                                        <div id="basic_salary">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label">Basic Salary
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control val_basic_salary" placeholder="Enter a basic salary.." 
+                                                    id="val_basic_salary" name="val_basic_salary" value="{{ old('val_basic_salary', $employee->gaji_pokok) }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div id="start_joining">
                                             <div class="form-group row">
                                                 <label class="col-lg-4 col-form-label">Start Joining
@@ -464,6 +476,18 @@
                                                 </select>
                                             </div>
                                         </div>
+
+                                        <div id="basic_salary">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label">Basic Salary
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-6">
+                                                    <input type="text" class="form-control val_basic_salary" placeholder="Enter a basic salary.." 
+                                                    id="val_basic_salary" name="val_basic_salary" value="{{ old('val_basic_salary') }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
                                         
                                         <div id="start_joining">
                                             <div class="form-group row">
@@ -593,140 +617,169 @@
         // });
 
         document.addEventListener('DOMContentLoaded', function () {
-        // show-hide element term contract, start contract, and end contract
-        const valStatus = document.getElementById('val_status');
-        const valDivision = document.getElementById('val_division');
+            // show-hide element term contract, start contract, and end contract
+            const valStatus = document.getElementById('val_status');
+            const valDivision = document.getElementById('val_division');
 
-        const contractStatus = document.getElementById('contract_status');
-        const startJoining = document.getElementById('start_joining');
+            const contractStatus = document.getElementById('contract_status');
+            const startJoining = document.getElementById('start_joining');
 
-        const startJoiningColumn = document.getElementById('val_start_joining');
-        const termContractColumn = document.getElementById('val_term_contract');
-        const startContractColumn = document.getElementById('val_start_contract');
-        const endContractColumn = document.getElementById('val_end_contract');
-        const dateBirthColumn = document.getElementById('val_date_birth');
-        const valIdCard = document.getElementById('val_idcard');
+            const startJoiningColumn = document.getElementById('val_start_joining');
+            const termContractColumn = document.getElementById('val_term_contract');
+            const startContractColumn = document.getElementById('val_start_contract');
+            const endContractColumn = document.getElementById('val_end_contract');
+            const dateBirthColumn = document.getElementById('val_date_birth');
+            const valIdCard = document.getElementById('val_idcard');
 
-        // tidak digunakan ganti format
-        // function updateIdCard() {
-        //     const selectedStatus = valStatus.value;
-        //     const selectedDivision = valDivision.value;
-            
-        //     const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
-        //     const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
-
-        //     if (selectedDivision || selectedStatus) {
-        //         // ambil data kode divisi dan status
-        //         const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
-        //         const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
-
-        //         // Dapatkan nilai tanggal berdasarkan kolom yang sesuai
-        //         let dateColumn;
-        //         if (selectedStatusOption.getAttribute("data-status").toLowerCase() === 'kontrak') {
-        //             dateColumn = startContractColumn;
-        //         } else {
-        //             dateColumn = startJoiningColumn;
-        //         }
-
-        //         function updateIdCardValue() {
-        //             const selectedStatus = valStatus.value;
-        //             const selectedDivision = valDivision.value;
-                    
-        //             const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
-        //             const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
-
-        //             // ambil data kode divisi dan status
-        //             const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
-        //             const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
-
-        //             var startDate = dateColumn.value;
-        //             var year = new Date(startDate).getFullYear();
-        //             var twoDigitYear = year % 100;
-        //             var randomDigits = (Math.floor(Math.random() * 1000)).toString().padStart(2, '0');
-                    
-        //             // set value id card
-        //             var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
-        //                 (selectedCodeStatus ? selectedCodeStatus : '00') +
-        //                 (selectedCodeDivision ? selectedCodeDivision : '00') + 
-        //                 randomDigits;
-        //             valIdCard.value = idcardValue;
-        //         }
-
-        //         // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
-        //         valStatus.addEventListener('change', updateIdCardValue);
-        //         valDivision.addEventListener('change', updateIdCardValue);
-
-        //         // Panggil fungsi untuk mengupdate ID card saat input di dateColumn
-        //         dateColumn.addEventListener("input", updateIdCardValue);
+            // tidak digunakan ganti format
+            // function updateIdCard() {
+            //     const selectedStatus = valStatus.value;
+            //     const selectedDivision = valDivision.value;
                 
-        //         // Panggil fungsi pertama kali untuk menginisialisasi nilai ID card
-        //         // updateIdCardValue();
-        //     }
-        // }
+            //     const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+            //     const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
 
-        function updateIdCardValue() {
-            const dateBirth = dateBirthColumn.value;
-            const startDate = startJoiningColumn.value;
+            //     if (selectedDivision || selectedStatus) {
+            //         // ambil data kode divisi dan status
+            //         const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+            //         const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
 
-            const getTwoDigitYear = (date) => {
-                const year = new Date(date).getFullYear();
-                return year % 100;
-            };
+            //         // Dapatkan nilai tanggal berdasarkan kolom yang sesuai
+            //         let dateColumn;
+            //         if (selectedStatusOption.getAttribute("data-status").toLowerCase() === 'kontrak') {
+            //             dateColumn = startContractColumn;
+            //         } else {
+            //             dateColumn = startJoiningColumn;
+            //         }
 
-            const twoDigitYearBirth = getTwoDigitYear(dateBirth);
-            const twoDigitYearJoin = getTwoDigitYear(startDate);
-            const randomDigits = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+            //         function updateIdCardValue() {
+            //             const selectedStatus = valStatus.value;
+            //             const selectedDivision = valDivision.value;
+                        
+            //             const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+            //             const selectedDivisionOption = valDivision.querySelector(`option[value="${selectedDivision}"`);
 
-            const idcardValue = String(twoDigitYearJoin || '00') + String(twoDigitYearBirth || '00') + String(randomDigits || '000');
-            valIdCard.value = idcardValue;
-        }
+            //             // ambil data kode divisi dan status
+            //             const selectedCodeStatus = selectedStatusOption.getAttribute("data-code-status");
+            //             const selectedCodeDivision = selectedDivisionOption.getAttribute("data-code-division");
 
-        // Fungsi yang memeriksa apakah ada perubahan tahun di dalam input
-        function checkYearChange(event) {
-            const inputElement = event.target;
-            const currentValue = inputElement.value;
-            const previousValue = inputElement.getAttribute('data-previous-value') || '';
+            //             var startDate = dateColumn.value;
+            //             var year = new Date(startDate).getFullYear();
+            //             var twoDigitYear = year % 100;
+            //             var randomDigits = (Math.floor(Math.random() * 1000)).toString().padStart(2, '0');
+                        
+            //             // set value id card
+            //             var idcardValue = (twoDigitYear ? twoDigitYear : '00') +
+            //                 (selectedCodeStatus ? selectedCodeStatus : '00') +
+            //                 (selectedCodeDivision ? selectedCodeDivision : '00') + 
+            //                 randomDigits;
+            //             valIdCard.value = idcardValue;
+            //         }
 
-            if (currentValue !== previousValue) {
-                inputElement.setAttribute('data-previous-value', currentValue);
-                updateIdCardValue();
+            //         // Panggil fungsi untuk mengupdate ID card saat status atau divisi berubah
+            //         valStatus.addEventListener('change', updateIdCardValue);
+            //         valDivision.addEventListener('change', updateIdCardValue);
+
+            //         // Panggil fungsi untuk mengupdate ID card saat input di dateColumn
+            //         dateColumn.addEventListener("input", updateIdCardValue);
+                    
+            //         // Panggil fungsi pertama kali untuk menginisialisasi nilai ID card
+            //         // updateIdCardValue();
+            //     }
+            // }
+
+            function updateIdCardValue() {
+                const dateBirth = dateBirthColumn.value;
+                const startDate = startJoiningColumn.value;
+
+                const getTwoDigitYear = (date) => {
+                    const year = new Date(date).getFullYear();
+                    return year % 100;
+                };
+
+                const twoDigitYearBirth = getTwoDigitYear(dateBirth);
+                const twoDigitYearJoin = getTwoDigitYear(startDate);
+                const randomDigits = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+
+                const idcardValue = String(twoDigitYearJoin || '00') + String(twoDigitYearBirth || '00') + String(randomDigits || '000');
+                valIdCard.value = idcardValue;
             }
-        }
 
-        // Tambahkan event listener untuk kedua kolom input (dateBirthColumn / startJoiningColumn)
-        dateBirthColumn.addEventListener("input", checkYearChange);
-        startJoiningColumn.addEventListener("input", checkYearChange);
+            // Fungsi yang memeriksa apakah ada perubahan tahun di dalam input
+            function checkYearChange(event) {
+                const inputElement = event.target;
+                const currentValue = inputElement.value;
+                const previousValue = inputElement.getAttribute('data-previous-value') || '';
 
-        function toggleContractStatus() {
-            const selectedStatus = valStatus.value;
-            const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
-
-            if (selectedStatus) {
-                const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
-                // Show or hide contractStatus based on the selected status
-                if (selectedNameStatus === 'kontrak') {
-                    termContractColumn.setAttribute('required', 'required');
-                    startContractColumn.setAttribute('required', 'required');
-                    endContractColumn.setAttribute('required', 'required');
-
-                    contractStatus.style.display = 'block';
-
-                } else {
-                    termContractColumn.removeAttribute('required');
-                    startContractColumn.removeAttribute('required');
-                    endContractColumn.removeAttribute('required');
-
-                    contractStatus.style.display = 'none';
+                if (currentValue !== previousValue) {
+                    inputElement.setAttribute('data-previous-value', currentValue);
+                    updateIdCardValue();
                 }
             }
+
+            // Tambahkan event listener untuk kedua kolom input (dateBirthColumn / startJoiningColumn)
+            dateBirthColumn.addEventListener("input", checkYearChange);
+            startJoiningColumn.addEventListener("input", checkYearChange);
+
+            function toggleContractStatus() {
+                const selectedStatus = valStatus.value;
+                const selectedStatusOption = valStatus.querySelector(`option[value="${selectedStatus}"`);
+
+                if (selectedStatus) {
+                    const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
+                    // Show or hide contractStatus based on the selected status
+                    if (selectedNameStatus === 'kontrak') {
+                        termContractColumn.setAttribute('required', 'required');
+                        startContractColumn.setAttribute('required', 'required');
+                        endContractColumn.setAttribute('required', 'required');
+
+                        contractStatus.style.display = 'block';
+
+                    } else {
+                        termContractColumn.removeAttribute('required');
+                        startContractColumn.removeAttribute('required');
+                        endContractColumn.removeAttribute('required');
+
+                        contractStatus.style.display = 'none';
+                    }
+                }
+            }
+
+            valStatus.addEventListener('change', toggleContractStatus);
+            // valDivision.addEventListener('change', toggleContractStatus);
+
+            // Set initial state based on the value of val_status on page load
+            toggleContractStatus();
+        });
+
+        // Fungsi untuk mengubah angka ke format IDR
+        function formatToIDR(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
         }
 
-        valStatus.addEventListener('change', toggleContractStatus);
-        valDivision.addEventListener('change', toggleContractStatus);
+        // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
+        function updateIDRFormat(inputElement) {
+            const value = inputElement.value;
+            const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
 
-        // Set initial state based on the value of val_status on page load
-        toggleContractStatus();
-    });
+            if (!isNaN(numericValue)) {
+                inputElement.value = formatToIDR(numericValue);
+            }
+        }
+
+        // Event listener untuk memanggil fungsi saat input berhenti diedit
+        const inputSelectors = [
+            '.form-control.val_basic_salary',
+        ];
+
+        inputSelectors.forEach(function (selector) {
+            const inputElements = document.querySelectorAll(selector);
+            inputElements.forEach(function (inputElement) {
+                inputElement.addEventListener('blur', function () {
+                    updateIDRFormat(this);
+                });
+            });
+        });
 
         // show/hide form create by excel
         const toggleFormButton = document.getElementById('button-create-employee-excel');

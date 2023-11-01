@@ -39,12 +39,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <div class="col-lg-6">
-                                                <label for="basic-salary-position">Basic Salary</label>
-                                                <input type="text" id="basic-salary-position" class="form-control input-new-basic-salary-position" 
-                                                name="input_gaji_pokok" placeholder="input new basic salary position" required>
-                                            </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <label for="position-allowance">Position Allowance</label>
                                                 <input type="text" id="position-allowance" class="form-control input-new-position-allowance" 
                                                 name="input_tunjangan_jabatan" placeholder="input new position allowance" required>
@@ -80,12 +75,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <div class="col-lg-6">
-                                                <label for="basic-salary-position">Basic Salary</label>
-                                                <input type="text" id="edit-basic-salary-position" class="form-control input-edit-basic-salary-position" 
-                                                name="value_gaji_pokok" placeholder="input edit basic salary position" required>
-                                            </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <label for="position-allowance">Position Allowance</label>
                                                 <input type="text" id="edit-position-allowance" class="form-control input-edit-position-allowance" 
                                                 name="value_tunjangan_jabatan" placeholder="input edit position allowance" required>
@@ -116,7 +106,6 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Position</th>
-                                            <th>Basic Salary</th>
                                             <th>Position Allowance</th>
                                         </tr>
                                     </thead>
@@ -125,7 +114,6 @@
                                         <tr data-id="{{$j->id_jabatan}}">
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="position-name-selected">{{$j->nama_jabatan}}</td>
-                                            <td class="basic-salary-selected">{{$j->gaji_pokok}}</td>
                                             <td class="position-allowance-selected">{{$j->tunjangan_jabatan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
@@ -181,13 +169,11 @@
                 var row = this.closest("tr");
                 var id = row.getAttribute("data-id");
                 var positionName = row.querySelector(".position-name-selected").textContent;
-                var basicSalary = row.querySelector(".basic-salary-selected").textContent;
                 var positionAllowance = row.querySelector(".position-allowance-selected").textContent;
 
                 // Mengisi data ke dalam formulir
                 document.getElementById("edit-id").value = id;
                 document.getElementById("edit-position").value = positionName;
-                document.getElementById("edit-basic-salary-position").value = basicSalary;
                 document.getElementById("edit-position-allowance").value = positionAllowance;
 
                 if (myEditForm.style.display === 'none') {
@@ -218,9 +204,7 @@
 
         // Event listener untuk memanggil fungsi saat input berhenti diedit
         const inputSelectors = [
-            '.form-control.input-new-basic-salary-position',
             '.form-control.input-new-position-allowance',
-            '.form-control.input-edit-basic-salary-position',
             '.form-control.input-edit-position-allowance'
         ];
 

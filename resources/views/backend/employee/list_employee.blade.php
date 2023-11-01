@@ -21,8 +21,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        @if (count($tbl_karyawan) > 0)
+                    @if (count($tbl_karyawan) > 0)
+                        <div class="card-header">
                             <form action="{{ url('list-employee-search') }}" method="GET">
                                 @csrf
                                 <div class="input-group">
@@ -33,8 +33,8 @@
                                     </span> -->
                                 </div>
                             </form>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                     <div class="card-header">                           
                         <h4 class="card-title">List Employee</h4>
                         @if (count($tbl_karyawan) > 0)

@@ -68,9 +68,12 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:void()" aria-expanded="false">
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                     <i class="icon icon-payment"></i><span class="nav-text">Payroll</span>
                 </a>
+                <ul aria-expanded="false">
+                    <li><a href="/data-payroll">Data Payroll</a></li>
+                </ul>
             </li>
         </ul>
     </div>

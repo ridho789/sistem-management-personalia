@@ -65,6 +65,9 @@ class employeemanagementController extends Controller
             'id_divisi' => $request->id_divisi,
             'id_perusahaan' => $request->id_perusahaan,
             'id_status' => $request->id_status,
+            'gaji_pokok' => $request->val_basic_salary,
+            'awal_bergabung' => $request->val_start_joining
+
         ];
 
         $dataStatus = StatusEmployee::where('id_status', $request->id_status)->first();
@@ -74,13 +77,11 @@ class employeemanagementController extends Controller
             $employeeData['lama_kontrak'] = $request->val_term_contract;
             $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
             $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;
-            $employeeData['awal_bergabung'] = null;
 
         } else {
             $employeeData['lama_kontrak'] = null;
             $employeeData['awal_masa_kontrak'] = null;
             $employeeData['akhir_masa_kontrak'] = null;
-            $employeeData['awal_bergabung'] = $request->val_start_joining;
         }
 
         $photo = $request->file('val_photo');
@@ -158,6 +159,7 @@ class employeemanagementController extends Controller
             'id_perusahaan' => $request->id_perusahaan,
             'id_status' => $request->id_status,
             'id_card' => $request->val_idcard,
+            'gaji_pokok' => $request->val_basic_salary,
             'awal_bergabung' => $request->val_start_joining,
             'lama_kontrak' => null,
             'awal_masa_kontrak' => null,
@@ -175,7 +177,6 @@ class employeemanagementController extends Controller
         $namaStatus = strtolower($dataStatus->nama_status);
         
         if ($dataStatus && $namaStatus == 'kontrak') {
-            $employeeData['awal_bergabung'] = null;
             $employeeData['lama_kontrak'] = $request->val_term_contract;
             $employeeData['awal_masa_kontrak'] = $request->val_start_contract;
             $employeeData['akhir_masa_kontrak'] = $request->val_end_contract;

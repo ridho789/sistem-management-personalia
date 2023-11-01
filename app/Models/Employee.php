@@ -22,6 +22,7 @@ class Employee extends Model
         'id_divisi',
         'id_perusahaan',
         'id_status',
+        'gaji_pokok',
         'lama_kontrak',
         'awal_masa_kontrak',
         'akhir_masa_kontrak',

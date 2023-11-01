@@ -36,17 +36,14 @@ class EmployeesImport implements ToCollection
             $date = date_create_from_format('Y-m-d', $dateText);
             $date_format = date_format($date, 'Y-m-d');
 
-            // date format (awal bergabung)
-            $dateTextStartJoining =  $row[14];
-            if ($dateTextStartJoining) {
-                $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
-                if ($dateStartJoining !== false) {
-                    $dateFormatStartJoining = date_format($dateStartJoining, 'Y-m-d');
-                }
+            // periksa kolom tanggal harus berupa teks
+            if (!is_string($row[3])) {
+                // Catat pesan kesalahan jika nilai bukan teks
+                Log::error('Error importing data: Nilai kolom tanggal bukan teks di baris ' . $this->currentRow);
             }
 
             // date format (awal kontrak)
-            $dateTextStartContract =  $row[12];
+            $dateTextStartContract =  $row[13];
             if ($dateTextStartContract) {
                 $dateStartContract = date_create_from_format('Y-m-d', $dateTextStartContract);
                 if ($dateStartContract !== false) {
@@ -55,11 +52,20 @@ class EmployeesImport implements ToCollection
             }
 
             // date format (selesai kontrak)
-            $dateTextEndContract =  $row[13];
+            $dateTextEndContract =  $row[14];
             if ($dateTextEndContract) {
                 $dateEndContract = date_create_from_format('Y-m-d', $dateTextEndContract);
                 if ($dateEndContract !== false) {
                     $dateFormatEndContract = date_format($dateEndContract, 'Y-m-d');
+                }
+            }
+
+            // date format (awal bergabung)
+            $dateTextStartJoining =  $row[15];
+            if ($dateTextStartJoining) {
+                $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
+                if ($dateStartJoining !== false) {
+                    $dateFormatStartJoining = date_format($dateStartJoining, 'Y-m-d');
                 }
             }
 
@@ -70,6 +76,11 @@ class EmployeesImport implements ToCollection
             $nameDivision = $row[8];
             $nameCompany = $row[9];
             $nameStatus = $row[10];
+
+            // Gaji Pokok
+            $basic_salary = $row[11];
+            $numericAmountBasicSalary = preg_replace("/[^0-9]/", "", explode(",", $basic_salary)[0]);
+            $basic_salary_idr = "Rp " . number_format($numericAmountBasicSalary, 0, ',', '.');
 
             $position = Position::where('nama_jabatan', $namePosition)->first();
             $division = Divisi::where('nama_divisi', $nameDivision)->first();
@@ -84,17 +95,11 @@ class EmployeesImport implements ToCollection
             }
 
             // periksa kolom nik dan id card
-            $key = $row[1]. '-'.$row[11];
+            $key = $row[1]. '-'.$row[16];
             if (isset($uniqueValues[$key])){
                 Log::error('Error importing data: Duplikasi berdasarkan NIK dan ID Card ditemukan di baris ' . $this->currentRow);
             } else {
                 $uniqueValues[$key] = true;
-            }
-
-            // periksa kolom tanggal harus berupa teks
-            if (!is_string($row[3])) {
-                // Catat pesan kesalahan jika nilai bukan teks
-                Log::error('Error importing data: Nilai kolom tanggal bukan teks di baris ' . $this->currentRow);
             }
 
             if ($position && $division && $company && $status) {
@@ -110,17 +115,18 @@ class EmployeesImport implements ToCollection
                     'id_divisi' => $division->id_divisi,
                     'id_perusahaan' => $company->id_perusahaan,
                     'id_status' => $status->id_status,
-                    'id_card' => $row[15],
-                    'foto' => ''
+                    'awal_bergabung' => $dateFormatStartJoining,
+                    'gaji_pokok' => $basic_salary_idr,
+                    'id_card' => $row[16],
                 ];
             
                 if (strtolower($status->nama_status) == 'kontrak') {
-                    $employeeData['lama_kontrak'] = $row[11];
+                    $employeeData['lama_kontrak'] = $row[12];
                     $employeeData['awal_masa_kontrak'] = $dateFormatStartContract;
                     $employeeData['akhir_masa_kontrak'] = $dateFormatEndContract;
-                } else {
-                    $employeeData['awal_bergabung'] = $dateFormatStartJoining;
+
                 }
+
                 Employee::create($employeeData);
 
             } else {

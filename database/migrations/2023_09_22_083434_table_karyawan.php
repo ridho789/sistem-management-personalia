@@ -23,6 +23,7 @@ class TableKaryawan extends Migration
             $table->bigInteger('no_telp', 15)->notNullable()->autoIncrement(false);
             $table->string('alamat')->notNull();
             $table->date('awal_bergabung')->nullable();
+            $table->string('gaji_pokok', 25)->notNull();
             $table->string('lama_kontrak')->nullable();
             $table->date('awal_masa_kontrak')->nullable();
             $table->date('akhir_masa_kontrak')->nullable();

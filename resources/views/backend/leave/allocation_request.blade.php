@@ -20,8 +20,8 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        @if (count($allocationRequest) > 0)
+                    @if (count($allocationRequest) > 0)
+                        <div class="card-header">
                             <form action="{{ url('allocation-request-search') }}" method="GET">
                             @csrf
                                 <div class="input-group">
@@ -29,8 +29,8 @@
                                     placeholder="Search employee / idcard" value="{{ Request::get('search') }}">
                                 </div>
                             </form>
-                        @endif
-                    </div>
+                        </div>
+                    @endif
                     <div class="card-header">                           
                         <h4 class="card-title">Allocation Request</h4>
                     </div>

@@ -13,6 +13,7 @@ use App\Http\Controllers\assetmanagementController;
 use App\Http\Controllers\employeemanagementController;
 use App\Http\Controllers\leavemanagementController;
 use App\Http\Controllers\attendanceController;
+use App\Http\Controllers\payrollController;
 
 use App\Http\Controllers\importEmployeeexcel;
 use App\Http\Controllers\importAssetexcel;
@@ -103,6 +104,10 @@ Route::post('leave-request-update', [leavemanagementController::class, 'update']
 Route::get('leave-request-delete/{id_data_cuti}', [leavemanagementController::class, 'delete']);
 Route::post('leave-request-print', [leavemanagementController::class, 'print']);
 Route::post('leave-request-upload', [leavemanagementController::class, 'upload']);
+
+// management - payroll
+Route::get('/data-payroll', [payrollController::class, 'index']);
+Route::get('/form-check-payroll', [payrollController::class, 'check']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);
