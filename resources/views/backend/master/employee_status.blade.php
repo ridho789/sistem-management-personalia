@@ -35,11 +35,11 @@
                                         <input type="text" id="name-employee-status" class="form-control input-new-employee-status" 
                                             name="nama_status" placeholder="input new employee status" required>
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="code-employee-status">Code Status</label>
                                         <input type="text" id="code-employee-status" class="form-control input-new-code-employee-status" 
                                             name="kode_status" placeholder="input new code employee status" required>
-                                    </div>
+                                    </div> -->
                                     <button type="submit" class="btn btn-primary submit-employee-status" id="close-form-new-employee-status">Submit</button>
                                 </div>
                             </form>
@@ -65,11 +65,11 @@
                                         <input type="text" id="edit-employee-status" class="form-control input-edit-employee-status" 
                                             name="nama_status" placeholder="input edit employee status" required>
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="edit-code-employee-status">Code Status</label>
                                         <input type="text" id="edit-code-employee-status" class="form-control input-edit-code-employee-status" 
                                             name="kode_status" placeholder="input edit code employee status" required>
-                                    </div>
+                                    </div> -->
                                     <button type="submit" class="btn btn-primary submit-employee-status" id="close-form-edit-employee-status">Submit</button>
                                 </div>
                             </form>
@@ -94,7 +94,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Status</th>
-                                            <th>Code</th>
+                                            <!-- <th>Code</th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -102,7 +102,7 @@
                                         <tr data-id="{{$e->id_status}}">
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="employee-status-name-selected">{{$e->nama_status}}</td>
-                                            <td class="employee-status-code-selected">{{$e->kode_status}}</td>
+                                            <!-- <td class="employee-status-code-selected">{{$e->kode_status}}</td> -->
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
                                                 <!-- <a href="employee-status-delete/{{$e->id_status}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
@@ -157,12 +157,12 @@
                 var row = this.closest("tr");
                 var id = row.getAttribute("data-id");
                 var employee_statusName = row.querySelector(".employee-status-name-selected").textContent;
-                var employee_statusCode = row.querySelector(".employee-status-code-selected").textContent;
+                // var employee_statusCode = row.querySelector(".employee-status-code-selected").textContent;
 
                 // Mengisi data ke dalam formulir
                 document.getElementById("edit-id").value = id;
                 document.getElementById("edit-employee-status").value = employee_statusName;
-                document.getElementById("edit-code-employee-status").value = employee_statusCode;
+                // document.getElementById("edit-code-employee-status").value = employee_statusCode;
 
                 if (myEditForm.style.display === 'none') {
                     myEditForm.style.display = 'block';

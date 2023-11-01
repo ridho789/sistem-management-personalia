@@ -35,11 +35,11 @@
                                         <input type="text" id="name-division" class="form-control input-new-division" 
                                             name="input_divisi" placeholder="input new division" required>
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="code-division">Code Division</label>
                                         <input type="text" id="code-division" class="form-control input-new-code-division" 
                                             name="input_code_divisi" placeholder="input new code division" required>
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3">
                                         <label for="workdays-division">Number of Workdays</label>
                                         <input type="number" id="workdays-division" class="form-control input-new-workdays-division" 
@@ -70,11 +70,11 @@
                                         <input type="text" id="edit-division" class="form-control input-edit-division" 
                                             name="value_divisi" placeholder="input edit division" required>
                                     </div>
-                                    <div class="mb-3">
+                                    <!-- <div class="mb-3">
                                         <label for="edit-code-division">Code Division</label>
                                         <input type="text" id="edit-code-division" class="form-control input-edit-code-division" 
                                             name="value_code_divisi" placeholder="input edit code division" required>
-                                    </div>
+                                    </div> -->
                                     <div class="mb-3">
                                         <label for="edit-workdays-division">Number of Workdays</label>
                                         <input type="text" id="edit-workdays-division" class="form-control input-edit-workdays-division" 
@@ -104,7 +104,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Division</th>
-                                            <th>Code</th>
+                                            <!-- <th>Code</th> -->
                                             <th>Number of Workdays</th>
                                         </tr>
                                     </thead>
@@ -113,7 +113,7 @@
                                         <tr data-id="{{$d->id_divisi}}">
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="division-name-selected">{{$d->nama_divisi}}</td>
-                                            <td class="division-code-selected">{{$d->kode_divisi}}</td>
+                                            <!-- <td class="division-code-selected">{{$d->kode_divisi}}</td> -->
                                             <td class="division-workdays-selected">{{$d->jumlah_hari_kerja}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
@@ -169,13 +169,13 @@
                 var row = this.closest("tr");
                 var id = row.getAttribute("data-id");
                 var divisionName = row.querySelector(".division-name-selected").textContent;
-                var divisionCode = row.querySelector(".division-code-selected").textContent;
+                // var divisionCode = row.querySelector(".division-code-selected").textContent;
                 var divisionWorkdays = row.querySelector(".division-workdays-selected").textContent;
 
                 // Mengisi data ke dalam formulir
                 document.getElementById("edit-id").value = id;
                 document.getElementById("edit-division").value = divisionName;
-                document.getElementById("edit-code-division").value = divisionCode;
+                // document.getElementById("edit-code-division").value = divisionCode;
                 document.getElementById("edit-workdays-division").value = divisionWorkdays;
 
                 if (myEditForm.style.display === 'none') {

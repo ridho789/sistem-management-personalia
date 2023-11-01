@@ -17,7 +17,7 @@ class employeestatusController extends Controller
     {   
         DB::table('tbl_status_kary')->insert([
             'nama_status'=> $request->nama_status,
-            'kode_status'=> $request->kode_status,
+            // 'kode_status'=> $request->kode_status,
         ]);
         return redirect()->back();
     }
@@ -32,7 +32,7 @@ class employeestatusController extends Controller
     {
         DB::table('tbl_status_kary')->where('id_status', $request->id_status)->update([
             'nama_status'=> $request->nama_status,
-            'kode_status'=> $request->kode_status,
+            // 'kode_status'=> $request->kode_status,
         ]);
         return redirect()->back();
     }

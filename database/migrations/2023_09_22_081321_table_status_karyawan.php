@@ -16,7 +16,7 @@ class TableStatusKaryawan extends Migration
         Schema::create('tbl_status_kary', function (Blueprint $table) {
             $table->id('id_status');
             $table->string('nama_status');
-            $table->string('kode_status', 5);
+            $table->string('kode_status', 5)->nullable();
             $table->timestamps();
         });
     }

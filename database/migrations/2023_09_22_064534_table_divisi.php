@@ -16,7 +16,7 @@ class TableDivisi extends Migration
         Schema::create('tbl_divisi', function (Blueprint $table) {
             $table->id('id_divisi');
             $table->string('nama_divisi');
-            $table->string('kode_divisi', 5);
+            $table->string('kode_divisi', 5)->nullable();
             $table->integer('jumlah_hari_kerja', 2)->autoIncrement(false);
             $table->timestamps();
         });
