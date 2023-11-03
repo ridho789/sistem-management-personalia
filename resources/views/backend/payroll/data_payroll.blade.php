@@ -74,20 +74,20 @@
                     </div>
                 </div>
                 @if($selectEmployee)
-                    @if ($NotValidPeriod)
+                    @if ($errorInfo)
                         <div class="card">
                             <div class="card-header"></div>
                             <div class="card-body">
                                 <span style="text-align: center;">
                                     <p>{{ $rangeDate }}
-                                    <br>Sorry, Not Applicable Period.</p>
+                                    <br>{{ $errorInfo }}</p>
                                 </span>
                             </div>
                         </div>
                     @else
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
+                                <h4 class="card-title">Basic Information</h4>
                             </div>
                             <div class="card-body">
                                 <table class="table table-responsive-sm" id="data-table-payslip" class="display" style="width:100%">
@@ -102,14 +102,19 @@
                                         <td>{{ $selectEmployee->id_card }}</td>
                                     </tr>
                                     <tr>
+                                        <td>Division</td>
+                                        <td style="text-align: right;">:</td>
+                                        <td>{{ $division->nama_divisi }}</td>
+                                    </tr>
+                                    <tr>
                                         <td>Position</td>
                                         <td style="text-align: right;">:</td>
                                         <td>{{ $position->nama_jabatan }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Division</td>
+                                        <td>Status</td>
                                         <td style="text-align: right;">:</td>
-                                        <td>{{ $division->nama_divisi }}</td>
+                                        <td>{{ $statusEmployee->nama_status }}</td>
                                     </tr>
                                     <tr>
                                         <td>Basic Salary</td>
@@ -122,6 +127,27 @@
                                         <td>{{ $position->tunjangan_jabatan }}</td>
                                     </tr>
                                 </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="">
+                                    @csrf
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Working Days</label>
+                                        <div class="col-sm-10 mb-2">
+                                            <div class="input-group-prepend">
+                                                <input type="number" name="working_days" id="working_days" class="form-control">
+                                                <div class="input-group-text">/ 26</div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     @endif
