@@ -91,6 +91,7 @@ Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class
 
 // management - attendance
 Route::get('/list-attendance', [attendanceController::class, 'index']);
+Route::get('list-attendance-search', [attendanceController::class, 'search']);
 
 // attendance - leave
 Route::get('/leave-request', [leavemanagementController::class, 'create']);

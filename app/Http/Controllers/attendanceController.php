@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\Divisi;
 use App\Models\Attendance;
+use App\Models\Position;
+use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Schema;
 
 class attendanceController extends Controller
@@ -234,8 +236,52 @@ class attendanceController extends Controller
 
         return view('/backend/attendance/list_attendance', [
             'allattendance' => $allattendance,
-            'nameEmployee' => $nameEmployee 
+            'nameEmployee' => $nameEmployee,
+            'employee' => $employee
         ]);
+    }
+
+    public function search(Request $request) {
+        $id_karyawan = $request->id_karyawan;
+        $start_date_range = $request->start_date;
+        $end_date_range = $request->end_date;
+
+        $employee = Employee::all();
+        $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
+        
+        if ($id_karyawan && $start_date_range && $end_date_range) {
+            $allattendance = Attendance::where('employee', $id_karyawan)
+                ->where('attendance_date', '>=', $start_date_range)
+                ->where('attendance_date', '<=', $end_date_range)
+                ->get();
+        }
+
+        if ($id_karyawan) {
+            $allattendance = Attendance::where('employee', $id_karyawan)
+                ->get();
+        }
+
+        if ($start_date_range && $end_date_range) {
+            $allattendance = Attendance::where('attendance_date', '>=', $start_date_range)
+                ->where('attendance_date', '<=', $end_date_range)
+                ->get();
+        }
+
+        if ($allattendance->count() === 0) {
+            $allattendance = Attendance::orderBy('attendance_date', 'asc')->get();
+            return view('/backend/attendance/list_attendance', [
+                'allattendance' => $allattendance,
+                'nameEmployee' => $nameEmployee,
+                'employee' => $employee
+            ]);
+
+        } else {
+            return view('/backend/attendance/list_attendance', [
+                'allattendance' => $allattendance,
+                'nameEmployee' => $nameEmployee,
+                'employee' => $employee
+            ]);
+        }
     }
     
 }

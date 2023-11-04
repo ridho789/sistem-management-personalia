@@ -21,20 +21,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    @if (count($tbl_karyawan) > 0)
-                        <div class="card-header">
-                            <form action="{{ url('list-employee-search') }}" method="GET">
-                                @csrf
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control" 
-                                    placeholder="Search name or ID card" value="{{ Request::get('search') }}">
-                                    <!-- <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary">Search</button>
-                                    </span> -->
-                                </div>
-                            </form>
-                        </div>
-                    @endif
                     <div class="card-header">                           
                         <h4 class="card-title">List Employee</h4>
                         @if (count($tbl_karyawan) > 0)
@@ -43,28 +29,35 @@
                     </div>
                     <div class="card-body">
                         @if (count($tbl_karyawan) > 0)
+                            <form action="{{ url('list-employee-search') }}" method="GET">
+                                @csrf
+                                <div class="form-group row">
+                                    <div class="col-sm-3 mb-3">
+                                        <label>Display employee data based on search name or ID card</label>
+                                        <input type="text" name="search" class="form-control" 
+                                        placeholder="Search name or ID card" value="{{ Request::get('search') }}">
+                                        <!-- <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary">Search</button>
+                                        </span> -->
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <label>Display employee data based on status</label>
+                                        <div class="form-group">
+                                            @foreach ($statuses as $statusId => $statusName)
+                                                <div class="form-check form-check-inline">
+                                                    <label class="form-check-label">
+                                                        <input type="checkbox" class="form-check-input status-filter" 
+                                                        value="{{ $statusId }}">{{ $statusName }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="table-responsive">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <label>Display employee data based on status</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                @foreach ($statuses as $statusId => $statusName)
-                                                    <div class="form-check form-check-inline">
-                                                        <label class="form-check-label">
-                                                            <input type="checkbox" class="form-check-input status-filter" 
-                                                            value="{{ $statusId }}">{{ $statusName }}
-                                                        </label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
                                 <table class="table table-responsive-sm" id="data-table-employee" class="display" style="width:100%">
                                     <thead>
                                         <tr>

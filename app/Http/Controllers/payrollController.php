@@ -89,9 +89,11 @@ class payrollController extends Controller
 
         // Cari data position berdasarkan selectEmployee
         $position = Position::where('id_jabatan', $selectEmployee->id_jabatan)->first();
+        $namePosition = strtolower($position->nama_jabatan);
 
         // Cari data division berdasarkan selectEmployee
         $division = Divisi::where('id_divisi', $selectEmployee->id_divisi)->first();
+        $nameDivision = strtolower($division->nama_divisi);
 
         // Cari data status karyawan berdasarkan selectEmployee
         $statusEmployee = StatusEmployee::where('id_status', $selectEmployee->id_status)->first();
@@ -157,6 +159,8 @@ class payrollController extends Controller
         // Inisiasi variabel
         $countLegalLeave = 0;
         $countSickLeave = 0;
+        $basic_salary = 0;
+        $positionAllowance = 0;
 
         if (count($countDataLeave) > 0) {
             $countLegalLeave = $countDataLeave->where('information', 'like', '%legal%')->count();
@@ -164,7 +168,14 @@ class payrollController extends Controller
         }
 
         // Gaji Pokok
-        $basic_salary = preg_replace("/[^0-9]/", "", explode(",", $selectEmployee->gaji_pokok)[0]);
+        if ($selectEmployee->gaji_pokok) {
+            $basic_salary = preg_replace("/[^0-9]/", "", explode(",", $selectEmployee->gaji_pokok)[0]);
+        }
+
+        // Tunjangan Jabatan
+        if ($position->tunjangan_jabatan) {
+            $positionAllowance = preg_replace("/[^0-9]/", "", explode(",", $position->tunjangan_jabatan)[0]);
+        }
 
         // Hitung jumlah hari kerja
         if ($nameStatusEmployee == 'harian') {
@@ -176,29 +187,49 @@ class payrollController extends Controller
                 $salary_cuts = $countlateTime * ($basic_salary / count($attendance));
             }
 
+            $total_salary = $salary - $salary_cuts;
+
         } else {
-            $workingDays = $nonSundayCount - $nationalHolidayCount;
+            if ($nameDivision == 'security') {
+                if ($namePosition == 'chief') {
+                    $workingDays = $nonSundayCount - $nationalHolidayCount;
+
+                } else {
+                    $workingDays = $nonSundayCount - $nationalHolidayCount;
+                }
+
+            } else {
+                $workingDays = $nonSundayCount - $nationalHolidayCount;
+            }
+
             $countAbsent = $workingDays - count($attendance);
             $absentCuts =  $countAbsent * ($basic_salary / 26);
             $lateCuts = $countlateTime * (($basic_salary / 26) / 8);
 
             $salary = $basic_salary;
             $salary_cuts = $absentCuts + $lateCuts;
+            $total_salary = ($salary - $salary_cuts) + $positionAllowance;
         }
+
+        // Mengubah ke format rupiah
+        $basic_salary = number_format($basic_salary, 0, ',', '.');
+        $positionAllowance = number_format($positionAllowance, 0, ',', '.');
+        $salary_cuts = number_format($salary_cuts, 0, ',', '.');
+        $total_salary = number_format($total_salary, 0, ',', '.');
     
         $payrollData = [
             'id_karyawan' => $request->id_karyawan,
             'periode_gaji' => $rangeDate,
-            'gaji_pokok' => $selectEmployee->gaji_pokok,
-            'tunjangan_jabatan' => $position->tunjangan_jabatan,
-            'potongan' => $salary_cuts,
-            'total_gaji' => $salary - $salary_cuts,
+            'gaji_pokok' => "Rp " . $basic_salary . ",00",
+            'tunjangan_jabatan' => "Rp " . $positionAllowance . ",00",
+            'potongan' => "Rp " . $salary_cuts . ",00",
+            'total_gaji' => "Rp " . $total_salary . ",00",
             'jumlah_hari_kerja' => count($attendance) - ($countLegalLeave + $countSickLeave),
             'jumlah_hari_sakit' => $countSickLeave,
             'jumlah_hari_tidak_masuk' => $workingDays - count($attendance),
             'jumlah_hari_cuti_resmi' => $countLegalLeave,
             'jumlah_hari_telat' => count($lateAttendance),
-            'bulan' => $start_month,
+            'bulan' => date("F", strtotime($request->start_date)),
             'tahun' => $start_year
         ];
 
@@ -207,7 +238,7 @@ class payrollController extends Controller
             ->where('id_karyawan', $request->id_karyawan)
             ->get();
 
-        if (empty($checkPayroll)) {
+        if ($checkPayroll->isEmpty()) {
             Payroll::insert($payrollData);
         }
 

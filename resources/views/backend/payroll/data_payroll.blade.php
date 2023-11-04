@@ -130,7 +130,7 @@
                             </div>
                         </div>
 
-                        <div class="card">
+                        <!-- <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
                             </div>
@@ -145,11 +145,10 @@
                                                 <div class="input-group-text">/ 26</div>
                                             </div>
                                         </div>
-                                        
                                     </div>
                                 </form>
                             </div>
-                        </div>
+                        </div> -->
                     @endif
                 @endif
             </div>

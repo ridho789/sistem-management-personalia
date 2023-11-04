@@ -34,12 +34,14 @@
                                 @csrf
                                 <input type="hidden" id="start_date" name="start_date">
                                 <input type="hidden" id="end_date" name="end_date">
+                                <label>Showing data base on date range</label>
                                 <div class="input-group">
                                     <div class="mb-1" id="reportrange" style="background: #fff; cursor: pointer; 
                                         padding: 5.5px 10px; border: 1px solid #ccc;">
                                         <i class="fa fa-calendar"> </i>&nbsp;<span id="reportrange_display"> Display data based on date range </span> 
                                         <i class="fa fa-caret-down"></i>
                                     </div>
+                                    <div class="ml-2"></div>
                                     <div class="mb-1">
                                         <button type="submit" class="btn btn-dark">Search</button>
                                     </div>
