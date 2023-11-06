@@ -8,7 +8,9 @@ use App\Models\Position;
 use App\Models\Divisi;
 use App\Models\StatusEmployee;
 use App\Models\Attendance;
+use App\Models\DataLeave;
 use App\Models\Payroll;
+use App\Models\TypeLeave;
 use Illuminate\Support\Facades\Http;
 use Ramsey\Uuid\Type\Integer;
 use DateTime;
@@ -112,12 +114,39 @@ class payrollController extends Controller
             ->where('attendance_date', '<=', $request->end_date)
             ->get();
 
-        // Cari semua data cuti
+        // Membuat array untuk menyimpan tanggal-tanggal yang ada dalam hasil kueri
+        $existingDates = $attendance->pluck('attendance_date')->toArray();
+
+        // Membuat array untuk menyimpan tanggal-tanggal yang tidak ada
+        $missingDates = [];
+
+        $checkStartDate = new DateTime($request->start_date);
+        $checkEndDate = new DateTime($request->end_date);
+
+        while ($checkStartDate <= $checkEndDate) {
+            $formattedDate = $checkStartDate->format('Y-m-d');
+            if (!in_array($formattedDate, $existingDates)) {
+                if ($checkStartDate->format('N') != 7) {
+                    $missingDates[] = $formattedDate;
+                }
+            }
+            $checkStartDate->modify('+1 day');
+        }
+
+        // Cari semua data attendance yang memiliki id_data_cuti
         $countDataLeave = Attendance::where('employee', $selectEmployee->id_karyawan)
             ->where('attendance_date', '>=', $request->start_date)
             ->where('attendance_date', '<=', $request->end_date)
             ->whereNotNull('id_data_cuti')
             ->get();
+
+            
+        // Cari semua data cuti
+        $id_data_cuti = $countDataLeave->pluck('id_data_cuti');
+        $dataLeave = DataLeave::whereIn('id_data_cuti', $id_data_cuti)->get();
+
+        // Tipe cuti
+        $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
         // Cari semua data attendance yang telat
         $lateAttendance = Attendance::where('employee', $selectEmployee->id_karyawan)
@@ -163,8 +192,15 @@ class payrollController extends Controller
         $positionAllowance = 0;
 
         if (count($countDataLeave) > 0) {
-            $countLegalLeave = $countDataLeave->where('information', 'like', '%legal%')->count();
-            $countSickLeave = $countDataLeave->where('information', 'like', '%sick%')->count();
+            foreach ($countDataLeave as $leave) {
+                if (stripos($leave->information, 'legal') !== false) {
+                    $countLegalLeave += 1;
+                }
+
+                if (stripos($leave->information, 'sick') !== false) {
+                    $countSickLeave += 1;
+                }
+            }
         }
 
         // Gaji Pokok
@@ -238,7 +274,7 @@ class payrollController extends Controller
             ->where('id_karyawan', $request->id_karyawan)
             ->get();
 
-        if ($checkPayroll->isEmpty()) {
+        if (empty($errorInfo) && $checkPayroll->isEmpty()) {
             Payroll::insert($payrollData);
         }
 
@@ -249,7 +285,12 @@ class payrollController extends Controller
             'division' => $division,
             'statusEmployee' => $statusEmployee,
             'rangeDate' => $rangeDate,
-            'errorInfo' => $errorInfo
+            'errorInfo' => $errorInfo,
+            'payrollData' => $payrollData,
+            'lateAttendance' => $lateAttendance,
+            'dataLeave' => $dataLeave,
+            'typeleave' => $typeleave,
+            'missingDates' => $missingDates
         ]);
     }
 }

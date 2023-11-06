@@ -90,7 +90,7 @@
                                 <h4 class="card-title">Basic Information</h4>
                             </div>
                             <div class="card-body">
-                                <table class="table table-responsive-sm" id="data-table-payslip" class="display" style="width:100%">
+                                <table class="table table-responsive-sm" id="data-table-payslip">
                                     <tr>
                                         <td>Employee</td>
                                         <td style="text-align: right;">:</td>
@@ -116,39 +116,187 @@
                                         <td style="text-align: right;">:</td>
                                         <td>{{ $statusEmployee->nama_status }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Basic Salary</td>
-                                        <td style="text-align: right;">:</td>
-                                        <td>{{ $selectEmployee->gaji_pokok }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Position Allowance</td>
-                                        <td style="text-align: right;">:</td>
-                                        <td>{{ $position->tunjangan_jabatan }}</td>
-                                    </tr>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
-                            </div>
-                            <div class="card-body">
-                                <form action="">
-                                    @csrf
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Working Days</label>
-                                        <div class="col-sm-10 mb-2">
-                                            <div class="input-group-prepend">
-                                                <input type="number" name="working_days" id="working_days" class="form-control">
-                                                <div class="input-group-text">/ 26</div>
+                        @if ($payrollData)
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form action="">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Working Days</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group-prepend">
+                                                    <input type="number" name="working_days" id="working_days" class="form-control" 
+                                                    value="{{ old('working_days', $payrollData['jumlah_hari_kerja']) }}" 
+                                                    max="{{ strtolower($statusEmployee->nama_status) == 'harian' ? 7 : 26 }}">
+                                                    @if (strtolower($statusEmployee->nama_status) == 'harian')
+                                                        <div class="input-group-text">/ 7</div>
+                                                    @else
+                                                        <div class="input-group-text">/ 26</div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </form>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label"></label>
+                                            <div class="col-sm-2">
+                                                <label class="col-form-label">Number of Sick Days</label>
+                                                <div>
+                                                    <input type="number" class="form-control" id="sick_days" name="sick_days" 
+                                                    value="{{ old('sick_days', $payrollData['jumlah_hari_sakit']) }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="col-form-label">Number of Absent Days</label>
+                                                <div>
+                                                    <input type="number" class="form-control" id="absent_days" name="absent_days" 
+                                                    value="{{ old('absent_days', $payrollData['jumlah_hari_tidak_masuk']) }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">Number of Legal Leave Days</label>
+                                                <div>
+                                                    <input type="number" class="form-control" id="leave_days" name="leave_days" 
+                                                    value="{{ old('leave_days', $payrollData['jumlah_hari_cuti_resmi']) }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">Number of Late Days</label>
+                                                <div>
+                                                    <input type="number" class="form-control" id="late_days" name="late_days" 
+                                                    value="{{ old('late_days', $payrollData['jumlah_hari_telat']) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label"></label>
+                                            <div class="col-sm-10">
+                                                <div id="accordion-one" class="accordion">
+                                                    <div class="accordion__item">
+                                                        <div class="accordion__header" data-toggle="collapse" data-target="#default_collapseOne">
+                                                            <span class="accordion__header--text">Reveal the detailed list of data</span>
+                                                            <span class="accordion__header--indicator"></span>
+                                                        </div>
+                                                        <div id="default_collapseOne" class="collapse accordion__body" data-parent="#accordion-one">
+                                                            <div class="accordion__body--text">
+                                                            @if (count($dataLeave) > 0 || count($lateAttendance) > 0 || count($missingDates) > 0)
+                                                                @if (count($dataLeave) > 0)
+                                                                    <label class="col-form-label" style="color: black;">Number of Leave Data</label>
+                                                                    <table class="table table-responsive-sm" id="data-table-leave">
+                                                                        <thead>
+                                                                            <th>Date</th>
+                                                                            <th>Type (C)</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach ($dataLeave as $leave)
+                                                                                <tr>
+                                                                                    <td>{{ date('l, Y-m-d', strtotime($leave->mulai_cuti)) }}</td>
+                                                                                    <td>
+                                                                                        <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($leave->id_data_cuti)]) }}">
+                                                                                        {{ $typeleave[$leave->id_tipe_cuti] }}</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                @endif
+
+                                                                @if (count($lateAttendance) > 0)
+                                                                    <label class="col-form-label" style="color: black;">Number of Late Days</label>
+                                                                    <table class="table table-responsive-sm" id="data-table-late">
+                                                                        <thead>
+                                                                            <th>Date</th>
+                                                                            <th>Late</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach ($lateAttendance as $late)
+                                                                                <tr>
+                                                                                    <td>{{ date('l, Y-m-d', strtotime($late->attendance_date)) }}</td>
+                                                                                    <td>{{ $late->sign_in_late }}</td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                @endif
+
+                                                                @if (count($missingDates) > 0)
+                                                                    <label class="col-form-label" style="color: black;">Number of Missing Days</label>
+                                                                    <table class="table table-responsive-sm" id="data-table-missing">
+                                                                        <thead>
+                                                                            <th>Date</th>
+                                                                            <th>Status</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach ($missingDates as $date)
+                                                                                <tr>
+                                                                                    <td>{{ date('l, Y-m-d', strtotime($date)) }}</td>
+                                                                                    <td>Absent</td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                @endif
+
+                                                            @else
+                                                                <label class="col-form-label" style="color: black;">No viewable data</label>
+                                                            @endif
+
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Basic Salary</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="basic_salary" id="basic_salary" class="form-control" 
+                                                value="{{ old('basic_salary', $payrollData['gaji_pokok']) }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Position Allowance</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
+                                                value="{{ old('position_allowance', $payrollData['tunjangan_jabatan']) }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Salary Deductions</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
+                                                value="{{ old('position_allowance', $payrollData['potongan']) }}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-10 col-form-label"></label>
+                                            <div class="col-sm-2">
+                                                <label class="col-form-label" style="font-size: larger;">Total Salary</label>
+                                                <div>
+                                                    <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
+                                                    value="{{ old('position_allowance', $payrollData['total_gaji']) }}" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <label class="col-form-label">Noted</label>
+                                                <textarea class="form-control" id="noted" name="noted" rows="3" 
+                                                    placeholder="Enter a noted..">{{ old('noted') }}
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div> -->
+                        @endif
                     @endif
                 @endif
             </div>
