@@ -69,7 +69,7 @@ class leavemanagementController extends Controller
 
     public function create(){
         $dataleave = '';
-        // filter hanya karyawan status kontrak
+        // filter hanya karyawan selain status harian
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
         $employee = Employee::where('id_status', '!=', $statusEmployee)->get();
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
@@ -90,23 +90,25 @@ class leavemanagementController extends Controller
         ]);
 
         $file = $request->file('file');
+        $filePath = null;
+
         if ($file){
             $fileName = $file->getClientOriginalName();
             $filePath = $file->storeAs('images/leave', $fileName);
-            
-            DataLeave::insert([
-                'id_karyawan'=> $request->id_karyawan,
-                'id_penangung_jawab'=> $request->id_penangung_jawab,
-                'deskripsi'=> $request->deskripsi,
-                'id_tipe_cuti'=> $request->id_tipe_cuti,
-                'mulai_cuti'=> $request->datetimestart,
-                'selesai_cuti'=> $request->datetimeend,
-                'durasi_cuti'=> $request->duration,
-                'file'=> $filePath,
-                'status_cuti' => 'To Approved',
-                'file_approved' => null
-            ]);
         }
+
+        DataLeave::insert([
+            'id_karyawan'=> $request->id_karyawan,
+            'id_penangung_jawab'=> $request->id_penangung_jawab,
+            'deskripsi'=> $request->deskripsi,
+            'id_tipe_cuti'=> $request->id_tipe_cuti,
+            'mulai_cuti'=> $request->datetimestart,
+            'selesai_cuti'=> $request->datetimeend,
+            'durasi_cuti'=> $request->duration,
+            'file'=> $filePath,
+            'status_cuti' => 'To Approved',
+            'file_approved' => null
+        ]);
 
         return redirect('/leaves-summary');
     }

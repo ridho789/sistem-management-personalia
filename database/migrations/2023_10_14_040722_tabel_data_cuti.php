@@ -19,7 +19,7 @@ class TabelDataCuti extends Migration
             $table->dateTime('mulai_cuti');
             $table->dateTime('selesai_cuti');
             $table->string('durasi_cuti');
-            $table->string('file');
+            $table->string('file')->nullable();
             $table->string('file_approved')->nullable();
             $table->string('status_cuti');
             $table->timestamps();

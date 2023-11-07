@@ -108,7 +108,7 @@
                                             <select class="form-control" id="val_type_leave" name="id_tipe_cuti" required>
                                                 <option value="">Select a type leave...</option>
                                                 @foreach ($typeLeave as $tl)
-                                                    <option value="{{ $tl->id_tipe_cuti }}" 
+                                                    <option value="{{ $tl->id_tipe_cuti }}" data-type-leave="{{ $tl->nama_tipe_cuti }}" 
                                                         {{ old('id_tipe_cuti', $dataleave->id_tipe_cuti) == 
                                                             $tl->id_tipe_cuti ? 'selected' : '' }}>
                                                         {{ $tl->nama_tipe_cuti }}
@@ -141,19 +141,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Attach File</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" class="form-control @error('file') is-invalid @enderror" 
-                                        id="file" name="file">
-                                        @error('file')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        @if($dataleave->file)
-                                            <img src="{{ asset('storage/'. $dataleave->file) }}" alt="Attach File" width="100">
-                                        @else
-                                            <p>No photo available.</p>
-                                        @endif
+                                <div id="attach_file" style="display: none;">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Attach File</label>
+                                        <div class="col-sm-10">
+                                            <input type="file" class="form-control @error('file') is-invalid @enderror" 
+                                            id="file" name="file">
+                                            @error('file')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            @if($dataleave->file)
+                                                <img src="{{ asset('storage/'. $dataleave->file) }}" alt="Attach File" width="100">
+                                            @else
+                                                <p>No photo available.</p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                                 @if($dataleave->status_cuti != 'Approved')
@@ -239,7 +241,7 @@
                                             <select class="form-control" id="val_type_leave" name="id_tipe_cuti" required>
                                                 <option value="">Select a type leave...</option>
                                                 @foreach ($typeLeave as $tl)
-                                                    <option value="{{ $tl->id_tipe_cuti }}" 
+                                                    <option value="{{ $tl->id_tipe_cuti }}" data-type-leave="{{ $tl->nama_tipe_cuti }}" 
                                                         {{ old('id_tipe_cuti') == $tl->id_tipe_cuti ? 'selected' : '' }}>
                                                         {{ $tl->nama_tipe_cuti }}
                                                     </option>
@@ -268,14 +270,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Attach File</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" class="form-control @error('file') is-invalid @enderror" 
-                                        id="file" name="file" required>
-                                        @error('file')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
+                                <div id="attach_file" style="display: none;">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Attach File</label>
+                                        <div class="col-sm-10">
+                                            <input type="file" class="form-control @error('file') is-invalid @enderror" 
+                                            id="file" name="file">
+                                            @error('file')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row mt-5">
@@ -501,6 +505,37 @@
                 durationInput.value = 0
             }
         }
+
+        // Munculkan column attach file jika tipe cuti = sakit
+        document.addEventListener("DOMContentLoaded", function () {
+            const leaveTypeSelect = document.getElementById("val_type_leave");
+            const attachFileSection = document.getElementById("attach_file");
+            const attachFileColumn = document.getElementById("file");
+
+            // Function to toggle the visibility of the "Attach File" section
+            function toggleAttachFileVisibility() {
+                const selectedOption = leaveTypeSelect.options[leaveTypeSelect.selectedIndex];
+                
+                if (selectedOption.getAttribute("data-type-leave")) {
+                    const typeLeave = selectedOption.getAttribute("data-type-leave").toLowerCase();
+
+                    if (typeLeave.includes("sick")) {
+                        attachFileSection.style.display = "block";
+                        attachFileColumn.setAttribute('required', 'required');
+
+                    } else {
+                        attachFileSection.style.display = "none";
+                        attachFileColumn.removeAttribute('required');
+                    }
+                }
+            }
+
+            // Initial visibility setup
+            toggleAttachFileVisibility();
+
+            // Listen for changes in the "Leave Type" dropdown
+            leaveTypeSelect.addEventListener("change", toggleAttachFileVisibility);
+        });
 
     </script>
 
