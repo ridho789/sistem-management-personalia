@@ -68,15 +68,26 @@
         </table>
 
         <div style="margin-top: 10px;">
-            @if( $dataleave->file )
-                <span><i>Bukti/berkas pendukung sudah terlampir</i></span>
-            @else
-                <span><i>Bukti/berkas pendukung belum terlampir</i></span>
+            @if (strpos(strtolower($typeLeave->nama_tipe_cuti), 'sick') !== false)
+                @if ( $dataleave->file )
+                    <span><i>Bukti/berkas pendukung sudah terlampir</i></span>
+                @else
+                    <span><i>Bukti/berkas pendukung belum terlampir</i></span>
+                @endif
             @endif
         </div>
-        <div style="margin-top: 25px; text-align:right; font-size:14px">
+        <!-- ttd -->
+        <div style="margin-top: 50px; text-align:left; font-size:14px">
             <div style="margin-right: 10px; margin-bottom: 50px;">
-                <label style="font-weight: bold;">Penangung Jawab</label>
+                <label style="font-weight: bold;">Yang mengajukan</label>
+            </div>
+            <div>
+                <span>( {{ $employee->nama_karyawan . ' - ' . $employee->id_card ?? '...' }} )</span>
+            </div>
+        </div>
+        <div style="margin-top: -83px; text-align:right; font-size:14px">
+            <div style="margin-right: 20px; margin-bottom: 50px;">
+                <label style="font-weight: bold;">Mengetahui</label>
             </div>
             <div>
                 <span>( {{ $responsible->nama_karyawan . ' - ' . $responsible->id_card ?? '...' }} )</span>
