@@ -11,4 +11,9 @@ class DataLeave extends Model
     protected $table = 'tbl_data_cuti';
 
     public $timestamps = true;
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'id_karyawan', 'id_karyawan');
+    }
 }

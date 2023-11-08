@@ -63,6 +63,14 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Form Employee</h4>
+                        @if($employee)
+                            <div class="mt-3">
+                                <input class='input-switch' type="checkbox" id="switch_checkbox" 
+                                value="1" {{ old('is_active', $employee->is_active) ? 'checked' : '' }}/>
+                                <label class="label-switch" for="switch_checkbox"></label>
+                                <!-- <span class="info-text"></span> -->
+                            </div>
+                        @endif
                     </div>
                     <div class="card-body">
                         <div class="form-validation-employee">
@@ -73,6 +81,7 @@
                                 @csrf
                                 <!-- Tambahkan input tersembunyi untuk ID karyawan yang akan diedit -->
                                 <input type="hidden" name="id" value="{{ $employee->id_karyawan }}">
+                                <input type="hidden" name="is_active" id="hidden_switch_checkbox" value="{{ $employee->is_active }}"/>
                                 <div class="row">
                                     <div class="col-xl-6">
                                         <div class="form-group row">
@@ -155,6 +164,18 @@
                                                 <textarea class="form-control" id="val_address" name="val_address" rows="5" 
                                                     placeholder="Enter a address.." required>{{ old('val_address', $employee->alamat) }}
                                                 </textarea>
+                                            </div>
+                                        </div>
+                                        <div id="column_reason" style="display: none;">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label" for="val_reason">Reason
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-6">
+                                                    <textarea class="form-control" id="val_reason" name="val_reason" rows="5" 
+                                                        placeholder="Enter a reason..">{{ old('val_reason', $employee->reason) }}
+                                                    </textarea>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -559,6 +580,68 @@
         </div>
     </div>
 
+    <style>
+        .input-switch {
+        display: none;
+        }
+
+        .label-switch {
+        display: inline-block;
+        position: relative;
+        }
+
+        .label-switch::before,
+        .label-switch::after {
+        content: "";
+        display: inline-block;
+        cursor: pointer;
+        transition: all 0.5s;
+        }
+
+        .label-switch::before {
+        width: 3em;
+        height: 1em;
+        border: 1px solid #757575;
+        border-radius: 4em;
+        background: #888888;
+        }
+
+        .label-switch::after {
+        position: absolute;
+        left: 0;
+        top: -20%;
+        width: 1.5em;
+        height: 1.5em;
+        border: 1px solid #757575;
+        border-radius: 4em;
+        background: #ffffff;
+        }
+
+        .input-switch:checked ~ .label-switch::before {
+        background: #00a900;
+        border-color: #008e00;
+        }
+
+        .input-switch:checked ~ .label-switch::after {
+        left: unset;
+        right: 0;
+        background: #00ce00;
+        border-color: #009a00;
+        }
+
+        .info-text {
+        display: inline-block;
+        }
+
+        .info-text::before {
+        content: "Not active";
+        }
+
+        .input-switch:checked ~ .info-text::before {
+        content: "Active";
+        }
+    </style>
+
     <script>
         // API Indonesian Identification Card (KTP)
         // document.addEventListener('DOMContentLoaded', function () {
@@ -752,61 +835,95 @@
 
             // Set initial state based on the value of val_status on page load
             toggleContractStatus();
-        });
-
-        // Fungsi untuk mengubah angka ke format IDR
-        function formatToIDR(amount) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
-        }
-
-        // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
-        function updateIDRFormat(inputElement) {
-            const value = inputElement.value;
-            const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
-
-            if (!isNaN(numericValue)) {
-                inputElement.value = formatToIDR(numericValue);
+            
+            // Fungsi untuk mengubah angka ke format IDR
+            function formatToIDR(amount) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
             }
-        }
-
-        // Event listener untuk memanggil fungsi saat input berhenti diedit
-        const inputSelectors = [
-            '.form-control.val_basic_salary',
-        ];
-
-        inputSelectors.forEach(function (selector) {
-            const inputElements = document.querySelectorAll(selector);
-            inputElements.forEach(function (inputElement) {
-                inputElement.addEventListener('blur', function () {
-                    updateIDRFormat(this);
+    
+            // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
+            function updateIDRFormat(inputElement) {
+                const value = inputElement.value;
+                const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+    
+                if (!isNaN(numericValue)) {
+                    inputElement.value = formatToIDR(numericValue);
+                }
+            }
+    
+            // Event listener untuk memanggil fungsi saat input berhenti diedit
+            const inputSelectors = [
+                '.form-control.val_basic_salary',
+            ];
+    
+            inputSelectors.forEach(function (selector) {
+                const inputElements = document.querySelectorAll(selector);
+                inputElements.forEach(function (inputElement) {
+                    inputElement.addEventListener('blur', function () {
+                        updateIDRFormat(this);
+                    });
                 });
+            });
+    
+            // show/hide form create by excel
+            const toggleFormButton = document.getElementById('button-create-employee-excel');
+            const toggleCloseButton = document.getElementById('button-create-excel')
+            const toggleCloseFormButton = document.getElementById('close-form-create-excel');
+            const myForm = document.getElementById('form-create-excel');
+    
+            toggleFormButton.addEventListener('click', function() {
+                if (myForm.style.display === 'none') {
+                    myForm.style.display = 'block';
+                }
+    
+                if (toggleCloseButton.style.display === 'block') {
+                    toggleCloseButton.style.display = 'none';
+                }
+            });
+    
+            toggleCloseFormButton.addEventListener('click', function() {
+                if (myForm.style.display === 'block') {
+                    myForm.style.display = 'none';
+                }
+    
+                if (toggleCloseButton.style.display === 'none') {
+                    toggleCloseButton.style.display = 'block';
+                }
+            });
+    
+            // Mengambil elemen checkbox dan input hidden
+            const checkbox = document.getElementById("switch_checkbox");
+            const hiddenInput = document.getElementById("hidden_switch_checkbox");
+            const columnReason = document.getElementById("column_reason");
+            const valReason = document.getElementById('val_reason');
+    
+            if (valReason.value.trim() === "") {
+                valReason.value = valReason.value.trim();
+            }
+    
+            if (hiddenInput.value == 0) {
+                columnReason.style.display = "block";
+                valReason.setAttribute('required', 'required');
+    
+            } else {
+                columnReason.style.display = "none";
+                valReason.removeAttribute('required');
+            }
+    
+            // Menambahkan event listener untuk memantau perubahan pada checkbox
+            checkbox.addEventListener("change", function () {
+                hiddenInput.value = checkbox.checked ? "1" : "0";
+    
+                if (checkbox.checked) {
+                    columnReason.style.display = "none";
+                    valReason.removeAttribute('required');
+    
+                } else {
+                    columnReason.style.display = "block";
+                    valReason.setAttribute('required', 'required');
+                }
             });
         });
 
-        // show/hide form create by excel
-        const toggleFormButton = document.getElementById('button-create-employee-excel');
-        const toggleCloseButton = document.getElementById('button-create-excel')
-        const toggleCloseFormButton = document.getElementById('close-form-create-excel');
-        const myForm = document.getElementById('form-create-excel');
-
-        toggleFormButton.addEventListener('click', function() {
-            if (myForm.style.display === 'none') {
-                myForm.style.display = 'block';
-            }
-
-            if (toggleCloseButton.style.display === 'block') {
-                toggleCloseButton.style.display = 'none';
-            }
-        });
-
-        toggleCloseFormButton.addEventListener('click', function() {
-            if (myForm.style.display === 'block') {
-                myForm.style.display = 'none';
-            }
-
-            if (toggleCloseButton.style.display === 'none') {
-                toggleCloseButton.style.display = 'block';
-            }
-        });
     </script>
 @endsection

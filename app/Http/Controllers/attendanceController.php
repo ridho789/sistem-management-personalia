@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Schema;
 class attendanceController extends Controller
 {
     public function index() {
-        $employee = Employee::all();
+        $employee = Employee::where('is_active', true)->get();
         $id_employee = $employee->pluck('id_card');
 
         if (Schema::hasTable('tbl_absensi')) {
@@ -231,7 +231,11 @@ class attendanceController extends Controller
             }
         }
     
-        $allattendance = Attendance::orderBy('attendance_date', 'asc')->get();
+        $allattendance = Attendance::orderBy('attendance_date', 'asc')
+            ->whereHas('employee', function ($query) {
+                $query->where('is_active', true);
+            })->get();
+
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
 
         return view('/backend/attendance/list_attendance', [
@@ -246,7 +250,7 @@ class attendanceController extends Controller
         $start_date_range = $request->start_date;
         $end_date_range = $request->end_date;
 
-        $employee = Employee::all();
+        $employee = Employee::where('is_active', true)->get();
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
         
         if ($id_karyawan && $start_date_range && $end_date_range) {

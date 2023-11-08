@@ -19,7 +19,10 @@ use Ramsey\Uuid\Type\Integer;
 class leavemanagementController extends Controller
 {
     public function index(){
-        $dataleave = DataLeave::all();
+        $dataleave = DataLeave::whereHas('employee', function ($query) {
+            $query->where('is_active', true);
+        })->get();
+        
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
@@ -52,11 +55,16 @@ class leavemanagementController extends Controller
 
         // Jika tidak ada hasil pencarian, tampilkan semua
         if (empty($id_data_cuti)) {
-            $dataleave = DataLeave::all();
+            $dataleave = DataLeave::whereHas('employee', function ($query) {
+                $query->where('is_active', true);
+            })->get();
             
         } else {
             // Temukan yang sesuai dengan id karyawan
-            $dataleave = DataLeave::whereIn('id_data_cuti', $id_data_cuti)->get();
+            $dataleave = DataLeave::whereIn('id_data_cuti', $id_data_cuti)
+                ->join('tbl_karyawan', 'tbl_data_cuti.id_karyawan', '=', 'tbl_karyawan.id_karyawan')
+                ->where('tbl_karyawan.is_active', true)
+                ->get();
         }
 
         return view('/backend/leave/leaves_summary', [
@@ -71,7 +79,10 @@ class leavemanagementController extends Controller
         $dataleave = '';
         // filter hanya karyawan selain status harian
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
-        $employee = Employee::where('id_status', '!=', $statusEmployee)->get();
+        $employee = Employee::where('id_status', '!=', $statusEmployee)
+            ->where('is_active', true)
+            ->get();
+            
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
@@ -263,7 +274,10 @@ class leavemanagementController extends Controller
     }
 
     public function allocation() {
-        $allocationRequest = AllocationRequest::all();
+        $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+            $query->where('is_active', true);
+        })->get();
+        
         $id_karyawan_array = $allocationRequest->pluck('id_karyawan')->toArray();
         $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
             ->where('status_cuti', 'Approved')
@@ -314,15 +328,22 @@ class leavemanagementController extends Controller
         $id_employee = Employee::where(function($query) use ($search) {
             $query->where('nama_karyawan', 'like', "%$search%")
                   ->orWhere('id_card', 'like', "%$search%");
-        })->pluck('id_karyawan')->toArray();
-        
+        })->where('is_active', true)->pluck('id_karyawan')->toArray();
+
         // Jika tidak ada hasil pencarian, tampilkan semua AllocationRequest
         if (empty($id_employee)) {
-            $allocationRequest = AllocationRequest::all();
+            $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+                $query->where('is_active', true);
+            })->get();
             
         } else {
             // Temukan AllocationRequest yang sesuai dengan id karyawan
             $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->get();
+            if ($allocationRequest->count() === 0) {
+                $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+                    $query->where('is_active', true);
+                })->get();
+            } 
         }
         
         // Temukan DataLeave berdasarkan id karyawan yang ada di AllocationRequest

@@ -36,6 +36,7 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="/list-employee">List Employee</a></li>
+                    <li><a href="/list-inactive-employee">List Inactive Employee</a></li>
                     <li><a href="/form-employee">Form Employee</a></li>
                 </ul>
             </li>

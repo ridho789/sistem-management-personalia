@@ -78,6 +78,10 @@ Route::post('form-employee-update', [employeemanagementController::class, 'updat
 Route::get('list-employee-search', [employeemanagementController::class, 'search']);
 Route::post('list-employee-print', [employeemanagementController::class, 'print']);
 
+// management employee inactive
+Route::get('/list-inactive-employee', [employeemanagementController::class, 'index_inactive']);
+Route::get('list-inactive-employee-search', [employeemanagementController::class, 'search_inactive']);
+
 // management - asset
 Route::get('/list-asset', [assetmanagementController::class, 'index']);
 Route::get('/form-asset', [assetmanagementController::class, 'create']);

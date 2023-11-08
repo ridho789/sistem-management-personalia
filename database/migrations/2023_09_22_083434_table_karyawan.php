@@ -29,6 +29,8 @@ class TableKaryawan extends Migration
             $table->date('akhir_masa_kontrak')->nullable();
             $table->string('foto')->nullable();
             $table->bigInteger('id_card', 10)->notNullable()->autoIncrement(false);
+            $table->boolean('is_active')->default(true);
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

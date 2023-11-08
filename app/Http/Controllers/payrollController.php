@@ -19,7 +19,7 @@ class payrollController extends Controller
 {
     public function index() 
     {
-        $employee = Employee::all();
+        $employee = Employee::where('is_active', true)->get();
         $selectEmployee = null;
 
         return view('/backend/payroll/data_payroll', [
@@ -126,8 +126,19 @@ class payrollController extends Controller
         while ($checkStartDate <= $checkEndDate) {
             $formattedDate = $checkStartDate->format('Y-m-d');
             if (!in_array($formattedDate, $existingDates)) {
-                if ($checkStartDate->format('N') != 7) {
+                if ($nameStatusEmployee == 'harian') {
                     $missingDates[] = $formattedDate;
+
+                } else {
+                    if ($nameDivision == 'security') {
+                        $missingDates[] = $formattedDate;
+
+                    } else {
+                        if ($checkStartDate->format('N') != 7) {
+                            $missingDates[] = $formattedDate;
+                        }
+                    }
+
                 }
             }
             $checkStartDate->modify('+1 day');
