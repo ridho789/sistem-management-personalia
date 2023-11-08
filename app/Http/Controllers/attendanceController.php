@@ -52,7 +52,7 @@ class attendanceController extends Controller
                 $sign_in = null;
                 $sign_out = null;
 
-                $sign_in = ($timeHour >= 6 && $timeHour <= 9) ? $timeFormat : null;
+                $sign_in = ($timeHour >= 4 && $timeHour <= 12) ? $timeFormat : null;
 
                 // Menghitung sign_in_late jika melebihi jam 08:00
                 $limitJam = 8;
@@ -80,13 +80,13 @@ class attendanceController extends Controller
 
                 // Jika divisi keuangan, personalia / admin dan marketing
                 if ($dayOfWeek == 6 && $divisi && in_array($nameDivisi, ['keuangan', 'personalia / admin', 'marketing'])) {
-                    $sign_out = ($timeHour >= 12 && $timeHour <= 22) ? $timeFormat : null;
+                    $sign_out = ($timeHour >= 12 && $timeHour <= 23) ? $timeFormat : null;
 
                 } elseif ($divisi && $nameDivisi === 'security') {
                     // Inisialisasi late ke default null
                     $late = null;
                 
-                    if (($timeHour >= 6 && $timeHour <= 9)) {
+                    if (($timeHour >= 6 && $timeHour <= 12)) {
                         // Shift pagi (sign in)
                         $limitJam = 8;
                         $limitMenit = 0;
@@ -101,7 +101,7 @@ class attendanceController extends Controller
                         $sign_in = $timeFormat;
                         $information = 'Shift Pagi';
 
-                    } elseif ($timeHour >= 18 && $timeHour <= 21) {
+                    } elseif ($timeHour >= 16 && $timeHour <= 23) {
                         // Shift malam (sign in)
                         $limitJam = 20;
                         $limitMenit = 0;
@@ -123,7 +123,7 @@ class attendanceController extends Controller
                     }
 
                 } else {
-                    $sign_out = ($timeHour >= 17 && $timeHour <= 22) ? $timeFormat : null;
+                    $sign_out = ($timeHour >= 17 && $timeHour <= 23) ? $timeFormat : null;
                 }
         
                 // Memeriksa apakah sudah ada data
@@ -136,7 +136,7 @@ class attendanceController extends Controller
                 
                     if ($divisi && $nameDivisi === 'security') {
                         if ($existingRecord->information == 'Shift Pagi') {
-                            $sign_out = ($timeHour >= 20 && $timeHour <= 22) ? $timeFormat : null;
+                            $sign_out = ($timeHour >= 20 && $timeHour <= 23) ? $timeFormat : null;
                 
                             if (empty($existingRecord->sign_out)) {
                                 $updateData['sign_out'] = $sign_out;
@@ -175,7 +175,7 @@ class attendanceController extends Controller
                         if ($existingRecordSecurity) {
                             // Periksa apakah ada data "sign_out"
                             if (empty($existingRecordSecurity->sign_out)) {
-                                $sign_out = ($timeHour >= 8 && $timeHour <= 10) ? $timeFormat : null;
+                                $sign_out = ($timeHour >= 8 && $timeHour <= 12) ? $timeFormat : null;
                                 $updateData = [];
                     
                                 if (empty($existingRecordSecurity->sign_out)) {
@@ -189,8 +189,8 @@ class attendanceController extends Controller
                                         ->update($updateData);
                                 }
 
-                            } elseif ($timeHour >= 18 && $timeHour <= 21) {
-                                // Buat data baru jika waktu masuk antara jam 18.00 - 20.00
+                            } elseif ($timeHour >= 18 && $timeHour <= 23) {
+                                // Buat data baru jika waktu masuk antara jam 18.00 - 23.00
                                 Attendance::insert([
                                     'employee' => $dataEmployee->id_karyawan,
                                     'id_card' => $data->cardNo,
@@ -246,46 +246,36 @@ class attendanceController extends Controller
     }
 
     public function search(Request $request) {
+
         $id_karyawan = $request->id_karyawan;
         $start_date_range = $request->start_date;
         $end_date_range = $request->end_date;
 
-        $employee = Employee::where('is_active', true)->get();
-        $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
-        
-        if ($id_karyawan && $start_date_range && $end_date_range) {
-            $allattendance = Attendance::where('employee', $id_karyawan)
-                ->where('attendance_date', '>=', $start_date_range)
-                ->where('attendance_date', '<=', $end_date_range)
-                ->get();
-        }
+        $query = Attendance::query();
 
         if ($id_karyawan) {
-            $allattendance = Attendance::where('employee', $id_karyawan)
-                ->get();
+            $query->where('employee', $id_karyawan);
         }
 
         if ($start_date_range && $end_date_range) {
-            $allattendance = Attendance::where('attendance_date', '>=', $start_date_range)
-                ->where('attendance_date', '<=', $end_date_range)
-                ->get();
+            $query->whereBetween('attendance_date', [$start_date_range, $end_date_range]);
         }
 
-        if ($allattendance->count() === 0) {
-            $allattendance = Attendance::orderBy('attendance_date', 'asc')->get();
-            return view('/backend/attendance/list_attendance', [
-                'allattendance' => $allattendance,
-                'nameEmployee' => $nameEmployee,
-                'employee' => $employee
-            ]);
-
+        if (!$id_karyawan && (!$start_date_range || !$end_date_range)) {
+            // Jika tidak ada filter yang diterapkan, tampilkan semua data
+            $allattendance = $query->orderBy('attendance_date', 'asc')->get();
         } else {
-            return view('/backend/attendance/list_attendance', [
-                'allattendance' => $allattendance,
-                'nameEmployee' => $nameEmployee,
-                'employee' => $employee
-            ]);
+            $allattendance = $query->get();
         }
+
+        $employee = Employee::where('is_active', true)->get();
+        $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
+
+        return view('/backend/attendance/list_attendance', [
+            'allattendance' => $allattendance,
+            'nameEmployee' => $nameEmployee,
+            'employee' => $employee
+        ]);
     }
     
 }
