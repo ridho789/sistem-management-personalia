@@ -30,7 +30,8 @@
                                 <label class="col-sm-2 col-form-label">Employee</label>
                                 <div class="col-sm-5 mb-2">
                                     <div class="input-group">
-                                        <input type="text" id="search_employee" class="form-control" placeholder="Search for an employee..." oninput="filterEmployees(this.value)">
+                                        <input type="text" id="search_employee" class="form-control" placeholder="Search for an employee..." 
+                                        oninput="filterEmployees(this.value)">
                                     </div>
                                     <div id="employee_list" style="display: none;">
                                         <div id="scrollable_employee_list" style="max-height: 125px; overflow-y: auto;">
@@ -63,7 +64,8 @@
                                     <div class="input-group">
                                         <div class="col-sm-4" id="reportrange" style="background: #fff; cursor: pointer; 
                                             padding: 5.5px 10px; border: 1px solid #ccc;">
-                                            <i class="fa fa-calendar"> </i>&nbsp;<span id="reportrange_display"> Display data based on date range </span> 
+                                            <i class="fa fa-calendar"> </i>&nbsp;
+                                            <span id="reportrange_display"> Display data based on date range </span> 
                                             <!-- <i class="fa fa-caret-down"></i> -->
                                         </div>
                                     </div>
@@ -126,15 +128,20 @@
                                     <h4 class="card-title">Payslip { {{ $rangeDate }} }</h4>
                                 </div>
                                 <div class="card-body">
-                                    <form action="">
+                                    <form class="form-payroll" action="{{ url('form-payroll-update') }}" 
+                                        method="POST" enctype="multipart/form-data">
                                         @csrf
+                                        <input type="hidden" name="id" value="{{ isset($payrollId) ? $payrollId : '' }}"/>
+                                        <input type="hidden" id="defaultAbsentDay" value="{{ $payrollData['jumlah_hari_tidak_masuk'] }}" />
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Working Days</label>
                                             <div class="col-sm-10">
                                                 <div class="input-group-prepend">
                                                     <input type="number" name="working_days" id="working_days" class="form-control" 
-                                                    value="{{ old('working_days', $payrollData['jumlah_hari_kerja']) }}" 
-                                                    max="{{ strtolower($statusEmployee->nama_status) == 'harian' ? 7 : 26 }}">
+                                                    value="{{ old('working_days', 
+                                                        optional($checkPayroll->first())->jumlah_hari_kerja ?? $dataPayroll->jumlah_hari_kerja) }}"
+                                                    max="{{ strtolower($statusEmployee->nama_status) == 'harian' ? 7 : 26 }}" readonly>
+
                                                     @if (strtolower($statusEmployee->nama_status) == 'harian')
                                                         <div class="input-group-text">/ 7</div>
                                                     @else
@@ -149,28 +156,31 @@
                                                 <label class="col-form-label">Number of Sick Days</label>
                                                 <div>
                                                     <input type="number" class="form-control" id="sick_days" name="sick_days" 
-                                                    value="{{ old('sick_days', $payrollData['jumlah_hari_sakit']) }}">
+                                                    value="{{ old('sick_days', 
+                                                        optional($checkPayroll->first())->jumlah_hari_sakit ?? $dataPayroll->jumlah_hari_sakit) }}">
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
                                                 <label class="col-form-label">Number of Absent Days</label>
                                                 <div>
                                                     <input type="number" class="form-control" id="absent_days" name="absent_days" 
-                                                    value="{{ old('absent_days', $payrollData['jumlah_hari_tidak_masuk']) }}">
+                                                    value="{{ old('absent_days', 
+                                                        optional($checkPayroll->first())->jumlah_hari_tidak_masuk ?? $dataPayroll->jumlah_hari_tidak_masuk) }}">
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label class="col-form-label">Number of Legal Leave Days</label>
                                                 <div>
                                                     <input type="number" class="form-control" id="leave_days" name="leave_days" 
-                                                    value="{{ old('leave_days', $payrollData['jumlah_hari_cuti_resmi']) }}">
+                                                    value="{{ old('leave_days', 
+                                                        optional($checkPayroll->first())->jumlah_hari_cuti_resmi ?? $dataPayroll->jumlah_hari_cuti_resmi ?? '0') }}">
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <label class="col-form-label">Number of Late Days</label>
                                                 <div>
                                                     <input type="number" class="form-control" id="late_days" name="late_days" 
-                                                    value="{{ old('late_days', $payrollData['jumlah_hari_telat']) }}">
+                                                    value="{{ old('late_days', $payrollData['jumlah_hari_telat']) }}" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -198,7 +208,8 @@
                                                                                 <tr>
                                                                                     <td>{{ date('l, Y-m-d', strtotime($leave->mulai_cuti)) }}</td>
                                                                                     <td>
-                                                                                        <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($leave->id_data_cuti)]) }}">
+                                                                                        <a href="{{ url('leave-request-edit', 
+                                                                                            ['id' => Crypt::encrypt($leave->id_data_cuti)]) }}">
                                                                                         {{ $typeleave[$leave->id_tipe_cuti] }}</a>
                                                                                     </td>
                                                                                 </tr>
@@ -247,7 +258,6 @@
                                                                 <label class="col-form-label" style="color: black;">No viewable data</label>
                                                             @endif
 
-                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -261,18 +271,34 @@
                                                 value="{{ old('basic_salary', $payrollData['gaji_pokok']) }}" readonly>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Position Allowance</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
-                                                value="{{ old('position_allowance', $payrollData['tunjangan_jabatan']) }}" readonly>
+                                        @if(strtolower($statusEmployee->nama_status) != 'harian')
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Position Allowance</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
+                                                    value="{{ old('position_allowance', $payrollData['tunjangan_jabatan']) }}" readonly>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label"></label>
+                                                <div class="col-sm-5">
+                                                    <label>Absent Deductions</label>
+                                                    <input type="text" name="absent_cuts" id="absent_cuts" class="form-control" 
+                                                    value="{{ old('absent_cuts', $absentCuts) }}" readonly>
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <label>Late Deductions</label>
+                                                    <input type="text" name="late_cuts" id="late_cuts" class="form-control" 
+                                                    value="{{ old('late_cuts', $lateCuts) }}" readonly>
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Salary Deductions</label>
+                                            <label class="col-sm-2 col-form-label">Total Salary Deductions</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
-                                                value="{{ old('position_allowance', $payrollData['potongan']) }}" readonly>
+                                                <input type="text" name="total_salary_deductions" id="total_salary_deductions" class="form-control" 
+                                                value="{{ old('total_salary_deductions', 
+                                                    optional($checkPayroll->first())->potongan ?? $dataPayroll->potongan ?? '0') }}" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -280,8 +306,10 @@
                                             <div class="col-sm-2">
                                                 <label class="col-form-label" style="font-size: larger;">Total Salary</label>
                                                 <div>
-                                                    <input type="text" name="position_allowance" id="position_allowance" class="form-control" 
-                                                    value="{{ old('position_allowance', $payrollData['total_gaji']) }}" readonly>
+                                                    <input type="text" name="total_salary" id="total_salary" class="form-control" 
+                                                    value="{{ old('total_salary', 
+                                                        $checkPayroll->first()->total_gaji ? 
+                                                        $checkPayroll->first()->total_gaji : $dataPayroll->total_gaji) }}" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,8 +317,15 @@
                                             <div class="col-sm-12">
                                                 <label class="col-form-label">Noted</label>
                                                 <textarea class="form-control" id="noted" name="noted" rows="3" 
-                                                    placeholder="Enter a noted..">{{ old('noted') }}
+                                                    placeholder="Enter a noted..">{{ old('noted', $checkPayroll->isNotEmpty() 
+                                                        && $checkPayroll->first() 
+                                                        && $checkPayroll->first()->catatan ? $checkPayroll->first()->catatan : '') }}
                                                 </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-sm-8">
+                                                <button type="submit" class="btn btn-primary">Update</button>
                                             </div>
                                         </div>
                                     </form>
@@ -337,8 +372,9 @@
                 employeeList.style.display = "none";
             }
         }
-
+        
         document.addEventListener("DOMContentLoaded", function() {
+
             var reportrange = document.getElementById('reportrange');
             var span = reportrange.querySelector('span');
             var startInput = document.getElementById('start_date');
@@ -383,7 +419,102 @@
 
             }
 
+            // Jalankan saat halaman di muat
             applyDateRangePicker();
+
+            $('#sick_days, #absent_days, #leave_days, #late_days, #working_days').on('change', function() {
+                calculateSalaryDeductions();
+            });
+
+            // Hapus spasi di value kolom noted
+            const valNoted = document.getElementById('noted');
+    
+            if (valNoted.value.trim() === "") {
+                valNoted.value = valNoted.value.trim();
+            }
+
+            // Set nilai awal absent days
+            const defaultAbsentDays = document.getElementById('defaultAbsentDay')
+            var previousAbsentDays = defaultAbsentDays.value;
+
+            // Fungsi untuk menghitung Salary Deductions
+            function calculateSalaryDeductions() {
+                var sickDays = parseInt($('#sick_days').val()) || 0;
+                var absentDays = parseInt($('#absent_days').val()) || 0;
+                var leaveDays = parseInt($('#leave_days').val()) || 0;
+                var lateDays = parseInt($('#late_days').val()) || 0;
+                var workingDays = parseInt($('#working_days').val()) || 0;
+
+                var dataTable = document.getElementById('data-table-payslip');
+                var rows = dataTable.querySelectorAll('tr');
+
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].querySelectorAll('td');
+                    if (cells.length >= 3 && cells[0].textContent.trim() === 'Status') {
+                        var statusElement = cells[2];
+                        var status = statusElement.textContent.trim().toLowerCase();
+                    }
+                }
+
+                var basicSalary = document.getElementById('basic_salary');
+                var positionAllowance = document.getElementById('position_allowance');
+                var totalSalaryCuts = document.getElementById('total_salary_deductions');
+                var totalSalary = document.getElementById('total_salary');
+
+                var basicSalaryValue = parseInt(basicSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
+
+                if (positionAllowance) {
+                    var positionAllowanceValue = parseInt(positionAllowance.value.slice(0, -3).replace(/[^\d]/g, ''));
+                }
+
+                if (status == 'harian') {
+                    if (absentDays <= 7) {
+                        updateWorkingDays = 7 - absentDays;
+                        basicSalaryDay = basicSalaryValue * updateWorkingDays;
+                        basicSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(basicSalaryDay);
+
+                        $('#working_days').val(updateWorkingDays);
+                        $('#total_salary').val(basicSalaryCurrency);
+
+                    }
+
+                } else {
+                    if (absentDays <= 26) {
+                        var lateDeductions = document.getElementById('late_cuts');
+
+                        var positionAllowanceValue = parseInt(positionAllowance.value.slice(0, -3).replace(/[^\d]/g, ''));
+                        var lateDeductionsValue = parseInt(lateDeductions.value.slice(0, -3).replace(/[^\d]/g, ''));
+                        var totalSalaryCutsValue = parseInt(totalSalaryCuts.value.slice(0, -3).replace(/[^\d]/g, ''));
+                        var totalSalaryValue = parseInt(totalSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
+
+                        updateWorkingDays = 26 - absentDays;
+                        absentCuts = absentDays * (basicSalaryValue /26);
+                        absentCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(absentCuts);
+
+                        totalSalaryCutsCalculate = absentCuts + lateDeductionsValue;
+                        totalSalaryCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCutsCalculate);
+
+                        totalSalaryCalculate = (basicSalaryValue + positionAllowanceValue) - totalSalaryCutsCalculate;
+                        totalSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCalculate);
+                        
+                        $('#working_days').val(updateWorkingDays);
+                        $('#absent_cuts').val(absentCutsCurrency);
+                        $('#total_salary_deductions').val(totalSalaryCutsCurrency);
+                        $('#total_salary').val(totalSalaryCurrency);
+
+                    }
+                }
+
+                // Tambahkan atribut "required" ke kolom "noted" jika ada perbedaan nilai absendays
+                if (absentDays !== parseInt(previousAbsentDays)) {
+                    valNoted.setAttribute('required', 'required');
+
+                } else {
+                    valNoted.removeAttribute('required');
+                }
+            }
+
+            calculateSalaryDeductions();
         });
     </script>
 @endsection

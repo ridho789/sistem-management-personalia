@@ -201,6 +201,8 @@ class payrollController extends Controller
         $countSickLeave = 0;
         $basic_salary = 0;
         $positionAllowance = 0;
+        $absentCuts = 0;
+        $lateCuts = 0;
 
         if (count($countDataLeave) > 0) {
             foreach ($countDataLeave as $leave) {
@@ -237,6 +239,7 @@ class payrollController extends Controller
             $total_salary = $salary - $salary_cuts;
 
         } else {
+            // Akan diupdate
             if ($nameDivision == 'security') {
                 if ($namePosition == 'chief') {
                     $workingDays = $nonSundayCount - $nationalHolidayCount;
@@ -263,6 +266,8 @@ class payrollController extends Controller
         $positionAllowance = number_format($positionAllowance, 0, ',', '.');
         $salary_cuts = number_format($salary_cuts, 0, ',', '.');
         $total_salary = number_format($total_salary, 0, ',', '.');
+        $absentCuts = number_format($absentCuts, 0, ',', '.');
+        $lateCuts = number_format($lateCuts, 0, ',', '.');
     
         $payrollData = [
             'id_karyawan' => $request->id_karyawan,
@@ -277,7 +282,7 @@ class payrollController extends Controller
             'jumlah_hari_cuti_resmi' => $countLegalLeave,
             'jumlah_hari_telat' => count($lateAttendance),
             'bulan' => date("F", strtotime($request->start_date)),
-            'tahun' => $start_year
+            'tahun' => $start_year,
         ];
 
         // Check data payroll sudah terbuat atau belum berdasarkan periode
@@ -285,11 +290,24 @@ class payrollController extends Controller
             ->where('id_karyawan', $request->id_karyawan)
             ->get();
 
+        // Inisiasi variabel
+        $payrollId = null;
+        $dataPayroll = null;
+
+        if (count($checkPayroll) > 0) {
+            $payrollId = $checkPayroll->first()->id_gaji;
+        }
+
         if (empty($errorInfo) && $checkPayroll->isEmpty()) {
-            Payroll::insert($payrollData);
+            $payroll = Payroll::create($payrollData);
+            $payrollId = $payroll->id;
+            $dataPayroll = Payroll::where('id_gaji', $payrollId)->first();
         }
 
         return view('/backend/payroll/data_payroll', [
+            'checkPayroll' => $checkPayroll,
+            'payrollId' => $payrollId,
+            'dataPayroll' => $dataPayroll,
             'employee' => $employee,
             'selectEmployee' => $selectEmployee,
             'position' => $position,
@@ -301,7 +319,39 @@ class payrollController extends Controller
             'lateAttendance' => $lateAttendance,
             'dataLeave' => $dataLeave,
             'typeleave' => $typeleave,
-            'missingDates' => $missingDates
+            'missingDates' => $missingDates,
+            'absentCuts' => "Rp " . $absentCuts . ",00",
+            'lateCuts' => "Rp " . $lateCuts . ",00"
         ]);
+    }
+
+    public function update(Request $request) {
+        $payroll = Payroll::where('id_gaji', $request->id)->first();
+    
+        $payrollData = [
+            'potongan' => $request->total_salary_deductions,
+            'total_gaji' => $request->total_salary,
+            'jumlah_hari_kerja' => $request->working_days,
+            'jumlah_hari_sakit' => $request->sick_days,
+            'jumlah_hari_tidak_masuk' => $request->absent_days,
+            'jumlah_hari_cuti_resmi' => $request->leave_days,
+            'catatan' => $request->noted
+        ];
+    
+        // Update data if there are changes
+        $changesDetected = false;
+    
+        foreach ($payrollData as $key => $value) {
+            if ($payroll->$key != $value) {
+                $changesDetected = true;
+                break;
+            }
+        }
+    
+        if ($changesDetected) {
+            Payroll::where('id_gaji', $request->id)->update($payrollData);
+        }
+    
+        return redirect()->back();
     }
 }

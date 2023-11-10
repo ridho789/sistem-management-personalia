@@ -23,44 +23,42 @@
                     <div class="card-header">                           
                         <h4 class="card-title">List Attendance</h4>
                     </div>
-                    @if (count($allattendance) > 0)
-                        <div class="card-body">
-                            <form action="{{ url('list-attendance-search') }}" method="GET">
-                                @csrf
-                                <label>Advance filter base on employee and date range</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-3 mb-2">
-                                        <input type="text" name="search_employee" id="search_employee" class="form-control" placeholder="Search employee...">
-                                    </div>
-                                    <div class="col-sm-3 mb-2">
-                                        <select class="form-control" id="val_employee" name="id_karyawan">
-                                            <option value="">Select a employee...</option>
-                                            @foreach ($employee as $e)
-                                                <option value="{{ $e->id_karyawan }}"  
-                                                    {{ old('id_karyawan') == $e->id_karyawan ? 'selected' : '' }}>
-                                                    {{ $e->nama_karyawan }} - {{ $e->id_card }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="hidden" id="start_date" name="start_date">
-                                        <input type="hidden" id="end_date" name="end_date">
-                                        <div class="input-group">
-                                            <div class="mb-2" id="reportrange" style="background: #fff; cursor: pointer; 
-                                                padding: 5.5px 10px; border: 1px solid #ccc;">
-                                                <i class="fa fa-calendar"> </i>&nbsp;<span id="reportrange_display"> Display data based on date range </span> 
-                                            </div>
-                                            <div class="ml-2"></div>
-                                            <div>
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
+                    <div class="card-body">
+                        <form action="{{ url('list-attendance-search') }}" method="GET">
+                            @csrf
+                            <label>Advance filter base on employee and date range</label>
+                            <div class="form-group row">
+                                <div class="col-sm-3 mb-2">
+                                    <input type="text" name="search_employee" id="search_employee" class="form-control" placeholder="Search employee...">
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <select class="form-control" id="val_employee" name="id_karyawan">
+                                        <option value="">Select a employee...</option>
+                                        @foreach ($employee as $e)
+                                            <option value="{{ $e->id_karyawan }}"  
+                                                {{ old('id_karyawan') == $e->id_karyawan ? 'selected' : '' }}>
+                                                {{ $e->nama_karyawan }} - {{ $e->id_card }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="hidden" id="start_date" name="start_date">
+                                    <input type="hidden" id="end_date" name="end_date">
+                                    <div class="input-group">
+                                        <div class="mb-2" id="reportrange" style="background: #fff; cursor: pointer; 
+                                            padding: 5.5px 10px; border: 1px solid #ccc;">
+                                            <i class="fa fa-calendar"> </i>&nbsp;<span id="reportrange_display"> Display data based on date range </span> 
+                                        </div>
+                                        <div class="ml-2"></div>
+                                        <div>
+                                            <button type="submit" class="btn btn-primary">Search</button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    @endif
+                            </div>
+                        </form>
+                    </div>
                     <div class="card-body">
                         @if (count($allattendance) > 0)
                             <div class="table-responsive">

@@ -113,6 +113,7 @@ Route::post('leave-request-upload', [leavemanagementController::class, 'upload']
 // management - payroll
 Route::get('/data-payroll', [payrollController::class, 'index']);
 Route::get('/form-check-payroll', [payrollController::class, 'check']);
+Route::post('form-payroll-update', [payrollController::class, 'update']);
 
 // import excel
 Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);
