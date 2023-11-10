@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\divisionController;
 use App\Http\Controllers\positionController;
 use App\Http\Controllers\companyController;
@@ -29,9 +31,7 @@ use App\Http\Controllers\importAssetexcel;
 |
 */
 
-Route::get('/', function () {
-    return view('/frontend/dashboard');
-});
+Route::get('/', [dashboardController::class, 'index']);
 
 // master data
 Route::get('/devision', [divisionController::class, 'index']);

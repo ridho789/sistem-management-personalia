@@ -6,13 +6,9 @@
         <ul class="metismenu" id="menu">
             <li class="nav-label first">Main Menu</li>
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a href="/" aria-expanded="false">
                     <i class="icon icon-world-2"></i><span class="nav-text">Dashboard</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="./index.html">Dashboard 1</a></li>
-                    <li><a href="./index2.html">Dashboard 2</a></li>
-                </ul>
             </li>
             <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -61,20 +57,14 @@
                 </ul>
             </li>
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a href="/list-attendance" aria-expanded="false">
                     <i class="icon icon-time"></i><span class="nav-text">Attendance</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="/list-attendance">List Attendance</a></li>
-                </ul>
             </li>
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                <a href="/data-payroll" aria-expanded="false">
                     <i class="icon icon-payment"></i><span class="nav-text">Payroll</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a href="/data-payroll">Data Payroll</a></li>
-                </ul>
             </li>
         </ul>
     </div>
