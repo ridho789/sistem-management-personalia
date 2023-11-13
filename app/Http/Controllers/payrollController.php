@@ -41,8 +41,28 @@ class PayrollController extends Controller
         $rangeDate = "Period {$start_date} - {$end_date}";
         $errorInfo = '';
         
+        // Tangal awal dan akhir bulan
+        $firstDayOfMonth = date('Y-m-01', strtotime($request->start_date));
+        $lastDayOfMonth = date('Y-m-t', strtotime($request->start_date));
+
+        $startIntervalOfMonth = new DateTime($firstDayOfMonth);
+        $endIntervalOfMonth = new DateTime($lastDayOfMonth);
+
         // Jumlah hari dalam bulan
-        $countDaysMonth = date('t', strtotime($request->start_date));
+        $intervalDaysOfMonth = $startIntervalOfMonth->diff($endIntervalOfMonth);
+        $daysOfMonth = $intervalDaysOfMonth->days + 1;
+
+        // Jumlah hari dalam bulan tanpa hari minggu
+        $nonSundayCountOfMonth = 0;
+        $currentDateOfMonth = clone $startIntervalOfMonth;
+
+        for ($i = 0; $i < $daysOfMonth; $i++) {
+            if ($currentDateOfMonth->format('N') != 7) {
+                $nonSundayCountOfMonth++;
+            }
+            
+            $currentDateOfMonth->modify('+1 day');
+        }
 
         // Jumlah hari dalam range start date - end date
         $startIntervalDate = new DateTime($request->start_date);
@@ -51,7 +71,7 @@ class PayrollController extends Controller
         $interval = $startIntervalDate->diff($endIntervalDate);
         $days = $interval->days + 1;
         
-        // Jumlah hari tanpa hari minggu
+        // Jumlah hari dalam range tanpa hari minggu
         $nonSundayCount = 0;
         $currentDate = clone $startIntervalDate;
 
@@ -104,7 +124,8 @@ class PayrollController extends Controller
         // Cek validasi range date
         if ($start_month != $end_month) {
             if ($nameStatusEmployee != 'harian') {
-                $errorInfo = "Sorry, not applicable period for employee " . $selectEmployee->nama_karyawan . " - " . $selectEmployee->id_card;
+                $errorInfo = "Sorry, not applicable period for employee " . $selectEmployee->nama_karyawan . " - " . 
+                $selectEmployee->id_card;
             }
         }
 
@@ -168,7 +189,8 @@ class PayrollController extends Controller
 
         // Jika tidak ada data attendance
         if (count($attendance) == 0) {
-            $errorInfo = "Sorry, there is no data for employees " . $selectEmployee->nama_karyawan . " - " . $selectEmployee->id_card . " in that period.";
+            $errorInfo = "Sorry, there is no data for employees " . $selectEmployee->nama_karyawan . " - " . 
+            $selectEmployee->id_card . " in that period.";
         }
 
         // Cari jumlah waktu telat
@@ -229,6 +251,13 @@ class PayrollController extends Controller
         // Hitung jumlah hari kerja
         if ($nameStatusEmployee == 'harian') {
             $workingDays = $days;
+
+            // Jika kurang atau lebih dari 7 hari
+            if ($workingDays < 7 || $workingDays > 7) {
+                $errorInfo = "Sorry, the total number of days in the date period must be 7 days for " . 
+                $selectEmployee->nama_karyawan . " - " . $selectEmployee->id_card . " in that period.";
+            }
+
             $salary = $basic_salary * count($attendance);
             $salary_cuts = 0;
 
@@ -250,6 +279,12 @@ class PayrollController extends Controller
 
             } else {
                 $workingDays = $nonSundayCount - $nationalHolidayCount;
+            }
+
+            // Jika jumlah hari range date di bawah jumlah hari dalam bulan tersebut
+            if ($workingDays < ($nonSundayCountOfMonth - $nationalHolidayCount)) {
+                $errorInfo = "Sorry, total number of days not matching the period number of days in the month  " . 
+                 "( " . $selectEmployee->nama_karyawan . " - " . $selectEmployee->id_card . " )" . " in that period.";
             }
 
             $countAbsent = $workingDays - count($attendance);

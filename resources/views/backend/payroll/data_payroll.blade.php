@@ -308,8 +308,7 @@
                                                 <div>
                                                     <input type="text" name="total_salary" id="total_salary" class="form-control" 
                                                     value="{{ old('total_salary', 
-                                                        $checkPayroll->first()->total_gaji ? 
-                                                        $checkPayroll->first()->total_gaji : $dataPayroll->total_gaji) }}" readonly>
+                                                        optional($checkPayroll->first())->total_gaji ?? $dataPayroll->total_gaji ?? '0') }}" readonly>
                                                 </div>
                                             </div>
                                         </div>
