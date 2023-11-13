@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class companyController extends Controller
+class CompanyController extends Controller
 {
     public function index()
     {   

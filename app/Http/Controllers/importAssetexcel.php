@@ -10,7 +10,7 @@ use App\Models\Subcategory;
 use App\Models\Company;
 use App\Models\Asset;
 
-class importAssetexcel extends Controller
+class ImportAssetexcel extends Controller
 {
     public function importExcel(Request $request)
     {   

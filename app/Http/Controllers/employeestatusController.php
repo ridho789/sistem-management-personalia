@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class employeestatusController extends Controller
+class EmployeeStatusController extends Controller
 {
     public function index()
     {   

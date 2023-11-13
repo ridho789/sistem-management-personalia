@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TypeLeave;
 
 
-class leavetypeController extends Controller
+class LeaveTypeController extends Controller
 {
     public function index()
     {   

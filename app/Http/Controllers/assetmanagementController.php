@@ -9,7 +9,7 @@ use App\Models\Company;
 use App\Models\Asset;
 use Illuminate\Support\Facades\Crypt;
 
-class assetmanagementController extends Controller
+class AssetManagementController extends Controller
 {
     public function index()
     {

@@ -12,7 +12,7 @@ use App\Models\StatusEmployee;
 use App\Models\TypeLeave;
 use Illuminate\Support\Carbon;
 
-class dashboardController extends Controller
+class DashboardController extends Controller
 {
     public function index() {
         $employeeActive = Employee::where('is_active', true)->count();

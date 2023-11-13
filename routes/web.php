@@ -2,23 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\dashboardController;
-use App\Http\Controllers\divisionController;
-use App\Http\Controllers\positionController;
-use App\Http\Controllers\companyController;
-use App\Http\Controllers\employeestatusController;
-use App\Http\Controllers\categoryController;
-use App\Http\Controllers\subcategoryController;
-use App\Http\Controllers\leavetypeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeStatusController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\LeaveTypeController;
 
-use App\Http\Controllers\assetmanagementController;
-use App\Http\Controllers\employeemanagementController;
-use App\Http\Controllers\leavemanagementController;
-use App\Http\Controllers\attendanceController;
-use App\Http\Controllers\payrollController;
+use App\Http\Controllers\AssetManagementController;
+use App\Http\Controllers\EmployeeManagementController;
+use App\Http\Controllers\LeaveManagementController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\PayrollController;
 
-use App\Http\Controllers\importEmployeeexcel;
-use App\Http\Controllers\importAssetexcel;
+use App\Http\Controllers\ImportEmployeeexcel;
+use App\Http\Controllers\ImportAssetexcel;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,90 +31,90 @@ use App\Http\Controllers\importAssetexcel;
 |
 */
 
-Route::get('/', [dashboardController::class, 'index']);
+Route::get('/', [DashboardController::class, 'index']);
 
 // master data
-Route::get('/devision', [divisionController::class, 'index']);
-Route::post('division-add', [divisionController::class, 'store']);
-Route::get('division-delete/{id_divisi}', [divisionController::class, 'delete']);
-Route::post('division-update', [divisionController::class, 'update']);
+Route::get('/devision', [DivisionController::class, 'index']);
+Route::post('division-add', [DivisionController::class, 'store']);
+Route::get('division-delete/{id_divisi}', [DivisionController::class, 'delete']);
+Route::post('division-update', [DivisionController::class, 'update']);
 
-Route::get('/position', [positionController::class, 'index']);
-Route::post('position-add', [positionController::class, 'store']);
-Route::get('position-delete/{id_divisi}', [positionController::class, 'delete']);
-Route::post('position-update', [positionController::class, 'update']);
+Route::get('/position', [PositionController::class, 'index']);
+Route::post('position-add', [PositionController::class, 'store']);
+Route::get('position-delete/{id_divisi}', [PositionController::class, 'delete']);
+Route::post('position-update', [PositionController::class, 'update']);
 
-Route::get('/company', [companyController::class, 'index']);
-Route::post('company-add', [companyController::class, 'store']);
-Route::get('company-delete/{id_perusahaan}', [companyController::class, 'delete']);
-Route::post('company-update', [companyController::class, 'update']);
+Route::get('/company', [CompanyController::class, 'index']);
+Route::post('company-add', [CompanyController::class, 'store']);
+Route::get('company-delete/{id_perusahaan}', [CompanyController::class, 'delete']);
+Route::post('company-update', [CompanyController::class, 'update']);
 
-Route::get('/employee-status', [employeestatusController::class, 'index']);
-Route::post('employee-status-add', [employeestatusController::class, 'store']);
-Route::get('employee-status-delete/{id_perusahaan}', [employeestatusController::class, 'delete']);
-Route::post('employee-status-update', [employeestatusController::class, 'update']);
+Route::get('/employee-status', [EmployeeStatusController::class, 'index']);
+Route::post('employee-status-add', [EmployeeStatusController::class, 'store']);
+Route::get('employee-status-delete/{id_perusahaan}', [EmployeeStatusController::class, 'delete']);
+Route::post('employee-status-update', [EmployeeStatusController::class, 'update']);
 
-Route::get('/category', [categoryController::class, 'index']);
-Route::post('category-add', [categoryController::class, 'store']);
-Route::get('category-delete/{id_kategori}', [categoryController::class, 'delete']);
-Route::post('category-update', [categoryController::class, 'update']);
+Route::get('/category', [CategoryController::class, 'index']);
+Route::post('category-add', [CategoryController::class, 'store']);
+Route::get('category-delete/{id_kategori}', [CategoryController::class, 'delete']);
+Route::post('category-update', [CategoryController::class, 'update']);
 
-Route::post('sub-category-add', [subcategoryController::class, 'store']);
-Route::get('sub-category-delete/{id_sub_kategori}', [subcategoryController::class, 'delete']);
-Route::post('sub-category-update', [subcategoryController::class, 'update']);
+Route::post('sub-category-add', [SubCategoryController::class, 'store']);
+Route::get('sub-category-delete/{id_sub_kategori}', [SubCategoryController::class, 'delete']);
+Route::post('sub-category-update', [SubCategoryController::class, 'update']);
 
-Route::get('/type-leave', [leavetypeController::class, 'index']);
-Route::post('type-leave-add', [leavetypeController::class, 'store']);
-Route::get('type-leave-delete/{id_tipe_cuti}', [leavetypeController::class, 'delete']);
-Route::post('type-leave-update', [leavetypeController::class, 'update']);
+Route::get('/type-leave', [LeaveTypeController::class, 'index']);
+Route::post('type-leave-add', [LeaveTypeController::class, 'store']);
+Route::get('type-leave-delete/{id_tipe_cuti}', [LeaveTypeController::class, 'delete']);
+Route::post('type-leave-update', [LeaveTypeController::class, 'update']);
 
 // management - employee
-Route::get('/list-employee', [employeemanagementController::class, 'index']);
-Route::get('/form-employee', [employeemanagementController::class, 'create']);
-Route::post('form-employee-add', [employeemanagementController::class, 'store']);
-Route::get('list-employee-delete/{id_karyawan}', [employeemanagementController::class, 'delete']);
-Route::get('form-employee-edit/{id_karyawan}', [employeemanagementController::class, 'edit']);
-Route::post('form-employee-update', [employeemanagementController::class, 'update']);
-Route::get('list-employee-search', [employeemanagementController::class, 'search']);
-Route::post('list-employee-print', [employeemanagementController::class, 'print']);
+Route::get('/list-employee', [EmployeeManagementController::class, 'index']);
+Route::get('/form-employee', [EmployeeManagementController::class, 'create']);
+Route::post('form-employee-add', [EmployeeManagementController::class, 'store']);
+Route::get('list-employee-delete/{id_karyawan}', [EmployeeManagementController::class, 'delete']);
+Route::get('form-employee-edit/{id_karyawan}', [EmployeeManagementController::class, 'edit']);
+Route::post('form-employee-update', [EmployeeManagementController::class, 'update']);
+Route::get('list-employee-search', [EmployeeManagementController::class, 'search']);
+Route::post('list-employee-print', [EmployeeManagementController::class, 'print']);
 
 // management employee inactive
-Route::get('/list-inactive-employee', [employeemanagementController::class, 'index_inactive']);
-Route::get('list-inactive-employee-search', [employeemanagementController::class, 'search_inactive']);
+Route::get('/list-inactive-employee', [EmployeeManagementController::class, 'index_inactive']);
+Route::get('list-inactive-employee-search', [EmployeeManagementController::class, 'search_inactive']);
 
 // management - asset
-Route::get('/list-asset', [assetmanagementController::class, 'index']);
-Route::get('/form-asset', [assetmanagementController::class, 'create']);
-Route::post('form-asset-add', [assetmanagementController::class, 'store']);
-Route::get('list-asset-delete/{id_asset}', [assetmanagementController::class, 'delete']);
-Route::get('form-asset-edit/{id_asset}', [assetmanagementController::class, 'edit']);
-Route::post('form-asset-update', [assetmanagementController::class, 'update']);
-Route::get('list-asset-search', [assetmanagementController::class, 'search']);
+Route::get('/list-asset', [AssetManagementController::class, 'index']);
+Route::get('/form-asset', [AssetManagementController::class, 'create']);
+Route::post('form-asset-add', [AssetManagementController::class, 'store']);
+Route::get('list-asset-delete/{id_asset}', [AssetManagementController::class, 'delete']);
+Route::get('form-asset-edit/{id_asset}', [AssetManagementController::class, 'edit']);
+Route::post('form-asset-update', [AssetManagementController::class, 'update']);
+Route::get('list-asset-search', [AssetManagementController::class, 'search']);
 // mengambil data sub category berdasarkan category yang dipilih
-Route::get('/get-sub-categories/{categoryId}', [assetmanagementController::class, 'getSubCategories']);
+Route::get('/get-sub-categories/{categoryId}', [AssetManagementController::class, 'getSubCategories']);
 
 // management - attendance
-Route::get('/list-attendance', [attendanceController::class, 'index']);
-Route::get('list-attendance-search', [attendanceController::class, 'search']);
+Route::get('/list-attendance', [AttendanceController::class, 'index']);
+Route::get('list-attendance-search', [AttendanceController::class, 'search']);
 
 // attendance - leave
-Route::get('/leave-request', [leavemanagementController::class, 'create']);
-Route::get('/leaves-summary', [leavemanagementController::class, 'index']);
-Route::get('leaves-summary-search', [leavemanagementController::class, 'leave_summary_search']);
-Route::get('/allocation-request', [leavemanagementController::class, 'allocation']);
-Route::get('allocation-request-search', [leavemanagementController::class, 'allocation_search']);
-Route::post('leave-request-add', [leavemanagementController::class, 'store']);
-Route::get('leave-request-edit/{id_data_cuti}', [leavemanagementController::class, 'edit']);
-Route::post('leave-request-update', [leavemanagementController::class, 'update']);
-Route::get('leave-request-delete/{id_data_cuti}', [leavemanagementController::class, 'delete']);
-Route::post('leave-request-print', [leavemanagementController::class, 'print']);
-Route::post('leave-request-upload', [leavemanagementController::class, 'upload']);
+Route::get('/leave-request', [LeaveManagementController::class, 'create']);
+Route::get('/leaves-summary', [LeaveManagementController::class, 'index']);
+Route::get('leaves-summary-search', [LeaveManagementController::class, 'leave_summary_search']);
+Route::get('/allocation-request', [LeaveManagementController::class, 'allocation']);
+Route::get('allocation-request-search', [LeaveManagementController::class, 'allocation_search']);
+Route::post('leave-request-add', [LeaveManagementController::class, 'store']);
+Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit']);
+Route::post('leave-request-update', [LeaveManagementController::class, 'update']);
+Route::get('leave-request-delete/{id_data_cuti}', [LeaveManagementController::class, 'delete']);
+Route::post('leave-request-print', [LeaveManagementController::class, 'print']);
+Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
 
 // management - payroll
-Route::get('/data-payroll', [payrollController::class, 'index']);
-Route::get('/form-check-payroll', [payrollController::class, 'check']);
-Route::post('form-payroll-update', [payrollController::class, 'update']);
+Route::get('/data-payroll', [PayrollController::class, 'index']);
+Route::get('/form-check-payroll', [PayrollController::class, 'check']);
+Route::post('form-payroll-update', [PayrollController::class, 'update']);
 
 // import excel
-Route::post('import-excel-employee', [importEmployeeexcel::class, 'importExcel']);
-Route::post('import-excel-asset', [importAssetexcel::class, 'importExcel']);
+Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);
+Route::post('import-excel-asset', [ImportAssetexcel::class, 'importExcel']);

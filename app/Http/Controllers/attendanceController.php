@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Employee;
 use App\Models\Divisi;
 use App\Models\Attendance;
-use App\Models\Position;
-use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Schema;
 
-class attendanceController extends Controller
+class AttendanceController extends Controller
 {
     public function index() {
         $employee = Employee::where('is_active', true)->get();

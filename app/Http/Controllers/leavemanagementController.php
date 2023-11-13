@@ -16,7 +16,7 @@ use PDF;
 use Carbon\Carbon;
 use Ramsey\Uuid\Type\Integer;
 
-class leavemanagementController extends Controller
+class LeaveManagementController extends Controller
 {
     public function index(){
         $dataleave = DataLeave::whereHas('employee', function ($query) {

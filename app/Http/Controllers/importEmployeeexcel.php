@@ -12,7 +12,7 @@ use App\Models\Company;
 use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Log;
 
-class importEmployeeexcel extends Controller
+class ImportEmployeeexcel extends Controller
 {
     public function importExcel(Request $request)
     {   

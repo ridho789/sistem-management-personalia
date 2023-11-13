@@ -11,7 +11,7 @@ use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Crypt;
 use PDF;
 
-class employeemanagementController extends Controller
+class EmployeeManagementController extends Controller
 {
     public function index()
     {   

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Ramsey\Uuid\Type\Integer;
 use DateTime;
 
-class payrollController extends Controller
+class PayrollController extends Controller
 {
     public function index() 
     {
