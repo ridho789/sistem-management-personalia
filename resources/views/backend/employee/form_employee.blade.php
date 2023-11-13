@@ -813,7 +813,7 @@
                 if (selectedStatus) {
                     const selectedNameStatus = selectedStatusOption.getAttribute("data-status").toLowerCase();
                     // Show or hide contractStatus based on the selected status
-                    if (selectedNameStatus === 'kontrak') {
+                    if (selectedNameStatus === 'kontrak' || selectedNameStatus === 'contract') {
                         termContractColumn.setAttribute('required', 'required');
                         startContractColumn.setAttribute('required', 'required');
                         endContractColumn.setAttribute('required', 'required');

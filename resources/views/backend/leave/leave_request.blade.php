@@ -519,7 +519,7 @@
                 if (selectedOption.getAttribute("data-type-leave")) {
                     const typeLeave = selectedOption.getAttribute("data-type-leave").toLowerCase();
 
-                    if (typeLeave.includes("sick")) {
+                    if (typeLeave.includes("sick") || typeLeave.includes("sakit")) {
                         attachFileSection.style.display = "block";
                         attachFileColumn.setAttribute('required', 'required');
 
