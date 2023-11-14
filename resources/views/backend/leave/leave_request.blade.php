@@ -292,54 +292,58 @@
                         </div>
                     </div>
                 </div>
-                @if($dataleave)
-                    @if($dataleave->status_cuti != 'Approved')
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <div class="col-sm-6">
-                                        <form action="{{ url('leave-request-print') }}" method="POST">
-                                            @csrf
-                                            <div class="form-group row">
-                                                <input type="hidden" name="id_data_cuti" value="{{ $dataleave->id_data_cuti }}">
-                                                <label class="col-sm-12 col-form-label">Click the button below to download 
-                                                    the leave permit and send it to the Responsible in charge for processing..</label>
-                                                <div class="col-sm-12">
-                                                    <!-- <button type="submit" id="pdf_leave_request" class="btn btn-rounded btn-secondary">
-                                                        <span class="btn-icon-left text-primary">
-                                                            <i class="fa fa-download color-primary"></i>
-                                                        </span>Download PDF
-                                                    </button> -->
-                                                    <button type="submit" class="btn btn-secondary">Download PDF</button>
-                                                </div>
+                @if (Auth::check())
+                    @if (Auth::user()->level == 1)
+                        @if($dataleave)
+                            @if($dataleave->status_cuti != 'Approved')
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <div class="col-sm-6">
+                                                <form action="{{ url('leave-request-print') }}" method="POST">
+                                                    @csrf
+                                                    <div class="form-group row">
+                                                        <input type="hidden" name="id_data_cuti" value="{{ $dataleave->id_data_cuti }}">
+                                                        <label class="col-sm-12 col-form-label">Click the button below to download 
+                                                            the leave permit and send it to the Responsible in charge for processing..</label>
+                                                        <div class="col-sm-12">
+                                                            <!-- <button type="submit" id="pdf_leave_request" class="btn btn-rounded btn-secondary">
+                                                                <span class="btn-icon-left text-primary">
+                                                                    <i class="fa fa-download color-primary"></i>
+                                                                </span>Download PDF
+                                                            </button> -->
+                                                            <button type="submit" class="btn btn-secondary">Download PDF</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <form action="{{ url('leave-request-upload') }}" method="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="form-group row">
-                                                <input type="hidden" name="id_data_cuti" value="{{ $dataleave->id_data_cuti }}">
-                                                <label class="col-sm-12 col-form-label">
-                                                    <span class="text-danger">*</span>
-                                                    Attach the leave application form file that has been approved
-                                                </label>
-                                                <div class="col-sm-8 mb-2">
-                                                    <input type="file" class="form-control @error('file_approved') is-invalid @enderror" 
-                                                    id="file_approved" name="file_approved">
-                                                    @error('file_approved')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <button type="submit" class="btn btn-primary">Upload</button>
-                                                </div>
+                                            <div class="col-sm-6">
+                                                <form action="{{ url('leave-request-upload') }}" method="POST" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="form-group row">
+                                                        <input type="hidden" name="id_data_cuti" value="{{ $dataleave->id_data_cuti }}">
+                                                        <label class="col-sm-12 col-form-label">
+                                                            <span class="text-danger">*</span>
+                                                            Attach the leave application form file that has been approved
+                                                        </label>
+                                                        <div class="col-sm-8 mb-2">
+                                                            <input type="file" class="form-control @error('file_approved') is-invalid @enderror" 
+                                                            id="file_approved" name="file_approved">
+                                                            @error('file_approved')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <button type="submit" class="btn btn-primary">Upload</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endif
+                        @endif
                     @endif
                 @endif
             </div>
