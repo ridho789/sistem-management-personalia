@@ -68,7 +68,7 @@
         </table>
 
         <div style="margin-top: 10px;">
-            @if (strpos(strtolower($typeLeave->nama_tipe_cuti), 'sick') !== false)
+            @if (strpos(strtolower($typeLeave->nama_tipe_cuti), 'sick') !== false || strpos(strtolower($typeLeave->nama_tipe_cuti), 'sakit') !== false)
                 @if ( $dataleave->file )
                     <span><i>Bukti/berkas pendukung sudah terlampir</i></span>
                 @else

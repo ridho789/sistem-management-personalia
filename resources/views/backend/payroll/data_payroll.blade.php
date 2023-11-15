@@ -330,6 +330,25 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Print Payslip</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{{ url('form-payroll-print') }}" method="POST">
+                                        @csrf
+                                        <div class="form-group row">
+                                            <input type="hidden" name="id_payroll" value="{{ isset($payrollId) ? $payrollId : '' }}">
+                                            <label class="col-sm-12 col-form-label">Click the button below to print the payslip based on the data 
+                                                currently displayed.
+                                            </label>
+                                            <div class="col-sm-12">
+                                                <button type="submit" class="btn btn-secondary">Print Payslip</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         @endif
                     @endif
                 @endif

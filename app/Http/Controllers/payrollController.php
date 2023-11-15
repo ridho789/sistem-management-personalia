@@ -12,8 +12,8 @@ use App\Models\DataLeave;
 use App\Models\Payroll;
 use App\Models\TypeLeave;
 use Illuminate\Support\Facades\Http;
-use Ramsey\Uuid\Type\Integer;
 use DateTime;
+use PDF;
 
 class PayrollController extends Controller
 {
@@ -388,5 +388,25 @@ class PayrollController extends Controller
         }
     
         return redirect()->back();
+    }
+
+    public function print(Request $request) {
+        $payroll = Payroll::where('id_gaji', $request->id_payroll)->first();
+        $employee = Employee::where('id_karyawan', $payroll->id_karyawan)->first();
+
+        $position = Position::pluck('nama_jabatan', 'id_jabatan');
+        $division = Divisi::pluck('nama_divisi', 'id_divisi');
+        $status = StatusEmployee::pluck('nama_status', 'id_status');
+
+        $pdf = PDF::loadView('backend.payroll.pdf_payslip', [
+            'payroll' => $payroll,
+            'employee' => $employee,
+            'position' => $position,
+            'division' => $division,
+            'status' => $status
+        ]);
+
+        $filename = 'Payslip ' . $employee->nama_karyawan . ' - ' . $employee->id_card . ' (' . $payroll->periode_gaji . ')' . '.pdf';
+        return $pdf->download($filename);
     }
 }

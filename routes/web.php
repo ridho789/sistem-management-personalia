@@ -133,6 +133,7 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::get('/data-payroll', [PayrollController::class, 'index'])->middleware('auth');
     Route::get('/form-check-payroll', [PayrollController::class, 'check']);
     Route::post('form-payroll-update', [PayrollController::class, 'update']);
+    Route::post('form-payroll-print', [PayrollController::class, 'print']);
 
     // import excel
     Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);
