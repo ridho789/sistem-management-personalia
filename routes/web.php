@@ -16,6 +16,7 @@ use App\Http\Controllers\EmployeeManagementController;
 use App\Http\Controllers\LeaveManagementController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\DailyReportManagementController;
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
@@ -134,6 +135,9 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::get('/form-check-payroll', [PayrollController::class, 'check']);
     Route::post('form-payroll-update', [PayrollController::class, 'update']);
     Route::post('form-payroll-print', [PayrollController::class, 'print']);
+
+    // management - daily report
+    Route::get('/form-daily-report', [DailyReportManagementController::class, 'create'])->middleware('auth');
 
     // import excel
     Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);

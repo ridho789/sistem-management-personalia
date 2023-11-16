@@ -68,6 +68,11 @@
                             <i class="icon icon-payment"></i><span class="nav-text">Payroll</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="/form-daily-report" aria-expanded="false">
+                            <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
+                        </a>
+                    </li>
                 @elseif (Auth::user()->level == 2)
                     <li class="nav-label">Management</li>
                     <li>
