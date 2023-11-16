@@ -505,7 +505,7 @@
                         var totalSalaryCutsValue = parseInt(totalSalaryCuts.value.slice(0, -3).replace(/[^\d]/g, ''));
                         var totalSalaryValue = parseInt(totalSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
 
-                        updateWorkingDays = 26 - absentDays;
+                        updateWorkingDays = 26 - (absentDays + sickDays + leaveDays);
                         absentCuts = absentDays * (basicSalaryValue /26);
                         absentCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(absentCuts);
 
