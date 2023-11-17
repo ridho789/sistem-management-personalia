@@ -86,7 +86,7 @@
                                                 </a>
                                             </td>
                                             <td>{{$at->id_card}}</td>
-                                            <td>{{ date('l, Y-m-d', strtotime($at->attendance_date)) }}</td>
+                                            <td>{{ date('l, j F Y', strtotime($at->attendance_date)) }}</td>
                                             <td>{{$at->sign_in ?? '-'}}</td>
                                             @if ($at->sign_in_late)
                                                 <td style="color: red;">{{$at->sign_in_late}}</td>

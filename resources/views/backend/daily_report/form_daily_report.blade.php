@@ -25,39 +25,87 @@
                     </div>
                     <div class="card-body">
                         <div class="basic-form">
-                            <form action="#" method="POST">
-                                @csrf
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label for="val_employee">Employee</label>
-                                        <select class="form-control" id="val_employee" name="id_karyawan" required>
-                                            <option value="">Select a employee...</option>
-                                            @foreach ($employee as $e)
-                                                <option value="{{ $e->id_karyawan }}" 
-                                                    {{ old('id_karyawan') == $e->id_karyawan ? 'selected' : '' }}>
-                                                    {{ $e->nama_karyawan }} - {{ $e->id_card }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                            @if($dailyReport)
+                                <form action="{{ url('daily-report-update') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="user" value="{{ auth()->user()->name }}"/>
+                                    <input type="hidden" name="id" value="{{ $dailyReport->id_catatan_harian }}"/>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label for="val_employee">Employee</label>
+                                            <select class="form-control" id="val_employee" name="id_karyawan" required>
+                                                <option value="">Select a employee...</option>
+                                                @foreach ($employee as $e)
+                                                    <option value="{{ $e->id_karyawan }}" 
+                                                        {{ old('id_karyawan', $dailyReport->id_karyawan) == $e->id_karyawan ? 'selected' : '' }}>
+                                                        {{ $e->nama_karyawan }} - {{ $e->id_card }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-4">
-                                        <label for="work-diary-date">Work Diary Date</label>
-                                        <input type="date" id="work-diary-date" class="form-control input-work-diary-date" 
-                                            name="input_work_diary_date" value="{{ old('input_work_diary_date') }}" required>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label for="work-diary-date">Work Diary Date</label>
+                                            <input type="date" id="work-diary-date" class="form-control input-work-diary-date" 
+                                                name="input_work_diary_date" value="{{ old('input_work_diary_date', $dailyReport->tanggal_catatan_harian) }}" required>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <label for="information">Information</label>
+                                            <input type="text" id="information" class="form-control input-information" 
+                                                name="input_information" placeholder="input information" value="{{ old('input_information', $dailyReport->keterangan) }}" required>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-8">
-                                        <label for="information">Information</label>
-                                        <input type="text" id="information" class="form-control input-information" 
-                                            name="input_information" placeholder="input information" value="{{ old('input_information') }}" required>
+                                    <button type="submit" class="btn btn-primary submit-daily-report" id="close-form-daily-report">Submit</button>
+                                </form>
+                            @else
+                                <form action="{{ url('daily-report-add') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="user" value="{{ auth()->user()->name }}"/>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label for="val_employee">Employee</label>
+                                            <select class="form-control" id="val_employee" name="id_karyawan" required>
+                                                <option value="">Select a employee...</option>
+                                                @foreach ($employee as $e)
+                                                    <option value="{{ $e->id_karyawan }}" 
+                                                        {{ old('id_karyawan') == $e->id_karyawan ? 'selected' : '' }}>
+                                                        {{ $e->nama_karyawan }} - {{ $e->id_card }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary submit-daily-report" id="close-form-daily-report">Submit</button>
-                            </form>
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <label for="work-diary-date">Work Diary Date</label>
+                                            <input type="date" id="work-diary-date" class="form-control input-work-diary-date" 
+                                                name="input_work_diary_date" value="{{ old('input_work_diary_date') }}" required>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <label for="information">Information</label>
+                                            <input type="text" id="information" class="form-control input-information" 
+                                                name="input_information" placeholder="input information" value="{{ old('input_information') }}" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary submit-daily-report" id="close-form-daily-report">Submit</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
+                @if($errorInfo)
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Log Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <span style="text-align: center;">
+                            <p>{{ $errorInfo }}</p>
+                        </span>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

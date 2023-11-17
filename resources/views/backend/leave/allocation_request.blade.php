@@ -77,7 +77,7 @@
                                                                 <td>{{ $cuti->durasi_cuti }} days</td>
                                                                 <td>
                                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($cuti->id_data_cuti)]) }}">
-                                                                    {{ date('l, Y-m-d', strtotime($cuti->mulai_cuti)) }}</a>
+                                                                    {{ date('l, j F Y', strtotime($cuti->mulai_cuti)) }}</a>
                                                                 </td>
                                                             </tr>
                                                         @endforeach

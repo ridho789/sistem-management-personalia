@@ -66,7 +66,7 @@
                     <div class="card-header">
                         <h4 class="card-title">Category</h4>
                         @if (count($tbl_kategori) > 0)
-                            <button type="submit" class="btn btn-primary mt-3" id="new-category">+ Add new category</button>
+                            <button type="submit" class="btn btn-primary" id="new-category">+ Add new category</button>
                         @endif
                     </div>
                     <div class="card-body">

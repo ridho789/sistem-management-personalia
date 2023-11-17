@@ -95,7 +95,7 @@
                     <div class="card-header">
                         <h4 class="card-title">position</h4>
                         @if (count($tbl_jabatan) > 0)
-                            <button type="submit" class="btn btn-primary mt-3" id="new-position">+ Add new position</button>
+                            <button type="submit" class="btn btn-primary" id="new-position">+ Add new position</button>
                         @endif
                     </div>
                     <div class="card-body">

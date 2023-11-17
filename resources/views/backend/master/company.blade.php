@@ -79,7 +79,7 @@
                     <div class="card-header">
                         <h4 class="card-title">company</h4>
                         @if (count($tbl_perusahaan) > 0)
-                            <button type="submit" class="btn btn-primary mt-3" id="new-company">+ Add new company</button>
+                            <button type="submit" class="btn btn-primary" id="new-company">+ Add new company</button>
                         @endif
                     </div>
                     <div class="card-body">

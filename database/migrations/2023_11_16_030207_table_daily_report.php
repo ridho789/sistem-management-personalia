@@ -17,6 +17,8 @@ class TableDailyReport extends Migration
             $table->id('id_catatan_harian');
             $table->date('tanggal_catatan_harian')->nullable();
             $table->string('keterangan')->nullable();
+            $table->string('dibuat_oleh')->nullable();
+            $table->string('diperbaharui_oleh')->nullable();
             $table->timestamps();
         });
     }

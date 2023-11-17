@@ -99,7 +99,7 @@
                     <div class="card-header">
                         <h4 class="card-title">Division</h4>
                         @if (count($tbl_divisi) > 0)
-                            <button type="submit" class="btn btn-primary mt-3" id="new-division">+ Add new division</button>
+                            <button type="submit" class="btn btn-primary" id="new-division">+ Add new division</button>
                         @endif
                     </div>
                     <div class="card-body">

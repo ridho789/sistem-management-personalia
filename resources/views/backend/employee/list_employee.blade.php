@@ -24,7 +24,7 @@
                     <div class="card-header">                           
                         <h4 class="card-title">List Employee</h4>
                         @if (count($tbl_karyawan) > 0)
-                            <a href="/form-employee" class="btn btn-primary mt-3" id="new-employee">+ Add new employee</a>
+                            <a href="/form-employee" class="btn btn-primary" id="new-employee">+ Add new employee</a>
                         @endif
                     </div>
                     <div class="card-body">

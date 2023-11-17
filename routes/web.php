@@ -137,7 +137,12 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('form-payroll-print', [PayrollController::class, 'print']);
 
     // management - daily report
+    Route::get('/list-daily-report', [DailyReportManagementController::class, 'index'])->middleware('auth');
     Route::get('/form-daily-report', [DailyReportManagementController::class, 'create'])->middleware('auth');
+    Route::post('daily-report-add', [DailyReportManagementController::class, 'store']);
+    Route::get('daily-report-edit/{id_daily_report}', [DailyReportManagementController::class, 'edit']);
+    Route::get('daily-report-delete/{id_daily_report}', [DailyReportManagementController::class, 'delete']);
+    Route::post('daily-report-update', [DailyReportManagementController::class, 'update']);
 
     // import excel
     Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);

@@ -69,10 +69,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/form-daily-report" aria-expanded="false">
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
                             <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
                         </a>
+                        <ul aria-expanded="false">
+                            <li><a href="/list-daily-report">List Daily Report</a></li>
+                            <li><a href="/form-daily-report">Form Daily Report</a></li>
+                        </ul>
                     </li>
+                    
                 @elseif (Auth::user()->level == 2)
                     <li class="nav-label">Management</li>
                     <li>

@@ -23,7 +23,7 @@
                     <div class="card-header">                           
                         <h4 class="card-title">Leaves Summary</h4>
                         @if (count($dataleave) > 0)
-                            <a href="/leave-request" class="btn btn-primary mt-3" 
+                            <a href="/leave-request" class="btn btn-primary" 
                                 id="new-data-leave">+ Create request
                             </a>
                         @endif
@@ -79,7 +79,7 @@
                                                 <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px;">
                                                     {{ $dl->deskripsi }}
                                                 </td>
-                                                <td colspan="2">{{ date('l, Y-m-d', strtotime($dl->mulai_cuti)) }}</td>
+                                                <td colspan="2">{{ date('l, j F Y', strtotime($dl->mulai_cuti)) }}</td>
                                                 <td>{{ $dl->durasi_cuti }}</td>
                                                 <td><a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($dl->id_penangung_jawab)]) }}">
                                                     {{ $employee[$dl->id_penangung_jawab] }} - {{ $idcard[$dl->id_penangung_jawab] }}
