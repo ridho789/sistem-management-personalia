@@ -292,6 +292,18 @@
                         </div>
                     </div>
                 </div>
+                @if($errorInfo)
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Log Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <span>
+                                <p>{{ $errorInfo }}</p>
+                            </span>
+                        </div>
+                    </div>
+                @endif
                 @if (Auth::check())
                     @if (Auth::user()->level == 1)
                         @if($dataleave)

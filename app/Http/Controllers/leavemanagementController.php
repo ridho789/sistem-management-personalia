@@ -21,7 +21,7 @@ class LeaveManagementController extends Controller
     public function index(){
         $dataleave = DataLeave::whereHas('employee', function ($query) {
             $query->where('is_active', true);
-        })->get();
+        })->orderBy('mulai_cuti', 'asc')->get();
         
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
@@ -76,7 +76,10 @@ class LeaveManagementController extends Controller
     }
 
     public function create(){
+        // Inisiasi variabel
         $dataleave = '';
+        $errorInfo = '';
+
         // filter hanya karyawan selain status harian
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
         $employee = Employee::where('id_status', '!=', $statusEmployee)
@@ -91,11 +94,16 @@ class LeaveManagementController extends Controller
             'employee' => $employee,
             'position' => $position,
             'division' => $division,
-            'typeLeave' => $typeLeave
+            'typeLeave' => $typeLeave,
+            'errorInfo' => $errorInfo
         ]);
     }
 
     public function store(Request $request){
+        // Inisiasi variabel
+        $errorInfo = '';
+        $dataleave = '';
+
         $request->validate([
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -108,20 +116,61 @@ class LeaveManagementController extends Controller
             $filePath = $file->storeAs('images/leave', $fileName);
         }
 
-        DataLeave::insert([
-            'id_karyawan'=> $request->id_karyawan,
-            'id_penangung_jawab'=> $request->id_penangung_jawab,
-            'deskripsi'=> $request->deskripsi,
-            'id_tipe_cuti'=> $request->id_tipe_cuti,
-            'mulai_cuti'=> $request->datetimestart,
-            'selesai_cuti'=> $request->datetimeend,
-            'durasi_cuti'=> $request->duration,
-            'file'=> $filePath,
-            'status_cuti' => 'To Approved',
-            'file_approved' => null
-        ]);
+        $date_start = date("j F Y", strtotime($request->datetimestart));
+        $date_end = date("j F Y", strtotime($request->datetimeend));
+        
+        $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
+        $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
+            ->whereBetween('mulai_cuti', [$request->datetimestart, $request->datetimeend])
+            ->get();
 
-        return redirect('/leaves-summary');
+        if (count($checkDataCuti) > 0) {
+            $range_date = $date_start . ' - ' . $date_end;
+            if ($date_start == $date_end) {
+                $range_date = $date_start;
+            }
+
+            $errorInfo = "Sorry, there is already data made for the employee " . 
+                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date;
+        }
+
+        if (empty($errorInfo)) {
+            DataLeave::insert([
+                'id_karyawan'=> $request->id_karyawan,
+                'id_penangung_jawab'=> $request->id_penangung_jawab,
+                'deskripsi'=> $request->deskripsi,
+                'id_tipe_cuti'=> $request->id_tipe_cuti,
+                'mulai_cuti'=> $request->datetimestart,
+                'selesai_cuti'=> $request->datetimeend,
+                'durasi_cuti'=> $request->duration,
+                'file'=> $filePath,
+                'status_cuti' => 'To Approved',
+                'file_approved' => null
+            ]);
+
+            return redirect('/leaves-summary');
+
+        } else {
+            // filter hanya karyawan selain status harian
+            $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
+            $employee = Employee::where('id_status', '!=', $statusEmployee)
+                ->where('is_active', true)
+                ->get();
+                
+            $position = Position::pluck('nama_jabatan', 'id_jabatan');
+            $division = Divisi::pluck('nama_divisi', 'id_divisi');
+            $typeLeave = TypeLeave::all();
+
+            return view('/backend/leave/leave_request', [
+                'dataleave' => $dataleave,
+                'employee' => $employee,
+                'position' => $position,
+                'division' => $division,
+                'typeLeave' => $typeLeave,
+                'errorInfo' => $errorInfo
+            ]);
+        }
+
     }
 
     public function edit($id){
@@ -180,9 +229,8 @@ class LeaveManagementController extends Controller
 
         // Hapus AllocationRequest yang tidak memiliki DataLeave yang sesuai
         AllocationRequest::whereNotIn('id_karyawan', function ($query) {
-            $query->select('id_karyawan')->from('tbl_data_cuti');
+            $query->select('id_karyawan')->from('tbl_data_cuti')->where('status_cuti', 'Approved');
         })->delete();
-
 
         return redirect()->back();
     }
@@ -292,20 +340,22 @@ class LeaveManagementController extends Controller
             ->groupBy('id_karyawan')
             ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
             ->get();
+        
+        if (count($totalDurasiCutiPerKaryawan) > 0) {
+            foreach ($totalDurasiCutiPerKaryawan as $data) {
+                $id_karyawan = $data->id_karyawan;
+                $totalDurasiCuti = $data->total_durasi_cuti;
 
-        foreach ($totalDurasiCutiPerKaryawan as $data) {
-            $id_karyawan = $data->id_karyawan;
-            $totalDurasiCuti = $data->total_durasi_cuti;
+                $sisaCuti = ($totalDurasiCuti >= 1) ? (12 - $totalDurasiCuti) : 12;
 
-            $sisaCuti = ($totalDurasiCuti >= 1) ? (12 - $totalDurasiCuti) : 12;
+                $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
 
-            $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
-
-            if ($allocationRequestData) {
-                AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
-                    ->update([
-                        'sisa_cuti' => $sisaCuti,
-                    ]);
+                if ($allocationRequestData) {
+                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
+                        ->update([
+                            'sisa_cuti' => $sisaCuti,
+                        ]);
+                }
             }
         }
 
