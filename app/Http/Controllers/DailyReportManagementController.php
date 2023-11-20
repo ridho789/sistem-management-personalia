@@ -171,8 +171,8 @@ class DailyReportManagementController extends Controller
         }
 
         if (!$id_karyawan && (!$start_date_range || !$end_date_range)) {
-            // Jika tidak ada filter yang diterapkan, tampilkan semua data
-            $dailyReport = $query->orderBy('tanggal_catatan_harian', 'asc')->get();
+            return redirect('/list-daily-report');
+
         } else {
             $dailyReport = $query->get();
         }
@@ -187,13 +187,7 @@ class DailyReportManagementController extends Controller
             ->get();
         
         if (count($dailyReport) == 0) {
-            $dailyReport = DailyReport::all();
-            return view('/backend/daily_report/list_daily_report', [
-                'dailyReport' => $dailyReport,
-                'nameEmployee' => $nameEmployee,
-                'idCard' => $idCard,
-                'employee' => $employee
-            ]);
+            return redirect('/list-daily-report');
 
         } else {
             return view('/backend/daily_report/list_daily_report', [
