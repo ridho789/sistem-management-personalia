@@ -23,6 +23,7 @@ use App\Http\Controllers\RegisterController;
 
 use App\Http\Controllers\ImportEmployeeexcel;
 use App\Http\Controllers\ImportAssetexcel;
+use App\Http\Controllers\ImportDailyReport;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,10 +144,12 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::get('daily-report-edit/{id_daily_report}', [DailyReportManagementController::class, 'edit']);
     Route::get('daily-report-delete/{id_daily_report}', [DailyReportManagementController::class, 'delete']);
     Route::post('daily-report-update', [DailyReportManagementController::class, 'update']);
+    Route::get('daily-report-search', [DailyReportManagementController::class, 'search']);
 
     // import excel
     Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);
     Route::post('import-excel-asset', [ImportAssetexcel::class, 'importExcel']);
+    Route::post('import-excel-daily-report', [ImportDailyReport::class, 'ImportDailyReport']);
 });
 
 // management - employee

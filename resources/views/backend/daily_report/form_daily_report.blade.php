@@ -19,6 +19,47 @@
 
         <div class="row">
             <div class="col-12" id="form-daily-report">
+                <div id="button-create-excel" class="mb-3" style="display: block;">
+                    <a href="#" class="btn btn-light" id="button-create-daily-report-excel">Click to <b>create by Excel</b></a>
+                </div>
+                <div id="form-create-excel" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h4 class="card-title">Import File Excel</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="basic-form custom_file_input">
+                            <form action="{{ url('import-excel-daily-report') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="file" name="file" class="form-control">
+                                    <button class="btn btn-primary ml-1" type="submit">Import</button>
+                                    <button class="btn btn-dark ml-1" type="button" id="close-form-create-excel">Cancel</button>
+                                </div>
+                                @error('file')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Log Importing Data -->
+                @if($logErrors)
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Error Log</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul>@if(is_array($logErrors))
+                                @foreach($logErrors as $logError)
+                                    <li>{{ $logError }}</li>
+                                @endforeach
+                            @else
+                            {{ $logErrors }}
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+                @endif
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Form Daily Report</h4>
@@ -109,4 +150,31 @@
             </div>
         </div>
     </div>
+    <script>
+        // show/hide form create by excel
+        const toggleFormButton = document.getElementById('button-create-daily-report-excel');
+        const toggleCloseButton = document.getElementById('button-create-excel')
+        const toggleCloseFormButton = document.getElementById('close-form-create-excel');
+        const myForm = document.getElementById('form-create-excel');
+
+        toggleFormButton.addEventListener('click', function() {
+            if (myForm.style.display === 'none') {
+                myForm.style.display = 'block';
+            }
+
+            if (toggleCloseButton.style.display === 'block') {
+                toggleCloseButton.style.display = 'none';
+            }
+        });
+
+        toggleCloseFormButton.addEventListener('click', function() {
+            if (myForm.style.display === 'block') {
+                myForm.style.display = 'none';
+            }
+
+            if (toggleCloseButton.style.display === 'none') {
+                toggleCloseButton.style.display = 'block';
+            }
+        });
+    </script>
 @endsection

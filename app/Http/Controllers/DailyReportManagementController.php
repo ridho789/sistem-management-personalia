@@ -15,7 +15,14 @@ class DailyReportManagementController extends Controller
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idCard = Employee::pluck('id_card', 'id_karyawan');
 
+        // Ambil semua data divisi yang memiliki is_daily_report bernilai true
+        $divisiIds = Divisi::where('is_daily_report', true)->pluck('id_divisi');   
+        $employee = Employee::whereIn('id_divisi', $divisiIds)
+            ->where('is_active', true)
+            ->get();
+
         return view('/backend/daily_report/list_daily_report', [
+            'employee' => $employee,
             'dailyReport' => $dailyReport,
             'nameEmployee' => $nameEmployee,
             'idCard' => $idCard
@@ -26,6 +33,7 @@ class DailyReportManagementController extends Controller
         // Inisiasi variabel
         $errorInfo = '';
         $dailyReport = '';
+        $logErrors = '';
 
         // Ambil semua data divisi yang memiliki is_daily_report bernilai true
         $divisiIds = Divisi::where('is_daily_report', true)->pluck('id_divisi');   
@@ -36,7 +44,8 @@ class DailyReportManagementController extends Controller
         return view('/backend/daily_report/form_daily_report', [
             'employee' => $employee,
             'errorInfo' => $errorInfo,
-            'dailyReport' => $dailyReport
+            'dailyReport' => $dailyReport,
+            'logErrors' => $logErrors
         ]);
     }
 
@@ -144,5 +153,56 @@ class DailyReportManagementController extends Controller
                 'dailyReport' => $dailyReport
             ]);
         }
+    }
+
+    public function search(Request $request) {
+        $id_karyawan = $request->id_karyawan;
+        $start_date_range = $request->start_date;
+        $end_date_range = $request->end_date;
+
+        $query = DailyReport::query();
+
+        if ($id_karyawan) {
+            $query->where('id_karyawan', $id_karyawan);
+        }
+
+        if ($start_date_range && $end_date_range) {
+            $query->whereBetween('tanggal_catatan_harian', [$start_date_range, $end_date_range]);
+        }
+
+        if (!$id_karyawan && (!$start_date_range || !$end_date_range)) {
+            // Jika tidak ada filter yang diterapkan, tampilkan semua data
+            $dailyReport = $query->orderBy('tanggal_catatan_harian', 'asc')->get();
+        } else {
+            $dailyReport = $query->get();
+        }
+
+        $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
+        $idCard = Employee::pluck('id_card', 'id_karyawan');
+
+        // Ambil semua data divisi yang memiliki is_daily_report bernilai true
+        $divisiIds = Divisi::where('is_daily_report', true)->pluck('id_divisi');   
+        $employee = Employee::whereIn('id_divisi', $divisiIds)
+            ->where('is_active', true)
+            ->get();
+        
+        if (count($dailyReport) == 0) {
+            $dailyReport = DailyReport::all();
+            return view('/backend/daily_report/list_daily_report', [
+                'dailyReport' => $dailyReport,
+                'nameEmployee' => $nameEmployee,
+                'idCard' => $idCard,
+                'employee' => $employee
+            ]);
+
+        } else {
+            return view('/backend/daily_report/list_daily_report', [
+                'dailyReport' => $dailyReport,
+                'nameEmployee' => $nameEmployee,
+                'idCard' => $idCard,
+                'employee' => $employee
+            ]);
+        }
+
     }
 }
