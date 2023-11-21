@@ -174,6 +174,9 @@ class LeaveManagementController extends Controller
     }
 
     public function edit($id){
+        // Inisiasi variabel
+        $errorInfo = '';
+
         // Dekripsi ID
         $id = Crypt::decrypt($id);
 
@@ -187,7 +190,8 @@ class LeaveManagementController extends Controller
             'employee' => $employee,
             'position' => $position,
             'division' => $division,
-            'typeLeave' => $typeLeave
+            'typeLeave' => $typeLeave,
+            'errorInfo' => $errorInfo
         ]);
     }
 
