@@ -50,7 +50,9 @@ class AttendanceController extends Controller
                 $sign_in = null;
                 $sign_out = null;
 
+                // Set normally scheduled
                 $sign_in = ($timeHour >= 4 && $timeHour <= 12) ? $timeFormat : null;
+                $sign_out = ($timeHour >= 17 && $timeHour <= 23) ? $timeFormat : null;
 
                 // Menghitung sign_in_late jika melebihi jam 08:00
                 $limitJam = 8;
@@ -115,6 +117,36 @@ class AttendanceController extends Controller
                         $information = 'Shift Malam';
                     }
                 
+                    // Cek apakah sign_in_late berisi data
+                    if (!$late) {
+                        $late = null;
+                    }
+
+                } elseif ($divisi && $nameDivisi === 'cargo') {
+                    // Inisialisasi late ke default null
+                    $late = null;
+
+                    if ($timeHour >= 22 || $timeHour <= 2) {
+                        if ($timeHour <= 2) {
+                            $timeHour+=24;
+                        }
+
+                        // Shift malam (sign in)
+                        $limitJam = 23;
+                        $limitMenit = 0;
+                        $limitDetik = 0;
+
+                        if (
+                            $timeHour > $limitJam || ($timeHour == $limitJam && $timeMinute > $limitMenit) ||
+                            ($timeHour == $limitJam && $timeMinute == $limitMenit && $timeSecond > $limitDetik)) {
+                            $sign_in_late = ($timeHour - $limitJam) * 3600 + ($timeMinute - $limitMenit) * 60 + ($timeSecond - $limitDetik);
+                            $late = gmdate("H:i:s", $sign_in_late);
+                        }
+
+                        $sign_in = $timeFormat;
+                        $information = 'Shift Malam';
+                    }
+
                     // Cek apakah sign_in_late berisi data
                     if (!$late) {
                         $late = null;
@@ -201,6 +233,55 @@ class AttendanceController extends Controller
                             }
 
                         } elseif (!$existingRecordSecurity) {
+                            // Insert data jika data tidak ada
+                            Attendance::insert([
+                                'employee' => $dataEmployee->id_karyawan,
+                                'id_card' => $data->cardNo,
+                                'attendance_date' => $data->authDate,
+                                'sign_in' => $sign_in,
+                                'sign_out' => $sign_out,
+                                'sign_in_late' => $late,
+                                'information' => $information
+                            ]);
+                        }
+
+                    } elseif ($divisi && $nameDivisi === 'cargo') {
+                        // Menambahkan logika untuk tidak menampilkan data sign_out
+                        $dateAttendanceOneAgo = date("Y-m-d", strtotime($data->authDate . " -1 day"));
+                        $existingRecordCargo = Attendance::where('id_card', $data->cardNo)
+                            ->whereDate('attendance_date', $dateAttendanceOneAgo)
+                            ->first();
+
+                        // Periksa apakah data sudah ada dan tidak perlu diupdate
+                        if ($existingRecordCargo) {
+                            // Periksa apakah ada data "sign_out"
+                            if (empty($existingRecordCargo->sign_out)) {
+                                $sign_out = ($timeHour >= 7 && $timeHour <= 12) ? $timeFormat : null;
+                                $updateData = [];
+
+                                if (empty($existingRecordCargo->sign_out)) {
+                                    $updateData['sign_out'] = $sign_out;
+                                }
+
+                                if (!empty($updateData)) {
+                                    // Update data jika diperlukan
+                                    Attendance::where('id_card', $existingRecordCargo->id_card)
+                                        ->whereDate('attendance_date', $existingRecordCargo->attendance_date)
+                                        ->update($updateData);
+                                }
+                            } elseif ($timeHour >= 22 || $timeHour <= 2) {
+                                // Buat data baru jika waktu masuk antara jam 22.00 - 02.00
+                                Attendance::insert([
+                                    'employee' => $dataEmployee->id_karyawan,
+                                    'id_card' => $data->cardNo,
+                                    'attendance_date' => $data->authDate,
+                                    'sign_in' => $sign_in,
+                                    'sign_out' => $sign_out,
+                                    'sign_in_late' => $late,
+                                    'information' => $information
+                                ]);
+                            }
+                        } elseif (!$existingRecordCargo) {
                             // Insert data jika data tidak ada
                             Attendance::insert([
                                 'employee' => $dataEmployee->id_karyawan,
