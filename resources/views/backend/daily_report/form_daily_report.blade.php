@@ -141,7 +141,7 @@
                         <h4 class="card-title">Log Information</h4>
                     </div>
                     <div class="card-body">
-                        <span style="text-align: center;">
+                        <span>
                             <p>{{ $errorInfo }}</p>
                         </span>
                     </div>

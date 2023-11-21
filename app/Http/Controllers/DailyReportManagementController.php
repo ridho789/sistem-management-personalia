@@ -53,6 +53,7 @@ class DailyReportManagementController extends Controller
         // Inisiasi variabel
         $errorInfo = '';
         $dailyReport = '';
+        $logErrors = '';
 
         $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
         $date = date("j F Y", strtotime($request->input_work_diary_date));
@@ -85,7 +86,8 @@ class DailyReportManagementController extends Controller
             return view('/backend/daily_report/form_daily_report', [
                 'employee' => $employee,
                 'errorInfo' => $errorInfo,
-                'dailyReport' => $dailyReport
+                'dailyReport' => $dailyReport,
+                'logErrors' => $logErrors
             ]);
         }
     }
@@ -93,6 +95,7 @@ class DailyReportManagementController extends Controller
     public function edit($id) {
         // Inisiasi variabel
         $errorInfo = '';
+        $logErrors = '';
 
         // Dekripsi ID
         $id = Crypt::decrypt($id);
@@ -103,7 +106,8 @@ class DailyReportManagementController extends Controller
         return view('/backend/daily_report/form_daily_report', [
             'employee' => $employee,
             'errorInfo' => $errorInfo,
-            'dailyReport' => $dailyReport
+            'dailyReport' => $dailyReport,
+            'logErrors' => $logErrors
         ]);
     }
 
@@ -122,6 +126,7 @@ class DailyReportManagementController extends Controller
 
         // Inisiasi variabel
         $errorInfo = '';
+        $logErrors = '';
 
         $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
         $date = date("j F Y", strtotime($request->input_work_diary_date));
@@ -150,7 +155,8 @@ class DailyReportManagementController extends Controller
             return view('/backend/daily_report/form_daily_report', [
                 'employee' => $employee,
                 'errorInfo' => $errorInfo,
-                'dailyReport' => $dailyReport
+                'dailyReport' => $dailyReport,
+                'logErrors' => $logErrors
             ]);
         }
     }
