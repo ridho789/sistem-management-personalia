@@ -21,6 +21,7 @@ class TableKaryawan extends Migration
             $table->date('tanggal_lahir')->nullable();
             $table->string('jenis_kelamin')->notNull();
             $table->bigInteger('no_telp', 15)->notNullable()->autoIncrement(false);
+            $table->string('lokasi')->notNull();
             $table->string('alamat')->notNull();
             $table->date('awal_bergabung')->nullable();
             $table->string('gaji_pokok', 25)->notNull();

@@ -17,6 +17,7 @@ class Employee extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'no_telp',
+        'lokasi',
         'alamat',
         'id_jabatan',
         'id_divisi',

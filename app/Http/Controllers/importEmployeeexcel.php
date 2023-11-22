@@ -26,10 +26,28 @@ class ImportEmployeeexcel extends Controller
             
             try {
                 Excel::import($import, $file);
-                return redirect('/list-employee');
-                
-            } catch (\Exception $e) {
                 $logErrors = $import->getLogErrors();
+
+                if ($logErrors) {
+                    $employee = '';
+                    $division = Divisi::all();
+                    $position = Position::all();
+                    $company = Company::all();
+                    $statusEmployee = StatusEmployee::all();
+                    return view('/backend/employee/form_employee', [
+                        'employee' => $employee, 
+                        'division' => $division, 
+                        'position' => $position, 
+                        'company' => $company, 
+                        'statusEmployee' => $statusEmployee,
+                        'logErrors' => $logErrors
+                    ]);
+
+                } else {
+                    return redirect('/list-employee');
+                }
+
+            } catch (\Exception $e) {
                 $sqlErrors = $e->getMessage();
 
                 if (!empty($sqlErrors)){

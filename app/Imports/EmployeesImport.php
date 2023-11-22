@@ -10,7 +10,6 @@ use App\Models\Position;
 use App\Models\Divisi;
 use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 class EmployeesImport implements ToCollection
 {
@@ -18,15 +17,19 @@ class EmployeesImport implements ToCollection
     * @param Collection $collection
     */
 
-    private $currentRow = 0; // Inisialisasi nomor baris
     private $logErrors = [];
 
     public function collection(Collection $collection)
     {
         $rowNumber = 0;
+        $currentRow = 0;
+
         foreach ($collection as $row){
+            $currentRow++;
+
             // baris pertama tidak diproses karena header
             if ($rowNumber === 0) {
+                $columnName = $row->toArray();
                 $rowNumber++;
                 continue;
             }
@@ -39,11 +42,14 @@ class EmployeesImport implements ToCollection
             // periksa kolom tanggal harus berupa teks
             if (!is_string($row[3])) {
                 // Catat pesan kesalahan jika nilai bukan teks
-                Log::error('Error importing data: Nilai kolom tanggal bukan teks di baris ' . $this->currentRow);
+                $errorMessage = 'Error importing data: Nilai kolom tanggal bukan teks di baris ' . $currentRow;
+
+                // Tambahkan pesan kesalahan ke dalam array logErrors
+                $this->logErrors[] = $errorMessage;
             }
 
             // date format (awal kontrak)
-            $dateTextStartContract =  $row[13];
+            $dateTextStartContract =  $row[14];
             if ($dateTextStartContract) {
                 $dateStartContract = date_create_from_format('Y-m-d', $dateTextStartContract);
                 if ($dateStartContract !== false) {
@@ -52,7 +58,7 @@ class EmployeesImport implements ToCollection
             }
 
             // date format (selesai kontrak)
-            $dateTextEndContract =  $row[14];
+            $dateTextEndContract =  $row[15];
             if ($dateTextEndContract) {
                 $dateEndContract = date_create_from_format('Y-m-d', $dateTextEndContract);
                 if ($dateEndContract !== false) {
@@ -61,7 +67,7 @@ class EmployeesImport implements ToCollection
             }
 
             // date format (awal bergabung)
-            $dateTextStartJoining =  $row[15];
+            $dateTextStartJoining =  $row[16];
             if ($dateTextStartJoining) {
                 $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
                 if ($dateStartJoining !== false) {
@@ -69,16 +75,15 @@ class EmployeesImport implements ToCollection
                 }
             }
 
-            $this->currentRow++;
             $uniqueValues = []; // Array untuk menyimpan nilai unik
 
-            $namePosition = $row[7];
-            $nameDivision = $row[8];
-            $nameCompany = $row[9];
-            $nameStatus = $row[10];
+            $namePosition = $row[8];
+            $nameDivision = $row[9];
+            $nameCompany = $row[10];
+            $nameStatus = $row[11];
 
             // Gaji Pokok
-            $basic_salary = $row[11];
+            $basic_salary = $row[12];
             $numericAmountBasicSalary = preg_replace("/[^0-9]/", "", explode(",", $basic_salary)[0]);
             $basic_salary_idr = "Rp " . number_format($numericAmountBasicSalary, 0, ',', '.');
 
@@ -88,16 +93,26 @@ class EmployeesImport implements ToCollection
             $status = StatusEmployee::where('nama_status', $nameStatus)->first();
 
             foreach ($row as $columnIndex => $value) {
+                $columnNameHeader = $columnName[$columnIndex] ?? "unknown";
+
+                // Cek jika status bukan kontrak
+                if (strtolower($status) != 'kontrak' || strtolower($status) != 'contract') {
+                    continue;
+                }
+
                 // Catat pesan kesalahan jika kolom kosong
                 if (empty($value)) {
-                    Log::error('Error importing data: Kolom ' . $columnIndex . ' kosong di baris ' . $this->currentRow);
+                    $errorMessage = 'Error importing data: Kolom ' . $columnNameHeader . ' kosong di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
                 }                
             }
 
             // periksa kolom nik dan id card
-            $key = $row[1]. '-'.$row[16];
+            $key = $row[1]. '-'.$row[17];
             if (isset($uniqueValues[$key])){
-                Log::error('Error importing data: Duplikasi berdasarkan NIK dan ID Card ditemukan di baris ' . $this->currentRow);
+                $errorMessage = 'Error importing data: Duplikasi berdasarkan NIK dan ID Card ditemukan di baris ' . $currentRow;
+                $this->logErrors[] = $errorMessage;
+
             } else {
                 $uniqueValues[$key] = true;
             }
@@ -110,18 +125,19 @@ class EmployeesImport implements ToCollection
                     'tanggal_lahir' => $date_format,
                     'jenis_kelamin' => $row[4],
                     'no_telp' => $row[5],
-                    'alamat' => $row[6],
+                    'lokasi' => $row[6],
+                    'alamat' => $row[7],
                     'id_jabatan' => $position->id_jabatan,
                     'id_divisi' => $division->id_divisi,
                     'id_perusahaan' => $company->id_perusahaan,
                     'id_status' => $status->id_status,
                     'awal_bergabung' => $dateFormatStartJoining,
                     'gaji_pokok' => $basic_salary_idr,
-                    'id_card' => $row[16],
+                    'id_card' => $row[17],
                 ];
             
                 if (strtolower($status->nama_status) == 'kontrak') {
-                    $employeeData['lama_kontrak'] = $row[12];
+                    $employeeData['lama_kontrak'] = $row[13];
                     $employeeData['awal_masa_kontrak'] = $dateFormatStartContract;
                     $employeeData['akhir_masa_kontrak'] = $dateFormatEndContract;
 
@@ -131,32 +147,27 @@ class EmployeesImport implements ToCollection
 
             } else {
                 if (empty($position)){
-                    Log::error('Error importing data: Nilai kolom Position/Jabatan tidak valid di baris ' . $this->currentRow);
+                    $errorMessage = 'Error importing data: Nilai kolom Position/Jabatan tidak valid di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
                 }
 
                 if (empty($division)){
-                    Log::error('Error importing data: Nilai kolom Division/Divisi tidak valid di baris ' . $this->currentRow);
+                    $errorMessage = 'Error importing data: Nilai kolom Division/Divisi tidak valid di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
                 }
 
                 if (empty($company)){
-                    Log::error('Error importing data: Nilai kolom Company/Perusahaan tidak valid di baris ' . $this->currentRow);
+                    $errorMessage = 'Error importing data: Nilai kolom Company/Perusahaan tidak valid di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
                 }
 
                 if (empty($status)){
-                    Log::error('Error importing data: Nilai kolom Status tidak valid di baris ' . $this->currentRow);
+                    $errorMessage = 'Error importing data: Nilai kolom Status tidak valid di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
                 }
-            } $rowNumber++;
+            } 
+            $rowNumber++;
         }
-    }
-
-    public function onError(Throwable $e)
-    {
-        // Catat pesan kesalahan ke log
-        $errorMessage = 'Error importing data: ' . $e->getMessage();
-        Log::error($errorMessage);
-
-        // Tambahkan pesan kesalahan ke dalam array logErrors
-        $this->logErrors[] = $errorMessage;
     }
 
     public function getLogErrors()

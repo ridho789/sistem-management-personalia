@@ -157,6 +157,16 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_location">Location
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_location" name="val_location" placeholder="Enter a location.." 
+                                                value="{{ old('val_location', $employee->lokasi) }}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val_address">Address
                                                 <span class="text-danger">*</span>
                                             </label>
@@ -411,6 +421,16 @@
                                                     id="val_phone" name="val_phone" placeholder="000-0000-0000" 
                                                     value="{{ old('val_phone') }}" required>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_location">Location
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_location" name="val_location" placeholder="Enter a location.." 
+                                                value="{{ old('val_location') }}" required>
                                             </div>
                                         </div>
                                         <div class="form-group row">
