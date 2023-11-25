@@ -528,6 +528,23 @@
             const attachFileSection = document.getElementById("attach_file");
             const attachFileColumn = document.getElementById("file");
 
+            // Dapatkan tahun saat ini
+            var currentYear = new Date().getFullYear();
+
+            // Loop melalui opsi dan sembunyikan opsi legal leave/cuti tahunan jika tidak sama dengan tahun saat ini hide
+            for (var i = 1; i < leaveTypeSelect.options.length; i++) {
+                var option = leaveTypeSelect.options[i];
+                var typeLeaveText = option.getAttribute('data-type-leave');
+                
+                if (typeLeaveText.toLowerCase().includes('legal leave') || typeLeaveText.toLowerCase().includes('cuti tahunan')) {
+                    var yearInOption = parseInt(typeLeaveText.match(/\d+/)[0]);
+    
+                    if (yearInOption && yearInOption !== currentYear) {
+                        option.style.display = 'none';
+                    }
+                }
+            }
+
             // Function to toggle the visibility of the "Attach File" section
             function toggleAttachFileVisibility() {
                 const selectedOption = leaveTypeSelect.options[leaveTypeSelect.selectedIndex];

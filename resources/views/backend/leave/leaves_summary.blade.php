@@ -95,7 +95,9 @@
                                                         class="btn btn-secondary btn-sm">
                                                         <i class="icon icon-edit-72"> </i>
                                                     </a>
-                                                    <!-- <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                    @if($dl->status_cuti == 'To Approved')
+                                                        <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach 

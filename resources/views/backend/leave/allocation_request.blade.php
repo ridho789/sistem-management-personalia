@@ -46,60 +46,23 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Employee (C)</th>
-                                            <th>Remaining Leave</th>
                                             <th>Leave Type</th>
-                                            <th>Duration</th>
-                                            <th>Date Leave (C)</th>
+                                            <th>Remaining Leave</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($allocationRequest as $ar)
-                                            @php
-                                            $dataCutiKaryawan = $dataCuti->where('id_karyawan', $ar->id_karyawan);
-                                            @endphp
-                                            @if (count($dataCutiKaryawan) > 0)
-                                                <tr data-id="{{$ar->id_alokasi_sisa_cuti}}">
-                                                    <td rowspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">
-                                                        {{ $loop->iteration }}
-                                                    </td>
-                                                    <td rowspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">
-                                                        <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($ar->id_karyawan)]) }}">
-                                                            {{ $employee[$ar->id_karyawan] }} - {{ $idcard[$ar->id_karyawan] }}
-                                                        </a>
-                                                    </td>
-                                                    <td rowspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">
-                                                        {{ $ar->sisa_cuti }}
-                                                    </td>
-                                                    @if ($dataCutiKaryawan->count() > 0)
-                                                        @foreach($dataCutiKaryawan as $cuti)
-                                                            <tr>
-                                                                <td>{{  $typeleave[$cuti->id_tipe_cuti] }}</td>
-                                                                <td>{{ $cuti->durasi_cuti }} days</td>
-                                                                <td>
-                                                                    <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($cuti->id_data_cuti)]) }}">
-                                                                    {{ date('l, j F Y', strtotime($cuti->mulai_cuti)) }}</a>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <td colspan="{{ $dataCutiKaryawan->count() > 0 ? $dataCutiKaryawan->count() + 1 : 2 }}">No Leave Data</td>
-                                                    @endif
-                                                </tr>
-                                            @else
-                                                <tr data-id="{{$ar->id_alokasi_sisa_cuti}}">
-                                                    <td>
-                                                        {{ $loop->iteration }}
-                                                    </td>
-                                                    <td>
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($ar->id_karyawan)]) }}">
                                                         {{ $employee[$ar->id_karyawan] }} - {{ $idcard[$ar->id_karyawan] }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $ar->sisa_cuti }}
-                                                    </td>
-                                                    <td>No Leave Data</td>
-                                                </tr>
-                                            @endif
-                                        @endforeach 
+                                                    </a>
+                                                </td>
+                                                <td>{{ $typeleave[$ar->id_tipe_cuti] }}</td>
+                                                <td>{{ $ar->sisa_cuti }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

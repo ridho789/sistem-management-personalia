@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Crypt;
 use PDF;
 use Carbon\Carbon;
 use Ramsey\Uuid\Type\Integer;
+use Illuminate\Support\Str;
 
 class LeaveManagementController extends Controller
 {
@@ -231,11 +232,6 @@ class LeaveManagementController extends Controller
         // Hapus DataLeave berdasarkan id_data_cuti
         DataLeave::where('id_data_cuti', $id)->delete();
 
-        // Hapus AllocationRequest yang tidak memiliki DataLeave yang sesuai
-        AllocationRequest::whereNotIn('id_karyawan', function ($query) {
-            $query->select('id_karyawan')->from('tbl_data_cuti')->where('status_cuti', 'Approved');
-        })->delete();
-
         return redirect()->back();
     }
 
@@ -302,72 +298,69 @@ class LeaveManagementController extends Controller
                 ]);
             }
 
-            // Mengambil semua data cuti dengan id karyawan yang sama
-            $dataCutiSamaKaryawan = DataLeave::where('id_karyawan', $dataCuti['id_karyawan'])
-            ->where(function ($query) {
-                $query->where('durasi_cuti', '>=', 1);
-                })
-            ->get();
+            if (Str::contains(strtolower($typeLeave->nama_tipe_cuti), ['legal leave', 'cuti tahunan'])) {
+                $allocationRequest = AllocationRequest::where('id_karyawan', $dataCuti->id_karyawan)
+                    ->where('id_tipe_cuti', $dataCuti->id_tipe_cuti)->first();
 
-            // Menghitung total durasi
-            $totalDurasi = $dataCutiSamaKaryawan->sum('durasi_cuti');
+                if (empty($allocationRequest)) {
+                    AllocationRequest::insert([
+                        'id_karyawan' => $dataCuti->id_karyawan,
+                        'id_tipe_cuti' => $dataCuti->id_tipe_cuti,
+                        'sisa_cuti' => 12 - $dataCuti->durasi_cuti
+                    ]);
 
-            // Mengurangi total durasi dari sisa cuti yang ada di tabel alokasi request
-            $sisacuti = 12 - $totalDurasi;
-            $id_karyawan = $dataCuti['id_karyawan'];
+                } else {
+                    $currentRemainingLeave = $allocationRequest->sisa_cuti;
+                    $resultRemainingLeave = $currentRemainingLeave - $dataCuti->durasi_cuti;
 
-            AllocationRequest::updateOrInsert(
-                ['id_karyawan' => $id_karyawan],
-                ['sisa_cuti' => $sisacuti]
-            );
+                    // Update sisa cuti
+                    $allocationRequest->update(['sisa_cuti' => $resultRemainingLeave]);
+                }
+            }
         }
  
-        return redirect('/allocation-request');
+        return redirect('/leaves-summary');
     }
 
     public function allocation() {
-        $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
-            $query->where('is_active', true);
-        })->get();
-        
-        $id_karyawan_array = $allocationRequest->pluck('id_karyawan')->toArray();
-        $dataCuti = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
-            ->where('status_cuti', 'Approved')
-            ->get();
+        $dataEmployee = [];
+        $statusEmployee = StatusEmployee::whereIn('nama_status', ['harian', 'daily'])->first();
 
-        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
-        $idcard = Employee::pluck('id_card', 'id_karyawan');
-        $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+        // Cari data tipe cuti berdasarkan tahun saat ini
+        $currentYear = Carbon::now()->year;
+        $typeLeave = TypeLeave::where('nama_tipe_cuti', 'like', "%$currentYear%")->first();
 
-        $totalDurasiCutiPerKaryawan = DataLeave::whereIn('id_karyawan', $id_karyawan_array)
-            ->where('status_cuti', 'Approved')
-            ->groupBy('id_karyawan')
-            ->selectRaw('id_karyawan, SUM(CASE WHEN durasi_cuti >= 1 THEN durasi_cuti ELSE 0 END) as total_durasi_cuti')
-            ->get();
-        
-        if (count($totalDurasiCutiPerKaryawan) > 0) {
-            foreach ($totalDurasiCutiPerKaryawan as $data) {
-                $id_karyawan = $data->id_karyawan;
-                $totalDurasiCuti = $data->total_durasi_cuti;
+        if ($statusEmployee) {
+            // Cari data karyawan aktif dan status kecuali harian/daily
+            $dataEmployee = Employee::where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status])->get();
+        }
 
-                $sisaCuti = ($totalDurasiCuti >= 1) ? (12 - $totalDurasiCuti) : 12;
+        if (count($dataEmployee) > 0) {
+            if ($typeLeave) {
+                foreach ($dataEmployee as $data) {
+                    $checkAllocationRequest = AllocationRequest::where('id_karyawan', $data->id_karyawan)
+                        ->where('id_tipe_cuti', $typeLeave->id_tipe_cuti)->first();
 
-                $allocationRequestData = AllocationRequest::where('id_karyawan', $id_karyawan)->first();
-
-                if ($allocationRequestData) {
-                    AllocationRequest::where('id_alokasi_sisa_cuti', $allocationRequestData->id_alokasi_sisa_cuti)
-                        ->update([
-                            'sisa_cuti' => $sisaCuti,
+                    if (empty($checkAllocationRequest)) {
+                        AllocationRequest::insert([
+                            'id_karyawan' => $data->id_karyawan,
+                            'id_tipe_cuti' => $typeLeave->id_tipe_cuti,
+                            'sisa_cuti' => 12
                         ]);
+                    }
                 }
             }
         }
 
+        $allocationRequest = AllocationRequest::all();
+        $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
+        $idcard = Employee::pluck('id_card', 'id_karyawan');
+        $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+        
         return view('/backend/leave/allocation_request', [
             'allocationRequest' => $allocationRequest,
             'employee' => $employee,
             'idcard' => $idcard,
-            'dataCuti' => $dataCuti,
             'typeleave' => $typeleave
         ]);
     }

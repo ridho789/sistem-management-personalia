@@ -9,6 +9,13 @@ class AllocationRequest extends Model
 {
     use HasFactory;
     protected $table = 'tbl_alokasi_sisa_cuti';
+    protected $primaryKey = 'id_alokasi_sisa_cuti';
+
+    protected $fillable = [
+        'id_karyawan',
+        'id_tipe_cuti',
+        'sisa_cuti',
+    ];
 
     public function employee()
     {
