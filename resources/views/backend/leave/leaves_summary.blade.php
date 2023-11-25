@@ -86,17 +86,17 @@
                                                     </a>
                                                 </td>
                                                 @if($dl->status_cuti == 'To Approved')
-                                                    <td><span class="badge badge-secondary">{{ $dl->status_cuti }}</span></td>
+                                                    <td><b><span style="color: #3065D0;">{{ $dl->status_cuti }}</span></b></td>
                                                 @elseif($dl->status_cuti == 'Approved')
-                                                    <td><span class="badge badge-primary">{{ $dl->status_cuti }}</span></td>
+                                                    <td><b><span style="color: #593BDB;">{{ $dl->status_cuti }}</span></b></td>
                                                 @endif
                                                 <td>
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dl->id_data_cuti)]) }}" 
-                                                        class="btn btn-secondary btn-sm">
+                                                        class="btn btn-secondary btn-sm mt-1">
                                                         <i class="icon icon-edit-72"> </i>
                                                     </a>
                                                     @if($dl->status_cuti == 'To Approved')
-                                                        <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a>
+                                                        <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm mt-1"><i class="fa fa-trash"></i></a>
                                                     @endif
                                                 </td>
                                             </tr>
