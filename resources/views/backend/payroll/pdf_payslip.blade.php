@@ -122,7 +122,7 @@
             </table>
 
             <div style="margin-top: 50px; text-align:left; font-size:14px; margin-left:20px;">
-                <div style="margin-left: 70px; margin-bottom: 50px;">
+                <div style="margin-left: 10px; margin-bottom: 50px;">
                     <label style="font-weight: bold;">Yang menerima</label>
                 </div>
                 <div>

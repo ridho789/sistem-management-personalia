@@ -151,7 +151,7 @@
                                                         {{ $employee[$dla->id_penangung_jawab] }} - {{ $idcard[$dla->id_penangung_jawab] }}
                                                     </a>
                                                 </td>
-                                                <td><span class="badge badge-secondary">{{ $dla->status_cuti }}</span></td>
+                                                <td><b><span style="color: #3065D0;">{{ $dla->status_cuti }}</span></b></td>
                                                 <td style="text-align:right;">
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dla->id_data_cuti)]) }}" 
                                                         class="btn btn-secondary btn-sm">

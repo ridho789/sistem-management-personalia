@@ -59,11 +59,11 @@
             </tr>
             <tr>
                 <th>Tanggal/Waktu Mulai:</th>
-                <td>{{ date('l, Y-m-d H:i:s', strtotime($dataleave->mulai_cuti)) }}</td>
+                <td>{{ date('l, j F Y', strtotime($dataleave->mulai_cuti)) }}</td>
             </tr>
             <tr>
                 <th>Tanggal/Waktu Selesai:</th>
-                <td>{{ date('l, Y-m-d H:i:s', strtotime($dataleave->selesai_cuti)) }}</td>
+                <td>{{ date('l, j F Y', strtotime($dataleave->selesai_cuti)) }}</td>
             </tr>
         </table>
 
