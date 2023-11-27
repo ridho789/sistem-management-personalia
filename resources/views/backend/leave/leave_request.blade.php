@@ -405,22 +405,32 @@
                 }
             }
         });
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            // Ambil elemen berdasarkan ID
+            var valEmployee = document.getElementById('val_employee');
+            var positionInput = document.getElementById('position');
+            var divisionInput = document.getElementById('division');
 
-        var valEmployee = document.getElementById('val_employee');
-        var positionInput = document.getElementById('position');
-        var divisionInput = document.getElementById('division');
+            // Fungsi untuk mengatur nilai posisi dan divisi
+            function updateValues() {
+                var selectedOption = valEmployee.options[valEmployee.selectedIndex];
+                var position = selectedOption ? selectedOption.getAttribute('data-position') : '';
+                var division = selectedOption ? selectedOption.getAttribute('data-division') : '';
 
-        valEmployee.addEventListener('change', function() {
-            var selectedOption = this.options[this.selectedIndex];
-            var position = selectedOption.getAttribute('data-position');
-            var division = selectedOption.getAttribute('data-division');
+                positionInput.value = position;
+                divisionInput.value = division;
 
-            positionInput.value = position;
-            divisionInput.value = division;
+                // Inisialisasi filter
+                const selectedEmployeeId = valEmployee.value;
+                filterResponsibleOptions(selectedEmployeeId);
+            }
 
-            // Inisialisasi filter
-            const selectedEmployeeId = valEmployee.value
-            filterResponsibleOptions(selectedEmployeeId);
+            // Tambahkan event listener untuk perubahan pada elemen valEmployee
+            valEmployee.addEventListener('change', updateValues);
+
+            // Panggil fungsi updateValues saat halaman pertama kali dimuat
+            updateValues();
         });
 
         const datetimestart = document.getElementById('datetimestart');
