@@ -88,7 +88,7 @@
                                                 <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" 
                                                     id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="icon icon-edit-72"></i>
                                                 </a>
-                                                <a href="{{ url('list-employee-delete/' . $k->id_karyawan) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a>
+                                                <!-- <a href="{{ url('list-employee-delete/' . $k->id_karyawan) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 
