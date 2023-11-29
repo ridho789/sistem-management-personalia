@@ -24,7 +24,7 @@
                     <div class="card-header">                           
                         <h4 class="card-title">List Daily Report</h4>
                         @if (count($dailyReport) > 0)
-                            <a href="/form-daily-report" class="btn btn-primary" id="new-daily-report">+ Add daily report</a>
+                            <a href="{{ url('/form-daily-report') }}" class="btn btn-primary" id="new-daily-report">+ Add daily report</a>
                         @endif
                     </div>
                     @if (count($dailyReport) > 0)
@@ -96,7 +96,7 @@
                                                 <a href="{{ url('daily-report-edit', ['id' => Crypt::encrypt($dr->id_catatan_harian)]) }}" 
                                                     id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="icon icon-edit-72"></i>
                                                 </a>
-                                                <!-- <a href="daily-report-delete/{{ $dr->id_catatan_harian }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('daily-report-delete/' . $dr->id_catatan_harian) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 
@@ -108,7 +108,7 @@
                             <div class="mt-3">
                                 <span style="text-align: center;">
                                     <p>Sorry, no data that can be displayed yet. <br>
-                                        <a href="/form-daily-report" class="btn btn-light mt-2" id="new-daily-report">click to add new daily report</a>
+                                        <a href="{{ url('/form-daily-report') }}" class="btn btn-light mt-2" id="new-daily-report">click to add new daily report</a>
                                     </p>
                                 </span>
                             </div>

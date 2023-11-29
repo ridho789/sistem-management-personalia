@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-sm-6">
-                <a href="/list-employee">
+                <a href="{{ url('/list-employee') }}">
                     <div class="card">
                         <div class="stat-widget-two card-body">
                             <div class="stat-content">
@@ -20,7 +20,7 @@
                 </a>
             </div>
             <div class="col-lg-3 col-sm-6">
-                <a href="/list-inactive-employee">
+                <a href="{{ url('/list-inactive-employee') }}">
                     <div class="card">
                         <div class="stat-widget-two card-body">
                             <div class="stat-content">

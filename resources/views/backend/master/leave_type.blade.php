@@ -86,7 +86,7 @@
                                             <td class="type-leave-name-selected">{{$tc->nama_tipe_cuti}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
-                                                <!-- <a href="type-leave-delete/{{$tc->id_tipe_cuti}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('type-leave-delete/' . $tc->id_tipe_cuti) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

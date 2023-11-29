@@ -117,7 +117,7 @@
                                             <td class="position-allowance-selected">{{$j->tunjangan_jabatan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
-                                                <!-- <a href="position-delete/{{$j->id_jabatan}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('position-delete/' . $j->id_jabatan)  }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

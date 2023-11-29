@@ -23,7 +23,7 @@
                     <div class="card-header">                           
                         <h4 class="card-title">Leaves Summary</h4>
                         @if (count($dataleave) > 0)
-                            <a href="/leave-request" class="btn btn-primary" 
+                            <a href="{{ url('/leave-request') }}" class="btn btn-primary" 
                                 id="new-data-leave">+ Create request
                             </a>
                         @endif
@@ -96,7 +96,7 @@
                                                         <i class="icon icon-edit-72"> </i>
                                                     </a>
                                                     @if($dl->status_cuti == 'To Approved')
-                                                        <a href="leave-request-delete/{{$dl->id_data_cuti}}" class="btn btn-dark btn-sm mt-1"><i class="fa fa-trash"></i></a>
+                                                        <a href="{{ url('leave-request-delete/' . $dl->id_data_cuti) }}" class="btn btn-dark btn-sm mt-1"><i class="fa fa-trash"></i></a>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -108,7 +108,7 @@
                             <div class="mt-3">
                                 <span style="text-align: center;">
                                     <p>Sorry, no data that can be displayed yet. <br>
-                                        <a href="/leave-request" class="btn btn-light mt-2" id="new-data-leave">
+                                        <a href="{{ url('/leave-request') }}" class="btn btn-light mt-2" id="new-data-leave">
                                             click to new leave request
                                         </a>
                                     </p>

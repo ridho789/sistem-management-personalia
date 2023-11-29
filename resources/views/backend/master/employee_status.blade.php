@@ -105,7 +105,7 @@
                                             <!-- <td class="employee-status-code-selected">{{$e->kode_status}}</td> -->
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
-                                                <!-- <a href="employee-status-delete/{{$e->id_status}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('employee-status-delete/' . $e->id_status) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

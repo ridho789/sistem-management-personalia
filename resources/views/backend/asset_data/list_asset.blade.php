@@ -104,7 +104,7 @@
                                                 <a href="{{ url('form-asset-edit', ['id' => Crypt::encrypt($a->id_aset)]) }}" 
                                                     id="edit-button" class="btn btn-secondary btn-sm edit-button mr-2"><i class="icon icon-edit-72"></i>
                                                 </a>
-                                                <!-- <a href="list-asset-delete/{{$a->id_aset}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('list-asset-delete/' . $a->id_aset) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

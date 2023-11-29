@@ -129,7 +129,7 @@
                                             <td style="display: none;" class="daily-report-selected">{{$d->is_daily_report}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
-                                                <!-- <a href="division-delete/{{$d->id_divisi}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('division-delete/' . $d->id_divisi) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 

@@ -101,7 +101,7 @@
                                             <td class="company-address-selected" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 225px;">{{$c->alamat_perusahaan}}</td>
                                             <td style="text-align:right;">
                                                 <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-edit"></i></a>
-                                                <!-- <a href="company-delete/{{$c->id_perusahaan}}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
+                                                <!-- <a href="{{ url('company-delete/' . $c->id_perusahaan) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach 
