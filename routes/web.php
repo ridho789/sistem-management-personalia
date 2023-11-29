@@ -131,6 +131,10 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('leave-request-print', [LeaveManagementController::class, 'print']);
     Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
 
+    Route::get('/national-holiday-leave', [LeaveManagementController::class, 'national_holiday'])->middleware('auth');
+    Route::get('national-holiday-leave-search', [LeaveManagementController::class, 'national_holiday_search'])->middleware('auth');
+    Route::post('national-holiday-leave-add', [LeaveManagementController::class, 'national_holiday_store'])->middleware('auth');
+
     // management - payroll
     Route::get('/data-payroll', [PayrollController::class, 'index'])->middleware('auth');
     Route::get('/form-check-payroll', [PayrollController::class, 'check']);

@@ -56,6 +56,7 @@
                             <li><a href="/allocation-request">Allocation Requests</a></li>
                             <li><a href="/leave-request">Leave Request</a></li>
                             <li><a href="/leaves-summary">Leaves Summary</a></li>
+                            <li><a href="/national-holiday-leave">National Holiday Leave</a></li>
                         </ul>
                     </li>
                     <li>

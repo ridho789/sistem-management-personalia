@@ -161,13 +161,13 @@
                                 @if($dataleave->status_cuti != 'Approved')
                                     <div class="form-group row mt-5">
                                         <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary mr-1">Update</button>
+                                            <button type="submit" id="btnUpdate" class="btn btn-primary mr-1">Update</button>
                                         </div>
                                     </div>
                                 @else
                                     <div class="form-group row mt-5">
                                         <div class="col-sm-10">
-                                            <span class="text-primary">This request has been <b>Approved</b> and <b>cannot</b> be edited.</span>
+                                            <span class="text-primary">This request has been <b>Approved</b> and <b>cannot</b> be updated.</span>
                                         </div>
                                     </div>
                                 @endif
@@ -284,7 +284,7 @@
                                 </div>
                                 <div class="form-group row mt-5">
                                     <div class="col-sm-10">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" id="btnSubmit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -381,8 +381,8 @@
                 const responsiblePosition = responsibleOption.getAttribute("data-position").toLowerCase();
                 const responsibleDivision = responsibleOption.getAttribute("data-division");
 
-                if ((responsiblePosition === "manager" || responsiblePosition === "supervisor") && 
-                    selectedEmployeeDivision === responsibleDivision) {
+                if (((responsiblePosition === "manager" || responsiblePosition === "supervisor") && 
+                    selectedEmployeeDivision === responsibleDivision) || responsiblePosition === "hrd") {
                     responsibleOption.style.display = 'block'
                 } else {
                     responsibleOption.style.display = 'none'
@@ -496,6 +496,9 @@
             const startValue = new Date(datetimestart.value);
             const endValue = new Date(datetimeend.value);
 
+            var btnSubmit = document.getElementById("btnSubmit");
+            var btnUpdate = document.getElementById("btnUpdate");
+
             if (!isNaN(startValue) && !isNaN(endValue) && startValue < endValue) {
                 // Mengabaikan waktu di luar rentang 08:00 - 17:00
                 if (startValue.getHours() < 8) {
@@ -527,8 +530,16 @@
                 // const totalWorkingHours = (daysDifference * workingHoursPerDay) + hoursDifference;
 
                 durationInput.value = workingDays
+
+                btnSubmit.disabled = false
+                btnUpdate.disabled = false
+
             } else {
                 durationInput.value = 0
+
+                // Disabled button submit or update
+                btnSubmit.disabled = true
+                btnUpdate.disabled = true
             }
         }
 

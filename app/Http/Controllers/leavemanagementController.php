@@ -196,32 +196,61 @@ class LeaveManagementController extends Controller
         ]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request) {
         $request->validate([
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        DataLeave::where('id_data_cuti', $request->id)->update([
-            'id_karyawan'=> $request->id_karyawan,
-            'id_penangung_jawab'=> $request->id_penangung_jawab,
-            'deskripsi'=> $request->deskripsi,
-            'id_tipe_cuti'=> $request->id_tipe_cuti,
-            'mulai_cuti'=> $request->datetimestart,
-            'selesai_cuti'=> $request->datetimeend,
-            'durasi_cuti'=> $request->duration,
-        ]);
+        $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
+            ->whereBetween('mulai_cuti', [$request->datetimestart, $request->datetimeend])
+            ->exists();
 
-        $file = $request->file('file');
-        if ($file){
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->storeAs('images/leave', $fileName);
+        $date_start = date("j F Y", strtotime($request->datetimestart));
+        $date_end = date("j F Y", strtotime($request->datetimeend));
 
-            DataLeave::where('id_data_cuti', $request->id)->update([
-                'file'=> $filePath,
-            ]);
+        $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
+        $range_date = $date_start . ' - ' . $date_end;
+        if ($date_start == $date_end) {
+            $range_date = $date_start;
         }
 
-        return redirect()->back();
+        $errorInfo = $checkDataCuti
+            ? "Sorry, there is already data made for the employee {$employeeData->nama_karyawan} - {$employeeData->id_card} date: {$range_date}"
+            : '';
+
+        if (empty($errorInfo)) {
+            DataLeave::where('id_data_cuti', $request->id)->update([
+                'id_karyawan' => $request->id_karyawan,
+                'id_penangung_jawab' => $request->id_penangung_jawab,
+                'deskripsi' => $request->deskripsi,
+                'id_tipe_cuti' => $request->id_tipe_cuti,
+                'mulai_cuti' => $request->datetimestart,
+                'selesai_cuti' => $request->datetimeend,
+                'durasi_cuti' => $request->duration,
+            ]);
+
+            $file = $request->file('file');
+
+            if ($file && $file->isValid()) {
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->storeAs('images/leave', $fileName);
+
+                DataLeave::where('id_data_cuti', $request->id)->update([
+                    'file' => $filePath,
+                ]);
+            }
+
+            return redirect()->back();
+
+        } else {
+            $dataleave = DataLeave::where('id_data_cuti', $request->id)->first();
+            $employee = Employee::all();
+            $position = Position::pluck('nama_jabatan', 'id_jabatan');
+            $division = Divisi::pluck('nama_divisi', 'id_divisi');
+            $typeLeave = TypeLeave::all();
+
+            return view('/backend/leave/leave_request', compact('dataleave', 'employee', 'position', 'division', 'typeLeave', 'errorInfo'));
+        }
     }
 
     public function delete($id)
@@ -404,5 +433,159 @@ class LeaveManagementController extends Controller
             'typeleave' => $typeleave
         ]);
     }
+
+    public function national_holiday() {
+        $employee = [];
+        $division = Divisi::all();
+        $logError = '';
+
+        return view('/backend/leave/national_holiday_leave', [
+            'employee' => $employee,
+            'division' => $division,
+            'logError' => $logError
+        ]);
+    }
+
+    public function national_holiday_search(Request $request) {
+        // Inisiasi variabel
+        $logError = '';
+
+        $nationalHoliday = $request->information;
+        $nationalHolidayArray = json_decode($nationalHoliday, true);
+
+        $nationalHolidayDate = $nationalHolidayArray[0]['holiday_date'];
+        $nationalHolidayName = $nationalHolidayArray[0]['holiday_name'];
+
+        // Format tanggal
+        $formatNationalHolidayDate = date("j F Y", strtotime($nationalHolidayDate));
+        $informationNationalHoliday = $nationalHolidayName . ' - ' . $formatNationalHolidayDate;
+
+        $statusEmployee = StatusEmployee::where(function ($query) {
+            $query->whereRaw("LOWER(nama_status) = LOWER('daily')")
+                  ->orWhereRaw("LOWER(nama_status) = LOWER('harian')");
+        })->value('id_status');
+
+        // Check data cuti
+        $checkDataCuti = DataLeave::where('deskripsi', $nationalHolidayName)
+            ->whereRaw('DATE(mulai_cuti) = ?', [$nationalHolidayDate])
+            ->pluck('id_karyawan');
+
+        if ($request->id_divisi == 'all') {
+            $employee = Employee::where('is_active', true)
+                ->where('id_status', '!=', $statusEmployee)
+                ->whereNotIn('id_karyawan', $checkDataCuti)
+                ->get();
+
+        } else {
+            $employee = Employee::where('id_divisi', $request->id_divisi)
+                ->where('is_active', true)
+                ->where('id_status', '!=', $statusEmployee)
+                ->whereNotIn('id_karyawan', $checkDataCuti)
+                ->get();
+        }
+
+        $division = Divisi::all();
+        $namePosistion = Position::pluck('nama_jabatan', 'id_jabatan');
+        $nameDivision = Divisi::pluck('nama_divisi', 'id_divisi');
+        $nameStatus =StatusEmployee::pluck('nama_status', 'id_status');
+
+        return view('/backend/leave/national_holiday_leave', [
+            'logError' => $logError,
+            'employee' => $employee,
+            'division' => $division,
+            'namePosistion' => $namePosistion,
+            'nameDivision' => $nameDivision,
+            'nameStatus' => $nameStatus,
+            'nationalHolidayDate' => $nationalHolidayDate,
+            'nationalHolidayName' => $nationalHolidayName,
+            'informationNationalHoliday' => $informationNationalHoliday
+        ]);
+    }
     
+    public function national_holiday_store(Request $request) {
+        // Inisiasi variabel
+        $logError = '';
+
+        $ids = $request->allSelectRow;
+        $idArray = explode(',', $ids);
+
+        $date = $request->dateNationalHolday;
+        $carbonDateStart = Carbon::parse($date)->setTime(8, 0, 0);
+        $carbonDateEnd = Carbon::parse($date)->setTime(17, 0, 0);
+
+        // Cari karyawan yang memiliki jabatan/position HRD
+        $position = Position::where(function($query) {
+            $query->where('nama_jabatan', 'like', 'HRD')
+                  ->orWhere('nama_jabatan', 'like', 'human resource development');
+        })->first();
+
+        if ($position) {
+            $responsible = Employee::where('id_jabatan', $position->id_jabatan)->first();
+
+            if (empty($responsible)) {
+                $logError = 'Please contact the administrator that there are no employees who have the title of HRD 
+                    or human resource development in the system.';
+            }
+
+        } else {
+            $logError = 'Please contact the administrator that there is no HRD 
+                or human resource development position in the system.';
+        }
+        
+        // Cari data tipe cuti berdasarkan tahun saat ini
+        $currentYear = Carbon::now()->year;
+        $typeLeave = TypeLeave::where('nama_tipe_cuti', 'like', "%$currentYear%")->first();
+
+        if (empty($typeLeave)) {
+            $logError = 'Please contact the administrator that there is no authorized 
+                or annual leave type for the current year in the system.';
+        }
+
+        if (empty($logError)) {
+            foreach ($idArray as $id) {
+                DataLeave::insert([
+                    'id_karyawan'=> $id,
+                    'id_penangung_jawab'=> $responsible->id_karyawan,
+                    'deskripsi'=> $request->descNationalHoliday,
+                    'id_tipe_cuti'=> $typeLeave->id_tipe_cuti,
+                    'mulai_cuti'=> $carbonDateStart,
+                    'selesai_cuti'=> $carbonDateEnd,
+                    'durasi_cuti'=> 1,
+                    'file'=> null,
+                    'status_cuti' => 'Approved',
+                    'file_approved' => null
+                ]);
+
+                // Update sisa cuti
+                $allocationRequest = AllocationRequest::where('id_karyawan', $id)
+                    ->where('id_tipe_cuti', $typeLeave->id_tipe_cuti)->first();
+    
+                if (empty($allocationRequest)) {
+                    AllocationRequest::insert([
+                        'id_karyawan' => $id,
+                        'id_tipe_cuti' => $typeLeave->id_tipe_cuti,
+                        'sisa_cuti' => 12 - 1
+                    ]);
+    
+                } else {
+                    $currentRemainingLeave = $allocationRequest->sisa_cuti;
+                    $resultRemainingLeave = $currentRemainingLeave - 1;
+                    $allocationRequest->update(['sisa_cuti' => $resultRemainingLeave]);
+                }
+            }
+
+            return redirect('/leaves-summary');
+
+        } else {
+            $employee = [];
+            $division = Divisi::all();
+
+            return view('/backend/leave/national_holiday_leave', [
+                'employee' => $employee,
+                'division' => $division,
+                'logError' => $logError
+            ]);
+        }
+    }
+
 }
