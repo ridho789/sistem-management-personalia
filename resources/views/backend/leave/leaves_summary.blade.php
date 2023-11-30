@@ -89,20 +89,67 @@
                                                     <td><b><span style="color: #3065D0;">{{ $dl->status_cuti }}</span></b></td>
                                                 @elseif($dl->status_cuti == 'Approved')
                                                     <td><b><span style="color: #593BDB;">{{ $dl->status_cuti }}</span></b></td>
+                                                @elseif($dl->status_cuti == 'Cancelled')
+                                                    <td><b><span style="color: #FD7E14;">{{ $dl->status_cuti }}</span></b></td>
                                                 @endif
                                                 <td>
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dl->id_data_cuti)]) }}" 
                                                         class="btn btn-secondary btn-sm mt-1">
-                                                        <i class="icon icon-edit-72"> </i>
+                                                        <i class="fa fa-pencil"></i>
                                                     </a>
-                                                    @if($dl->status_cuti == 'To Approved')
-                                                        <a href="{{ url('leave-request-delete/' . $dl->id_data_cuti) }}" class="btn btn-dark btn-sm mt-1"><i class="fa fa-trash"></i></a>
+                                                    @if (!in_array($dl->status_cuti, ['Cancelled', 'To Approved']))
+                                                        <button type="button" class="btn btn-warning btn-sm mt-1 leave-cancel-button" data-toggle="modal" 
+                                                            data-target="#cancelledLeave" data-id="{{ $dl->id_data_cuti }}" 
+                                                            data-employee="{{ $employee[$dl->id_karyawan] }} - {{ $idcard[$dl->id_karyawan] }}" 
+                                                            data-description="{{ $dl->deskripsi }}">
+                                                            <i class="fa fa-times"></i>
+                                                        </button>
+                                                    @endif
+                                                    @if (in_array($dl->status_cuti, ['To Approved']))
+                                                        <a href="{{ url('leave-request-delete/' . $dl->id_data_cuti) }}" class="btn btn-dark btn-sm mt-1">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
                                                     @endif
                                                 </td>
                                             </tr>
                                         @endforeach 
                                     </tbody>
                                 </table>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="cancelledLeave">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Leave Cancelation</h5>
+                                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ url('leave-request-cancel') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="id" id="id">
+                                                    
+                                                    <div class="form-group">
+                                                        <label for="employeeInfo">Employee</label>
+                                                        <input type="text" id="employeeInfo" class="form-control input-employeeInfo mb-3" readonly>
+    
+                                                        <label for="descriptionInfo">Description</label>
+                                                        <input type="text" id="descriptionInfo" class="form-control input-descriptionInfo mb-3" readonly>
+
+                                                        <label for="reason">Reason</label>
+                                                        <textarea class="form-control" id="reason" name="reason" rows="3" 
+                                                            placeholder="Enter a reason.." required>
+                                                        </textarea>
+
+                                                        <button type="submit" class="btn btn-danger mt-3 float-right">Retrieved</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         @else
                             <div class="mt-3">
@@ -164,6 +211,28 @@
             }
 
             applyDateRangePicker();
+
+            // Mengambil id data cuti
+            var buttons = document.querySelectorAll('.leave-cancel-button');
+
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var idDataCuti = this.getAttribute('data-id');
+                    var employee = this.getAttribute('data-employee');
+                    var description = this.getAttribute('data-description');
+
+                    document.getElementById('id').value = idDataCuti;
+                    document.getElementById('employeeInfo').value = employee;
+                    document.getElementById('descriptionInfo').value = description;
+                });
+            });
+
+            // Hilangkan space dalam value reason saat pertama kali diakses
+            const reason = document.getElementById('reason');
+    
+            if (reason.value.trim() === "") {
+                reason.value = reason.value.trim();
+            }
         });
     </script>
 @endsection

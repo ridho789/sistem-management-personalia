@@ -128,6 +128,7 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit'])->middleware('auth');
     Route::post('leave-request-update', [LeaveManagementController::class, 'update']);
     Route::get('leave-request-delete/{id_data_cuti}', [LeaveManagementController::class, 'delete']);
+    Route::post('leave-request-cancel', [LeaveManagementController::class, 'cancel']);
     Route::post('leave-request-print', [LeaveManagementController::class, 'print']);
     Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
 

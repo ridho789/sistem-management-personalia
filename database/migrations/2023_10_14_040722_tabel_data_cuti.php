@@ -22,6 +22,7 @@ class TabelDataCuti extends Migration
             $table->string('file')->nullable();
             $table->string('file_approved')->nullable();
             $table->string('status_cuti');
+            $table->string('reason')->nullable();
             $table->timestamps();
         });
     }

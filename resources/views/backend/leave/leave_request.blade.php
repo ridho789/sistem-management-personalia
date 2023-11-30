@@ -27,6 +27,8 @@
                                     <span class="text-primary" style="font-size: small;">({{ $dataleave->status_cuti }})</span>
                                 @elseif ($dataleave->status_cuti == 'To Approved')
                                     <span class="text-secondary" style="font-size: small;">({{ $dataleave->status_cuti }})</span>
+                                @elseif ($dataleave->status_cuti == 'Cancelled')
+                                    <span class="text-warning" style="font-size: small;">({{ $dataleave->status_cuti }})</span>
                                 @endif
                             </h4>
                         @else
@@ -158,7 +160,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if($dataleave->status_cuti != 'Approved')
+                                @if (!in_array($dataleave->status_cuti, ['Cancelled', 'Approved']))
                                     <div class="form-group row mt-5">
                                         <div class="col-sm-10">
                                             <button type="submit" id="btnUpdate" class="btn btn-primary mr-1">Update</button>
@@ -167,7 +169,11 @@
                                 @else
                                     <div class="form-group row mt-5">
                                         <div class="col-sm-10">
-                                            <span class="text-primary">This request has been <b>Approved</b> and <b>cannot</b> be updated.</span>
+                                            <span>This request has been <b>{{ $dataleave->status_cuti }}</b> and <b>cannot</b> be updated.</span>
+                                            
+                                            @if ($dataleave->reason)
+                                                <br><span>Reason for leave cancellation: <b>{{ $dataleave->reason }}</b>.</span>
+                                            @endif
                                         </div>
                                     </div>
                                 @endif
@@ -307,7 +313,7 @@
                 @if (Auth::check())
                     @if (Auth::user()->level == 1)
                         @if($dataleave)
-                            @if($dataleave->status_cuti != 'Approved')
+                            @if (!in_array($dataleave->status_cuti, ['Cancelled', 'Approved']))
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="form-group row">

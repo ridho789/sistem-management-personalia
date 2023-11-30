@@ -86,7 +86,7 @@
                                             <td>{{ $statuses[$k->id_status] }}</td>
                                             <td>
                                                 <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" 
-                                                    id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="icon icon-edit-72"></i>
+                                                    id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-pencil"></i>
                                                 </a>
                                                 <!-- <a href="{{ url('list-employee-delete/' . $k->id_karyawan) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>

@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 class LeaveManagementController extends Controller
 {
-    public function index(){
+    public function index() {
         $dataleave = DataLeave::whereHas('employee', function ($query) {
             $query->where('is_active', true);
         })->orderBy('mulai_cuti', 'asc')->get();
@@ -36,7 +36,7 @@ class LeaveManagementController extends Controller
         ]);
     }
 
-    public function leave_summary_search(Request $request){
+    public function leave_summary_search(Request $request) {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
@@ -76,7 +76,7 @@ class LeaveManagementController extends Controller
         ]);
     }
 
-    public function create(){
+    public function create() {
         // Inisiasi variabel
         $dataleave = '';
         $errorInfo = '';
@@ -100,7 +100,7 @@ class LeaveManagementController extends Controller
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request) {
         // Inisiasi variabel
         $errorInfo = '';
         $dataleave = '';
@@ -174,7 +174,7 @@ class LeaveManagementController extends Controller
 
     }
 
-    public function edit($id){
+    public function edit($id) {
         // Inisiasi variabel
         $errorInfo = '';
 
@@ -253,8 +253,7 @@ class LeaveManagementController extends Controller
         }
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
         // Hapus data attendance yang berkaitan dengan data cuti
         Attendance::where('id_data_cuti',  $id)->delete();
         
@@ -264,7 +263,34 @@ class LeaveManagementController extends Controller
         return redirect()->back();
     }
 
-    public function print(Request $request){
+    public function cancel(Request $request) {
+        $dataLeave = DataLeave::where('id_data_cuti', $request->id)->first();
+        
+        if ($dataLeave->status_cuti == 'Approved') {
+            // Check alokasi sisa cuti
+            $allocationRequest = AllocationRequest::where('id_karyawan', $dataLeave->id_karyawan)
+                ->where('id_tipe_cuti', $dataLeave->id_tipe_cuti)->first();
+
+            // Update sisa cuti
+            if ($allocationRequest) {
+                $sisaCuti = $allocationRequest->sisa_cuti + $dataLeave->durasi_cuti;
+                $allocationRequest->update(['sisa_cuti' => $sisaCuti]);
+            }
+
+            // Hapus attendance, jika berkaitan dengan data cuti
+            Attendance::where('id_data_cuti', $request->id)->delete();
+
+            // Ubah status
+            DataLeave::where('id_data_cuti', $request->id)->update([
+                'status_cuti' => 'Cancelled',
+                'reason' => $request->reason
+            ]);
+
+            return redirect('/leaves-summary'); 
+        }
+    }
+
+    public function print(Request $request) {
         $dataleave = DataLeave::where('id_data_cuti', $request->id_data_cuti)->first();
         $employee = Employee::where('id_karyawan', $dataleave['id_karyawan'])->first();
         $responsible = Employee::where('id_karyawan', $dataleave['id_penangung_jawab'])->first();
@@ -291,7 +317,7 @@ class LeaveManagementController extends Controller
 
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request) {
         $request->validate([
             'file_approved' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -468,6 +494,7 @@ class LeaveManagementController extends Controller
         // Check data cuti
         $checkDataCuti = DataLeave::where('deskripsi', $nationalHolidayName)
             ->whereRaw('DATE(mulai_cuti) = ?', [$nationalHolidayDate])
+            ->where('status_cuti', '!=', 'Cancelled')
             ->pluck('id_karyawan');
 
         if ($request->id_divisi == 'all') {

@@ -94,7 +94,7 @@
                                             <td>{{ $dr->diperbaharui_oleh ?? '-' }}</td>
                                             <td>
                                                 <a href="{{ url('daily-report-edit', ['id' => Crypt::encrypt($dr->id_catatan_harian)]) }}" 
-                                                    id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="icon icon-edit-72"></i>
+                                                    id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-pencil"></i>
                                                 </a>
                                                 <!-- <a href="{{ url('daily-report-delete/' . $dr->id_catatan_harian) }}" class="btn btn-dark btn-sm"><i class="fa fa-trash"></i></a> -->
                                             </td>

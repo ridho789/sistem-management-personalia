@@ -97,7 +97,7 @@
                                                 <td>{{ date('l, Y-m-d', strtotime($ec->akhir_masa_kontrak)) }}</td>
                                                 <td style="text-align:right;">
                                                     <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($ec->id_karyawan)]) }}" 
-                                                        id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="icon icon-edit-72"></i>
+                                                        id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-pencil"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -155,7 +155,7 @@
                                                 <td style="text-align:right;">
                                                     <a href="{{ url('leave-request-edit', ['id' => Crypt::encrypt($dla->id_data_cuti)]) }}" 
                                                         class="btn btn-secondary btn-sm">
-                                                        <i class="icon icon-edit-72"> </i>
+                                                        <i class="fa fa-pencil"> </i>
                                                     </a>
                                                 </td>
                                             </tr>
