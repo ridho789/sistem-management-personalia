@@ -916,33 +916,36 @@
             const hiddenInput = document.getElementById("hidden_switch_checkbox");
             const columnReason = document.getElementById("column_reason");
             const valReason = document.getElementById('val_reason');
-    
-            if (valReason.value.trim() === "") {
-                valReason.value = valReason.value.trim();
-            }
-    
-            if (hiddenInput.value == 0) {
-                columnReason.style.display = "block";
-                valReason.setAttribute('required', 'required');
-    
-            } else {
-                columnReason.style.display = "none";
-                valReason.removeAttribute('required');
-            }
-    
-            // Menambahkan event listener untuk memantau perubahan pada checkbox
-            checkbox.addEventListener("change", function () {
-                hiddenInput.value = checkbox.checked ? "1" : "0";
-    
-                if (checkbox.checked) {
-                    columnReason.style.display = "none";
-                    valReason.removeAttribute('required');
-    
-                } else {
+            
+            if (valReason) {
+                if (valReason.value.trim() === "") {
+                    valReason.value = valReason.value.trim();
+                }
+        
+                if (hiddenInput.value == 0) {
                     columnReason.style.display = "block";
                     valReason.setAttribute('required', 'required');
+        
+                } else {
+                    columnReason.style.display = "none";
+                    valReason.removeAttribute('required');
                 }
-            });
+                
+                // Menambahkan event listener untuk memantau perubahan pada checkbox
+                checkbox.addEventListener("change", function () {
+                    hiddenInput.value = checkbox.checked ? "1" : "0";
+        
+                    if (checkbox.checked) {
+                        columnReason.style.display = "none";
+                        valReason.removeAttribute('required');
+        
+                    } else {
+                        columnReason.style.display = "block";
+                        valReason.setAttribute('required', 'required');
+                    }
+                });
+            }
+    
         });
 
     </script>
