@@ -147,17 +147,19 @@
             var endInput = document.getElementById('end_date');
             var reportrangeDisplay = document.getElementById('reportrange_display');
 
-            var start = moment().subtract(29, 'days');
-            var end = moment();
+            var start = moment();
+            var end = null;
 
             function cb(start, end) {
-                var rangeText = span.innerHTML = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
-                startInput.value = start.format('YYYY-MM-DD');
-                endInput.value = end.format('YYYY-MM-DD');
-                reportrangeDisplay.innerHTML = rangeText;
+                if (start.isValid() && end.isValid()) {
+                    var rangeText = span.innerHTML = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
+                    startInput.value = start.format('YYYY-MM-DD');
+                    endInput.value = end.format('YYYY-MM-DD');
+                    reportrangeDisplay.innerHTML = rangeText;
 
-                // Menyimpan nilai dalam local storage
-                localStorage.setItem('selected_range', rangeText);
+                    // Menyimpan nilai dalam local storage
+                    localStorage.setItem('selected_range', rangeText);
+                }
             }
 
             function applyDateRangePicker() {
@@ -172,7 +174,9 @@
                         'This Month': [moment().startOf('month'), moment().endOf('month')],
                         'Last Month': [moment().subtract(1, 'month').startOf('month'), 
                             moment().subtract(1, 'month').endOf('month')]
-                    }
+                    },
+                    alwaysShowCalendars: true,
+
                 }, cb);
             }
 

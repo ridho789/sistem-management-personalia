@@ -400,7 +400,7 @@
             var reportrangeDisplay = document.getElementById('reportrange_display');
 
             var start = moment().subtract(29, 'days');
-            var end = moment();
+            var end = null;
 
             // Fungsi untuk memeriksa apakah tanggal telah dipilih
             function checkDateSelection() {
@@ -412,12 +412,14 @@
             }
 
             function cb(start, end) {
-                var rangeText = span.innerHTML = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
-                startInput.value = start.format('YYYY-MM-DD');
-                endInput.value = end.format('YYYY-MM-DD');
+                if (start.isValid() && end.isValid()) {
+                    var rangeText = span.innerHTML = start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY');
+                    startInput.value = start.format('YYYY-MM-DD');
+                    endInput.value = end.format('YYYY-MM-DD');
 
-                // Panggil checkDateSelection setiap kali pemilihan tanggal berubah
-                checkDateSelection();
+                    // Panggil checkDateSelection setiap kali pemilihan tanggal berubah
+                    checkDateSelection();
+                }
             }
 
             function applyDateRangePicker() {
@@ -432,7 +434,9 @@
                         'This Month': [moment().startOf('month'), moment().endOf('month')],
                         'Last Month': [moment().subtract(1, 'month').startOf('month'), 
                             moment().subtract(1, 'month').endOf('month')]
-                    }
+                    },
+                    alwaysShowCalendars: true,
+                    
                 }, cb);
 
             }
@@ -447,13 +451,15 @@
             // Hapus spasi di value kolom noted
             const valNoted = document.getElementById('noted');
     
-            if (valNoted.value.trim() === "") {
+            if (valNoted && valNoted.value.trim() === "") {
                 valNoted.value = valNoted.value.trim();
             }
 
             // Set nilai awal absent days
             const defaultAbsentDays = document.getElementById('defaultAbsentDay')
-            var previousAbsentDays = defaultAbsentDays.value;
+            if (defaultAbsentDays) {
+                var previousAbsentDays = defaultAbsentDays.value;
+            }
 
             // Fungsi untuk menghitung Salary Deductions
             function calculateSalaryDeductions() {
@@ -464,71 +470,73 @@
                 var workingDays = parseInt($('#working_days').val()) || 0;
 
                 var dataTable = document.getElementById('data-table-payslip');
-                var rows = dataTable.querySelectorAll('tr');
+                if (dataTable) {
+                    var rows = dataTable.querySelectorAll('tr');
 
-                for (var i = 0; i < rows.length; i++) {
-                    var cells = rows[i].querySelectorAll('td');
-                    if (cells.length >= 3 && cells[0].textContent.trim() === 'Status') {
-                        var statusElement = cells[2];
-                        var status = statusElement.textContent.trim().toLowerCase();
-                    }
-                }
-
-                var basicSalary = document.getElementById('basic_salary');
-                var positionAllowance = document.getElementById('position_allowance');
-                var totalSalaryCuts = document.getElementById('total_salary_deductions');
-                var totalSalary = document.getElementById('total_salary');
-
-                var basicSalaryValue = parseInt(basicSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
-
-                if (positionAllowance) {
-                    var positionAllowanceValue = parseInt(positionAllowance.value.slice(0, -3).replace(/[^\d]/g, ''));
-                }
-
-                if (status == 'harian') {
-                    if (absentDays <= 7) {
-                        updateWorkingDays = 7 - absentDays;
-                        basicSalaryDay = basicSalaryValue * updateWorkingDays;
-                        basicSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(basicSalaryDay);
-
-                        $('#working_days').val(updateWorkingDays);
-                        $('#total_salary').val(basicSalaryCurrency);
-
+                    for (var i = 0; i < rows.length; i++) {
+                        var cells = rows[i].querySelectorAll('td');
+                        if (cells.length >= 3 && cells[0].textContent.trim() === 'Status') {
+                            var statusElement = cells[2];
+                            var status = statusElement.textContent.trim().toLowerCase();
+                        }
                     }
 
-                } else {
-                    if (absentDays <= 26) {
-                        var lateDeductions = document.getElementById('late_cuts');
+                    var basicSalary = document.getElementById('basic_salary');
+                    var positionAllowance = document.getElementById('position_allowance');
+                    var totalSalaryCuts = document.getElementById('total_salary_deductions');
+                    var totalSalary = document.getElementById('total_salary');
 
+                    var basicSalaryValue = parseInt(basicSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
+
+                    if (positionAllowance) {
                         var positionAllowanceValue = parseInt(positionAllowance.value.slice(0, -3).replace(/[^\d]/g, ''));
-                        var lateDeductionsValue = parseInt(lateDeductions.value.slice(0, -3).replace(/[^\d]/g, ''));
-                        var totalSalaryCutsValue = parseInt(totalSalaryCuts.value.slice(0, -3).replace(/[^\d]/g, ''));
-                        var totalSalaryValue = parseInt(totalSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
-
-                        updateWorkingDays = 26 - (absentDays + sickDays + leaveDays);
-                        absentCuts = absentDays * (basicSalaryValue /26);
-                        absentCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(absentCuts);
-
-                        totalSalaryCutsCalculate = absentCuts + lateDeductionsValue;
-                        totalSalaryCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCutsCalculate);
-
-                        totalSalaryCalculate = (basicSalaryValue + positionAllowanceValue) - totalSalaryCutsCalculate;
-                        totalSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCalculate);
-                        
-                        $('#working_days').val(updateWorkingDays);
-                        $('#absent_cuts').val(absentCutsCurrency);
-                        $('#total_salary_deductions').val(totalSalaryCutsCurrency);
-                        $('#total_salary').val(totalSalaryCurrency);
-
                     }
-                }
 
-                // Tambahkan atribut "required" ke kolom "noted" jika ada perbedaan nilai absendays
-                if (absentDays !== parseInt(previousAbsentDays)) {
-                    valNoted.setAttribute('required', 'required');
+                    if (status == 'harian') {
+                        if (absentDays <= 7) {
+                            updateWorkingDays = 7 - absentDays;
+                            basicSalaryDay = basicSalaryValue * updateWorkingDays;
+                            basicSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(basicSalaryDay);
 
-                } else {
-                    valNoted.removeAttribute('required');
+                            $('#working_days').val(updateWorkingDays);
+                            $('#total_salary').val(basicSalaryCurrency);
+
+                        }
+
+                    } else {
+                        if (absentDays <= 26) {
+                            var lateDeductions = document.getElementById('late_cuts');
+
+                            var positionAllowanceValue = parseInt(positionAllowance.value.slice(0, -3).replace(/[^\d]/g, ''));
+                            var lateDeductionsValue = parseInt(lateDeductions.value.slice(0, -3).replace(/[^\d]/g, ''));
+                            var totalSalaryCutsValue = parseInt(totalSalaryCuts.value.slice(0, -3).replace(/[^\d]/g, ''));
+                            var totalSalaryValue = parseInt(totalSalary.value.slice(0, -3).replace(/[^\d]/g, ''));
+
+                            updateWorkingDays = 26 - (absentDays + sickDays + leaveDays);
+                            absentCuts = absentDays * (basicSalaryValue /26);
+                            absentCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(absentCuts);
+
+                            totalSalaryCutsCalculate = absentCuts + lateDeductionsValue;
+                            totalSalaryCutsCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCutsCalculate);
+
+                            totalSalaryCalculate = (basicSalaryValue + positionAllowanceValue) - totalSalaryCutsCalculate;
+                            totalSalaryCurrency = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(totalSalaryCalculate);
+                            
+                            $('#working_days').val(updateWorkingDays);
+                            $('#absent_cuts').val(absentCutsCurrency);
+                            $('#total_salary_deductions').val(totalSalaryCutsCurrency);
+                            $('#total_salary').val(totalSalaryCurrency);
+
+                        }
+                    }
+
+                    // Tambahkan atribut "required" ke kolom "noted" jika ada perbedaan nilai absendays
+                    if (absentDays !== parseInt(previousAbsentDays)) {
+                        valNoted.setAttribute('required', 'required');
+
+                    } else {
+                        valNoted.removeAttribute('required');
+                    }
                 }
             }
 

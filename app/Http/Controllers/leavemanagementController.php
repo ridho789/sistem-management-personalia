@@ -28,8 +28,14 @@ class LeaveManagementController extends Controller
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
+        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
+        $dataEmployee = Employee::where('is_active', true)
+            ->where('id_status', '!=', $statusEmployee)
+            ->get();
+
         return view('/backend/leave/leaves_summary', [
             'dataleave' => $dataleave,
+            'dataEmployee' => $dataEmployee,
             'employee' => $employee,
             'idcard' => $idcard,
             'typeleave' => $typeleave
@@ -37,43 +43,49 @@ class LeaveManagementController extends Controller
     }
 
     public function leave_summary_search(Request $request) {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $id_karyawan = $request->id_karyawan;
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
 
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
 
-        $id_data_cuti = [];
+        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
+        $dataEmployee = Employee::where('is_active', true)
+            ->where('id_status', '!=', $statusEmployee)
+            ->get();
 
-        // Cari id karyawan yang sesuai dengan rentang tanggal yang dicari
+        $query = DataLeave::query();
+
+        if ($id_karyawan) {
+            $query->where('id_karyawan', $id_karyawan);
+        }
+
         if ($startDate && $endDate) {
-            $id_data_cuti = DataLeave::whereDate('mulai_cuti', '>=', $startDate)
-                ->whereDate('mulai_cuti', '<=', $endDate)
-                ->pluck('id_data_cuti')
-                ->toArray();
+            $query->whereDate('mulai_cuti', '>=', $startDate)
+                ->whereDate('mulai_cuti', '<=', $endDate);
         }
 
-        // Jika tidak ada hasil pencarian, tampilkan semua
-        if (empty($id_data_cuti)) {
-            $dataleave = DataLeave::whereHas('employee', function ($query) {
-                $query->where('is_active', true);
-            })->get();
-            
+        if (!$id_karyawan && (!$startDate || !$endDate)) {
+            return redirect('/leaves-summary');
+
         } else {
-            // Temukan yang sesuai dengan id karyawan
-            $dataleave = DataLeave::whereIn('id_data_cuti', $id_data_cuti)
-                ->join('tbl_karyawan', 'tbl_data_cuti.id_karyawan', '=', 'tbl_karyawan.id_karyawan')
-                ->where('tbl_karyawan.is_active', true)
-                ->get();
+            $dataleave = $query->get();
         }
 
-        return view('/backend/leave/leaves_summary', [
-            'dataleave' => $dataleave,
-            'employee' => $employee,
-            'idcard' => $idcard,
-            'typeleave' => $typeleave
-        ]);
+        if (count($dataleave) == 0) {
+            return redirect('/leaves-summary');
+
+        } else {
+            return view('/backend/leave/leaves_summary', [
+                'dataleave' => $dataleave,
+                'dataEmployee' => $dataEmployee,
+                'employee' => $employee,
+                'idcard' => $idcard,
+                'typeleave' => $typeleave
+            ]);
+        }
     }
 
     public function create() {
