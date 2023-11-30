@@ -504,8 +504,7 @@ class LeaveManagementController extends Controller
         })->value('id_status');
 
         // Check data cuti
-        $checkDataCuti = DataLeave::where('deskripsi', $nationalHolidayName)
-            ->whereRaw('DATE(mulai_cuti) = ?', [$nationalHolidayDate])
+        $checkDataCuti = DataLeave::whereRaw('DATE(mulai_cuti) = ?', [$nationalHolidayDate])
             ->where('status_cuti', '!=', 'Cancelled')
             ->pluck('id_karyawan');
 

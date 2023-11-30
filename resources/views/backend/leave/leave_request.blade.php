@@ -537,15 +537,16 @@
 
                 durationInput.value = workingDays
 
-                btnSubmit.disabled = false
-                btnUpdate.disabled = false
+                btnSubmit && (btnSubmit.disabled = false);
+                btnUpdate && (btnUpdate.disabled = false);
+
 
             } else {
                 durationInput.value = 0
 
                 // Disabled button submit or update
-                btnSubmit.disabled = true
-                btnUpdate.disabled = true
+                btnSubmit && (btnSubmit.disabled = true);
+                btnUpdate && (btnUpdate.disabled = true);
             }
         }
 
