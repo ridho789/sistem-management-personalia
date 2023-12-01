@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Crypt;
 class DailyReportManagementController extends Controller
 {
     public function index() {
-        $dailyReport = DailyReport::all();
+        $dailyReport = DailyReport::whereHas('employee', function ($query) {
+            $query->where('is_active', true);
+        })->get();;
+
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idCard = Employee::pluck('id_card', 'id_karyawan');
 
