@@ -305,7 +305,7 @@
                         </div>
                         <div class="card-body">
                             <span>
-                                <p>{{ $errorInfo }}</p>
+                                {!! $errorInfo !!}
                             </span>
                         </div>
                     </div>

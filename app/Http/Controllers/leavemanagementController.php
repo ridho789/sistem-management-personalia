@@ -116,6 +116,7 @@ class LeaveManagementController extends Controller
         // Inisiasi variabel
         $errorInfo = '';
         $dataleave = '';
+        $resultIntervalDate = [];
 
         $request->validate([
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -129,22 +130,70 @@ class LeaveManagementController extends Controller
             $filePath = $file->storeAs('images/leave', $fileName);
         }
 
-        $date_start = date("j F Y", strtotime($request->datetimestart));
-        $date_end = date("j F Y", strtotime($request->datetimeend));
-        
+        $date_start = strtotime($request->datetimestart);
+        $date_end = strtotime($request->datetimeend);
+
+        while ($date_start <= $date_end) {
+            $resultIntervalDate[] = date('Y-m-d', $date_start);
+            $date_start = strtotime('+1 day', $date_start);
+        }
+
+        $formatresultIntervalDate = implode(", ", $resultIntervalDate);
+
+        // Check data cuti
         $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
         $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
-            ->whereBetween('mulai_cuti', [$request->datetimestart, $request->datetimeend])
+            ->where(function ($query) use ($date_start, $date_end) {
+                $query->where(function ($subQuery) use ($date_start) {
+                    $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
+                            AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_start)])
+                            ->where('status_cuti', '!=', 'Cancelled');;
+                })
+                ->orWhere(function ($subQuery) use ($date_end) {
+                    $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
+                            AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_end)])
+                            ->where('status_cuti', '!=', 'Cancelled');;
+                });
+            })
             ->get();
 
+
+        $startLeave = Carbon::parse($request->datetimestart);
+        $endLeave = Carbon::parse($request->datetimeend);
+
+        // Check attendance
+        $checkAttendance = Attendance::where('employee', $request->id_karyawan)
+            ->whereBetween('attendance_date', [$startLeave->toDateString(), $endLeave->toDateString()])
+            ->get();
+
+            
+        if (count($checkAttendance) > 0) {
+            $listDateAttendance = $checkAttendance->pluck('attendance_date');
+            $resultDateAttendance = [];
+            
+            foreach ($listDateAttendance as $dateAttendance) {
+                $dateAttendanceObj = strtotime($dateAttendance);
+                $formatDateAttendance = date("d F Y", $dateAttendanceObj);
+                $resultDateAttendance[] = $formatDateAttendance;
+            }
+    
+            $formatResultDateAttendance = implode(", ", $resultDateAttendance);
+
+            $errorInfo .= "Sorry, there is employee " . $employeeData->nama_karyawan . " - " . $employeeData->id_card . 
+                " attendance data made on the following date: " . $formatResultDateAttendance . "<br>";
+        }
+
         if (count($checkDataCuti) > 0) {
-            $range_date = $date_start . ' - ' . $date_end;
-            if ($date_start == $date_end) {
-                $range_date = $date_start;
+            $dateLeaveStart = date("j F Y", strtotime($request->datetimestart));
+            $dateLeaveEnd = date("j F Y", strtotime($request->datetimeend));
+
+            $range_date = $dateLeaveStart . ' - ' . $dateLeaveEnd;
+            if ($dateLeaveStart == $dateLeaveEnd) {
+                $range_date = $dateLeaveStart;
             }
 
-            $errorInfo = "Sorry, there is already data made for the employee " . 
-                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date;
+            $errorInfo .= "Sorry, there is already data leave made for the employee " . 
+                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date . "<br>";
         }
 
         if (empty($errorInfo)) {
@@ -154,6 +203,7 @@ class LeaveManagementController extends Controller
                 'deskripsi'=> $request->deskripsi,
                 'id_tipe_cuti'=> $request->id_tipe_cuti,
                 'mulai_cuti'=> $request->datetimestart,
+                'rentang_tanggal_cuti' => $formatresultIntervalDate,
                 'selesai_cuti'=> $request->datetimeend,
                 'durasi_cuti'=> $request->duration,
                 'file'=> $filePath,
@@ -209,26 +259,85 @@ class LeaveManagementController extends Controller
     }
 
     public function update(Request $request) {
+        // Inisiasi variabel
+        $errorInfo = '';
+        $resultIntervalDate = [];
+        $checkDataCuti = [];
+
         $request->validate([
             'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
-            ->whereBetween('mulai_cuti', [$request->datetimestart, $request->datetimeend])
-            ->exists();
+        $date_start = strtotime($request->datetimestart);
+        $date_end = strtotime($request->datetimeend);
 
-        $date_start = date("j F Y", strtotime($request->datetimestart));
-        $date_end = date("j F Y", strtotime($request->datetimeend));
-
-        $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
-        $range_date = $date_start . ' - ' . $date_end;
-        if ($date_start == $date_end) {
-            $range_date = $date_start;
+        while ($date_start <= $date_end) {
+            $resultIntervalDate[] = date('Y-m-d', $date_start);
+            $date_start = strtotime('+1 day', $date_start);
         }
 
-        $errorInfo = $checkDataCuti
-            ? "Sorry, there is already data made for the employee {$employeeData->nama_karyawan} - {$employeeData->id_card} date: {$range_date}"
-            : '';
+        $formatresultIntervalDate = implode(", ", $resultIntervalDate);
+
+        // Check data cuti
+        $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
+        $exitingDataLeave = DataLeave::where('id_data_cuti', $request->id)->first();
+
+        if (date('Y-m-d H:i:s', strtotime($request->datetimestart)) != $exitingDataLeave->mulai_cuti 
+            && date('Y-m-d H:i:s', strtotime($request->datetimeend)) != $exitingDataLeave->selesai_cuti) {
+
+            $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
+                ->where(function ($query) use ($date_start, $date_end) {
+                    $query->where(function ($subQuery) use ($date_start) {
+                        $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
+                                AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_start)])
+                                ->where('status_cuti', '!=', 'Cancelled');
+                    })
+                    ->orWhere(function ($subQuery) use ($date_end) {
+                        $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
+                                AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_end)])
+                                ->where('status_cuti', '!=', 'Cancelled');
+                    });
+                })
+                ->get();
+
+        }
+
+        $startLeave = Carbon::parse($request->datetimestart);
+        $endLeave = Carbon::parse($request->datetimeend);
+
+        // Check attendance
+        $checkAttendance = Attendance::where('employee', $request->id_karyawan)
+            ->whereBetween('attendance_date', [$startLeave->toDateString(), $endLeave->toDateString()])
+            ->get();
+            
+        if (count($checkAttendance) > 0) {
+            $listDateAttendance = $checkAttendance->pluck('attendance_date');
+            $resultDateAttendance = [];
+            
+            foreach ($listDateAttendance as $dateAttendance) {
+                $dateAttendanceObj = strtotime($dateAttendance);
+                $formatDateAttendance = date("d F Y", $dateAttendanceObj);
+                $resultDateAttendance[] = $formatDateAttendance;
+            }
+    
+            $formatResultDateAttendance = implode(", ", $resultDateAttendance);
+
+            $errorInfo .= "Sorry, there is employee " . $employeeData->nama_karyawan . " - " . $employeeData->id_card . 
+                " attendance data made on the following date: " . $formatResultDateAttendance . "<br>";
+        }
+
+        if (count($checkDataCuti) > 0) {
+            $dateLeaveStart = date("j F Y", strtotime($request->datetimestart));
+            $dateLeaveEnd = date("j F Y", strtotime($request->datetimeend));
+
+            $range_date = $dateLeaveStart . ' - ' . $dateLeaveEnd;
+            if ($dateLeaveStart == $dateLeaveEnd) {
+                $range_date = $dateLeaveStart;
+            }
+
+            $errorInfo .= "Sorry, there is already data leave made for the employee " . 
+                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date . "<br>";
+        }
 
         if (empty($errorInfo)) {
             DataLeave::where('id_data_cuti', $request->id)->update([
@@ -238,6 +347,7 @@ class LeaveManagementController extends Controller
                 'id_tipe_cuti' => $request->id_tipe_cuti,
                 'mulai_cuti' => $request->datetimestart,
                 'selesai_cuti' => $request->datetimeend,
+                'rentang_tanggal_cuti' => $formatresultIntervalDate,
                 'durasi_cuti' => $request->duration,
             ]);
 
@@ -279,6 +389,9 @@ class LeaveManagementController extends Controller
         $dataLeave = DataLeave::where('id_data_cuti', $request->id)->first();
         
         if ($dataLeave->status_cuti == 'Approved') {
+            // Ambil tipe cuti
+            $typeLeave = TypeLeave::where('id_tipe_cuti', $dataLeave->id_tipe_cuti)->first();
+
             // Check alokasi sisa cuti
             $allocationRequest = AllocationRequest::where('id_karyawan', $dataLeave->id_karyawan)
                 ->where('id_tipe_cuti', $dataLeave->id_tipe_cuti)->first();
@@ -290,7 +403,9 @@ class LeaveManagementController extends Controller
             }
 
             // Hapus attendance, jika berkaitan dengan data cuti
-            Attendance::where('id_data_cuti', $request->id)->delete();
+            Attendance::where('id_data_cuti', $dataLeave->id_data_cuti )
+                ->where('information', $typeLeave->nama_tipe_cuti)
+                ->delete();
 
             // Ubah status
             DataLeave::where('id_data_cuti', $request->id)->update([
@@ -355,14 +470,22 @@ class LeaveManagementController extends Controller
 
             // Jika data leave terbuat, maka akan terbuat data baru di attendance
             for ($i = 0; $i <= $difference->d; $i++) {
-                $startLeave->addDays($i);
-                Attendance::insert([
-                    'id_data_cuti' => $request->id_data_cuti,
-                    'employee' => $dataCuti['id_karyawan'],
-                    'id_card' => $dataEmployee->id_card,
-                    'information' => $typeLeave->nama_tipe_cuti,
-                    'attendance_date' => $startLeave->toDateString(),
-                ]);
+                $currentDate = $startLeave->copy()->addDays($i);
+
+                // Check attendance
+                $checkAttendance = Attendance::where('employee', $dataCuti['id_karyawan'])
+                    ->where('attendance_date', $currentDate->toDateString())
+                    ->first();
+
+                if (empty($checkAttendance)) {
+                    Attendance::insert([
+                        'id_data_cuti' => $request->id_data_cuti,
+                        'employee' => $dataCuti['id_karyawan'],
+                        'id_card' => $dataEmployee->id_card,
+                        'information' => $typeLeave->nama_tipe_cuti,
+                        'attendance_date' => $currentDate->toDateString(),
+                    ]);
+                }
             }
 
             if (Str::contains(strtolower($typeLeave->nama_tipe_cuti), ['legal leave', 'cuti tahunan'])) {
@@ -508,10 +631,15 @@ class LeaveManagementController extends Controller
             ->where('status_cuti', '!=', 'Cancelled')
             ->pluck('id_karyawan');
 
+        // Check attendance
+        $checkAttendance = Attendance::whereRaw('attendance_date = ?', [$nationalHolidayDate])
+            ->pluck('employee');
+
         if ($request->id_divisi == 'all') {
             $employee = Employee::where('is_active', true)
                 ->where('id_status', '!=', $statusEmployee)
                 ->whereNotIn('id_karyawan', $checkDataCuti)
+                ->whereNotIn('id_karyawan', $checkAttendance)
                 ->get();
 
         } else {
@@ -519,6 +647,7 @@ class LeaveManagementController extends Controller
                 ->where('is_active', true)
                 ->where('id_status', '!=', $statusEmployee)
                 ->whereNotIn('id_karyawan', $checkDataCuti)
+                ->whereNotIn('id_karyawan', $checkAttendance)
                 ->get();
         }
 

@@ -52,7 +52,7 @@ class AttendanceController extends Controller
 
                 // Set normally scheduled
                 $sign_in = ($timeHour >= 4 && $timeHour <= 12) ? $timeFormat : null;
-                $sign_out = ($timeHour >= 17 && $timeHour <= 23) ? $timeFormat : null;
+                // $sign_out = ($timeHour >= 17 && $timeHour <= 23) ? $timeFormat : null;
 
                 // Menghitung sign_in_late jika melebihi jam 08:00
                 $limitJam = 8;
