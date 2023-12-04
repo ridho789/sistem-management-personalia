@@ -10,6 +10,7 @@ use App\Models\Position;
 use App\Models\Divisi;
 use App\Models\StatusEmployee;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Row;
 
 class EmployeesImport implements ToCollection
 {
@@ -107,6 +108,15 @@ class EmployeesImport implements ToCollection
                 }                
             }
 
+            // cek jumlah digit ID card
+            $idcard = $row[17];
+            $total_digit = strlen(strval($idcard));
+
+            if ($total_digit != 7) {
+                $errorMessage = 'Error importing data: Jumlah digit ID card harus berjumlah 7 di baris ' . $currentRow;
+                    $this->logErrors[] = $errorMessage;
+            }
+
             // periksa kolom nik dan id card
             $key = $row[1]. '-'.$row[17];
             if (isset($uniqueValues[$key])){
@@ -143,7 +153,9 @@ class EmployeesImport implements ToCollection
 
                 }
 
-                Employee::create($employeeData);
+                if (empty($this->logErrors)) {
+                    Employee::create($employeeData);
+                }
 
             } else {
                 if (empty($position)){
