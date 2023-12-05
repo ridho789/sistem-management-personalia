@@ -430,14 +430,30 @@ class LeaveManagementController extends Controller
         $employeeIDcard = $employee->id_card;
         $typeLeaveName = $typeLeave->nama_tipe_cuti;
 
-        $pdf = PDF::loadView('backend.leave.pdf_leave_request', [
-            'dataleave' => $dataleave,
-            'employee' => $employee,
-            'responsible' => $responsible,
-            'position' => $position,
-            'division' => $division,
-            'typeLeave' => $typeLeave
-        ]);
+        if (Str::contains(strtolower($typeLeave->nama_tipe_cuti), ['assignment', 'tugas', 'surat tugas'])) {
+            $imagePath = public_path('asset/images/kop_su.png');
+            $imageContent = file_get_contents($imagePath);
+
+            $pdf = PDF::loadView('backend.leave.pdf_assignment_request', [
+                'dataleave' => $dataleave,
+                'employee' => $employee,
+                'responsible' => $responsible,
+                'position' => $position,
+                'division' => $division,
+                'typeLeave' => $typeLeave,
+                'imageContent' => $imageContent
+            ]);
+
+        } else {
+            $pdf = PDF::loadView('backend.leave.pdf_leave_request', [
+                'dataleave' => $dataleave,
+                'employee' => $employee,
+                'responsible' => $responsible,
+                'position' => $position,
+                'division' => $division,
+                'typeLeave' => $typeLeave
+            ]);
+        }
 
         $filename = 'Leave Request - ' . $employeeName . '_' . $employeeIDcard . ' (' . $typeLeaveName . ')' . '.pdf';
         return $pdf->download($filename);
@@ -478,13 +494,15 @@ class LeaveManagementController extends Controller
                     ->first();
 
                 if (empty($checkAttendance)) {
-                    Attendance::insert([
-                        'id_data_cuti' => $request->id_data_cuti,
-                        'employee' => $dataCuti['id_karyawan'],
-                        'id_card' => $dataEmployee->id_card,
-                        'information' => $typeLeave->nama_tipe_cuti,
-                        'attendance_date' => $currentDate->toDateString(),
-                    ]);
+                    if (!Str::contains(strtolower($typeLeave->nama_tipe_cuti), ['other', 'permission', 'izin'])) {
+                        Attendance::insert([
+                            'id_data_cuti' => $request->id_data_cuti,
+                            'employee' => $dataCuti['id_karyawan'],
+                            'id_card' => $dataEmployee->id_card,
+                            'information' => $typeLeave->nama_tipe_cuti,
+                            'attendance_date' => $currentDate->toDateString(),
+                        ]);
+                    }
                 }
             }
 
