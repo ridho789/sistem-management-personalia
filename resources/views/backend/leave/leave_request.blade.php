@@ -298,17 +298,32 @@
                         </div>
                     </div>
                 </div>
-                @if($errorInfo)
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Log Information</h4>
+                @if($dataleave)
+                    @if($errors->any())
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Log Information</h4>
+                            </div>
+                            <div class="card-body">
+                                @foreach ($errors->all() as $error)
+                                    <span>{{ $error }}</span><br>
+                                @endforeach
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <span>
-                                {!! $errorInfo !!}
-                            </span>
+                    @endif
+                @else
+                    @if($errorInfo)
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Log Information</h4>
+                            </div>
+                            <div class="card-body">
+                                <span>
+                                    {!! $errorInfo !!}
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 @endif
                 @if (Auth::check())
                     @if (Auth::user()->level == 1)

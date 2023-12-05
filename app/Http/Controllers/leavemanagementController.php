@@ -56,7 +56,7 @@ class LeaveManagementController extends Controller
             ->where('id_status', '!=', $statusEmployee)
             ->get();
 
-        $query = DataLeave::query();
+        $query = DataLeave::query()->orderBy('mulai_cuti', 'asc');
 
         if ($id_karyawan) {
             $query->where('id_karyawan', $id_karyawan);
@@ -323,7 +323,7 @@ class LeaveManagementController extends Controller
             $formatResultDateAttendance = implode(", ", $resultDateAttendance);
 
             $errorInfo .= "Sorry, there is employee " . $employeeData->nama_karyawan . " - " . $employeeData->id_card . 
-                " attendance data made on the following date: " . $formatResultDateAttendance . "<br>";
+                " attendance data made on the following date: " . $formatResultDateAttendance;
         }
 
         if (count($checkDataCuti) > 0) {
@@ -336,7 +336,7 @@ class LeaveManagementController extends Controller
             }
 
             $errorInfo .= "Sorry, there is already data leave made for the employee " . 
-                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date . "<br>";
+                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date;
         }
 
         if (empty($errorInfo)) {
@@ -365,13 +365,7 @@ class LeaveManagementController extends Controller
             return redirect()->back();
 
         } else {
-            $dataleave = DataLeave::where('id_data_cuti', $request->id)->first();
-            $employee = Employee::all();
-            $position = Position::pluck('nama_jabatan', 'id_jabatan');
-            $division = Divisi::pluck('nama_divisi', 'id_divisi');
-            $typeLeave = TypeLeave::all();
-
-            return view('/backend/leave/leave_request', compact('dataleave', 'employee', 'position', 'division', 'typeLeave', 'errorInfo'));
+            return redirect()->back()->withErrors(['errorInfo' => $errorInfo]);
         }
     }
 

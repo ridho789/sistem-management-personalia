@@ -13,7 +13,7 @@ class DailyReportManagementController extends Controller
     public function index() {
         $dailyReport = DailyReport::whereHas('employee', function ($query) {
             $query->where('is_active', true);
-        })->get();;
+        })->orderBy('tanggal_catatan_harian', 'asc')->get();;
 
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idCard = Employee::pluck('id_card', 'id_karyawan');
@@ -169,7 +169,7 @@ class DailyReportManagementController extends Controller
         $start_date_range = $request->start_date;
         $end_date_range = $request->end_date;
 
-        $query = DailyReport::query();
+        $query = DailyReport::query()->orderBy('tanggal_catatan_harian', 'asc');
 
         if ($id_karyawan) {
             $query->where('id_karyawan', $id_karyawan);

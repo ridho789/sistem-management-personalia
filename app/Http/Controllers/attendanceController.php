@@ -330,7 +330,7 @@ class AttendanceController extends Controller
         $start_date_range = $request->start_date;
         $end_date_range = $request->end_date;
 
-        $query = Attendance::query();
+        $query = Attendance::query()->orderBy('attendance_date', 'asc');
 
         if ($id_karyawan) {
             $query->where('employee', $id_karyawan);
@@ -342,7 +342,7 @@ class AttendanceController extends Controller
 
         if (!$id_karyawan && (!$start_date_range || !$end_date_range)) {
             // Jika tidak ada filter yang diterapkan, tampilkan semua data
-            $allattendance = $query->orderBy('attendance_date', 'asc')->get();
+            $allattendance = $query->get();
         } else {
             $allattendance = $query->get();
         }
