@@ -147,12 +147,12 @@ class LeaveManagementController extends Controller
                 $query->where(function ($subQuery) use ($date_start) {
                     $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
                             AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_start)])
-                            ->where('status_cuti', '!=', 'Cancelled');;
+                            ->where('status_cuti', '!=', 'Cancelled');
                 })
                 ->orWhere(function ($subQuery) use ($date_end) {
                     $subQuery->whereRaw('? BETWEEN SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", 1) 
                             AND SUBSTRING_INDEX(rentang_tanggal_cuti, ", ", -1)', [date('Y-m-d', $date_end)])
-                            ->where('status_cuti', '!=', 'Cancelled');;
+                            ->where('status_cuti', '!=', 'Cancelled');
                 });
             })
             ->get();
@@ -537,24 +537,25 @@ class LeaveManagementController extends Controller
             $dataEmployee = Employee::where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status])->get();
         }
 
-        if (count($dataEmployee) > 0) {
-            if ($typeLeave) {
-                foreach ($dataEmployee as $data) {
-                    $checkAllocationRequest = AllocationRequest::where('id_karyawan', $data->id_karyawan)
-                        ->where('id_tipe_cuti', $typeLeave->id_tipe_cuti)->first();
+        if (count($dataEmployee) > 0 && $typeLeave) {
+            foreach ($dataEmployee as $data) {
+                $checkAllocationRequest = AllocationRequest::where('id_karyawan', $data->id_karyawan)
+                    ->where('id_tipe_cuti', $typeLeave->id_tipe_cuti)->first();
 
-                    if (empty($checkAllocationRequest)) {
-                        AllocationRequest::insert([
-                            'id_karyawan' => $data->id_karyawan,
-                            'id_tipe_cuti' => $typeLeave->id_tipe_cuti,
-                            'sisa_cuti' => 12
-                        ]);
-                    }
+                if (empty($checkAllocationRequest)) {
+                    AllocationRequest::insert([
+                        'id_karyawan' => $data->id_karyawan,
+                        'id_tipe_cuti' => $typeLeave->id_tipe_cuti,
+                        'sisa_cuti' => 12
+                    ]);
                 }
             }
         }
 
-        $allocationRequest = AllocationRequest::all();
+        $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+            $query->where('is_active', true);
+        })->get();
+
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
