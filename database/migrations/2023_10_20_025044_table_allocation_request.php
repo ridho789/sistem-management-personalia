@@ -16,6 +16,7 @@ class TableAllocationRequest extends Migration
         Schema::create('tbl_alokasi_sisa_cuti', function (Blueprint $table) {
             $table->id('id_alokasi_sisa_cuti');
             $table->string('sisa_cuti')->default('12');
+            $table->string('status')->default('-');
             $table->timestamps();
         });
     }

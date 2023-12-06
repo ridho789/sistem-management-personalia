@@ -28,10 +28,24 @@
                             <form action="{{ url('allocation-request-search') }}" method="GET">
                             @csrf
                                 <div class="form-group row">
-                                    <div class="col-sm-4">
-                                        <label>Showing data base on employee or ID card</label>
+                                    <div class="col-sm-3">
+                                        <!-- <label>Showing data base on employee or ID card</label> -->
                                         <input type="text" name="search" class="form-control" 
                                         placeholder="Search employee or ID card.." value="{{ Request::get('search') }}">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <select class="form-control" id="val_legal_leave" name="id_legal_leave">
+                                            <option value="all">All Type Legal Leave</option>
+                                            @foreach ($legalLeaveIds as $ll)
+                                                <option value="{{ $ll->id_tipe_cuti }}"  
+                                                    {{ old('id_tipe_cuti') == $ll->id_tipe_cuti ? 'selected' : '' }}>
+                                                    {{ $ll->nama_tipe_cuti }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="submit" class="btn btn-primary">Search</button>
                                     </div>
                                 </div>
                             </form>
@@ -44,16 +58,19 @@
                                     class="display" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th width=5%>
+                                                <input type="checkbox" id="selectAllCheckbox">
+                                            </th>
                                             <th>Employee (C)</th>
                                             <th>Leave Type</th>
                                             <th>Remaining Leave</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($allocationRequest as $ar)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                            <tr data-id="{{$ar->id_alokasi_sisa_cuti }}">
+                                                <td><input type="checkbox" class="select-checkbox"></td>
                                                 <td>
                                                     <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($ar->id_karyawan)]) }}">
                                                         {{ $employee[$ar->id_karyawan] }} - {{ $idcard[$ar->id_karyawan] }}
@@ -61,6 +78,11 @@
                                                 </td>
                                                 <td>{{ $typeleave[$ar->id_tipe_cuti] }}</td>
                                                 <td>{{ $ar->sisa_cuti }}</td>
+                                                @if ($ar->status == 'Cashed')
+                                                    <td style="color:#673BB7"><b>{{ $ar->status }}</b></td>
+                                                @else
+                                                    <td>{{ $ar->status }}</td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -74,8 +96,98 @@
                             </div>
                         @endif
                     </div>
+                    @if (count($allocationRequest) > 0)
+                        <div class="card-body">
+                            <form action="{{ url('allocation-request-status') }}" method="POST">
+                                @csrf
+                                <label>Update status allocation</label>
+                                <input type="hidden" id="allSelectRow" name="allSelectRow" value="">
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <button type="submit" id="searchButtonCashed" class="btn btn-secondary" name="action" value="cashed" disabled>Cashed</button>
+                                        <button type="submit" id="searchButtonDefault" class="btn btn-dark" name="action" value="default" disabled>Set Default</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        var table = document.getElementById('data-table-allocation-request');
+        var checkboxes;
+        var selectAllCheckbox = document.getElementById('selectAllCheckbox');
+        var searchButtonCashed = document.getElementById('searchButtonCashed');
+        var searchButtonDefault = document.getElementById('searchButtonDefault');
+        var allSelectRowInput = document.getElementById('allSelectRow');
+
+        if (table) {
+            checkboxes = table.getElementsByClassName('select-checkbox');
+
+            // Event listener untuk checkbox "Select All"
+            selectAllCheckbox.addEventListener('change', function () {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = this.checked;
+                    var row = checkboxes[i].parentNode.parentNode;
+                    row.classList.toggle('selected', this.checked);
+                }
+
+                // Ambil dan simpan ID semua baris yang terpilih ke dalam input hidden
+                updateAllSelectRow();
+
+                // Aktifkan atau nonaktifkan button berdasarkan status "Select All"
+                searchButtonCashed.disabled = !this.checked;
+                searchButtonDefault.disabled = !this.checked;
+
+            });
+
+            // Event listener untuk checkbox di setiap baris
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', function () {
+                    var row = this.parentNode.parentNode;
+                    row.classList.toggle('selected', this.checked);
+
+                    // Periksa apakah setidaknya satu checkbox terpilih
+                    var atLeastOneChecked = Array.from(checkboxes).some(function (checkbox) {
+                        return checkbox.checked;
+                    });
+
+                    // Aktifkan atau nonaktifkan button berdasarkan hasil pemeriksaan
+                    searchButtonCashed.disabled = !atLeastOneChecked;
+                    searchButtonDefault.disabled = !atLeastOneChecked;
+
+                    // Periksa apakah semua checkbox terpilih
+                    var allChecked = true;
+                    for (var j = 0; j < checkboxes.length; j++) {
+                        if (!checkboxes[j].checked) {
+                            allChecked = false;
+                            break;
+                        }
+                    }
+
+                    // Atur status checkbox "Select All"
+                    selectAllCheckbox.checked = allChecked;
+
+                    // Ambil dan simpan ID semua baris yang terpilih ke dalam input hidden
+                    updateAllSelectRow();
+                });
+            }
+
+            // Fungsi untuk mengambil dan menyimpan ID semua baris yang terpilih
+            function updateAllSelectRow() {
+                var selectedIds = Array.from(checkboxes)
+                    .filter(function (checkbox) {
+                        return checkbox.checked;
+                    })
+                    .map(function (checkbox) {
+                        return checkbox.closest('tr').getAttribute('data-id');
+                    });
+
+                allSelectRowInput.value = selectedIds.join(',');
+            }
+        }
+    </script>
 @endsection

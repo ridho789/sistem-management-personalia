@@ -13,42 +13,45 @@ use PDF;
 
 class EmployeeManagementController extends Controller
 {
-    public function index()
-    {   
+    public function index() {   
         $employee = Employee::where('is_active', true)->get();
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
+        $dataDivision = Divisi::all();
+
         return view('/backend/employee/list_employee', [
             'tbl_karyawan' => $employee, 
             'positions' => $positions, 
             'divisions' => $divisions, 
             'companies' => $companies, 
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'dataDivision' => $dataDivision
         ]);
     }
 
-    public function index_inactive()
-    {   
+    public function index_inactive() {   
         $employee = Employee::where('is_active', false)->get();
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
+        $dataDivision = Divisi::all();
+
         return view('/backend/employee/list_inactive_employee', [
             'tbl_karyawan' => $employee, 
             'positions' => $positions, 
             'divisions' => $divisions, 
             'companies' => $companies, 
-            'statuses' => $statuses
+            'statuses' => $statuses,
+            'dataDivision' => $dataDivision
         ]);
     }
 
-    public function create()
-    {   
+    public function create() {   
         $logErrors = '';
         $employee = '';
         $division = Divisi::all();
@@ -60,8 +63,7 @@ class EmployeeManagementController extends Controller
         ));
     }
 
-    public function store(Request $request)
-    {   
+    public function store(Request $request) {   
         $request->validate([
             'val_nik' => 'min:16|unique:tbl_karyawan,nik',
             'val_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -112,14 +114,12 @@ class EmployeeManagementController extends Controller
         return redirect('/list-employee');
     }
 
-    public function delete($id)
-    {
+    public function delete($id) {
        Employee::where('id_karyawan', $id)->delete();
         return redirect('/list-employee');
     }
 
-    public function edit($id)
-    {   
+    public function edit($id) {   
         // Dekripsi ID
         $id = Crypt::decrypt($id);
 
@@ -137,8 +137,7 @@ class EmployeeManagementController extends Controller
         ));
     }
 
-    public function update(Request $request)
-    {   
+    public function update(Request $request) {   
         // Mengambil data karyawan berdasarkan ID
         $existingEmployee = Employee::where('id_karyawan', $request->id)->first();
 
@@ -204,47 +203,47 @@ class EmployeeManagementController extends Controller
         
         Employee::where('id_karyawan', $request->id)->update($employeeData);
 
-        return redirect('/list-employee');
+        $checkEmployee = Employee::where('id_karyawan', $request->id)->first();
+        if ($checkEmployee->is_active == true) {
+            return redirect('/list-employee');
+
+        } else {
+            return redirect('/list-inactive-employee');
+        }
     }
 
-    public function search(Request $request)
-    {
+    public function search(Request $request) {
         $search = $request->input('search');
+        $id_divisi = $request->id_divisi;
 
         $employees = Employee::where(function ($query) use ($search) {
             $query->where('nama_karyawan', 'like', "%$search%")
                 ->orWhere('id_card', 'like', "%$search%");
-        })->where('is_active', true)->get();
+        })->where('is_active', true)->where('id_divisi', $id_divisi)->get();
 
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
-        if ($employees->count() === 0) {
+        $dataDivision = Divisi::all();
+
+        // Jika tidak ada hasil pencarian, ambil semua karyawan aktif
+        if ($employees->isEmpty()) {
             $employees = Employee::where('is_active', true)->get();
-
-            return view('/backend/employee/list_employee', [
-            'tbl_karyawan' => $employees, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
-
-        } else {
-            return view('/backend/employee/list_employee', [
-            'tbl_karyawan' => $employees, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
         }
+
+        return view('/backend/employee/list_employee', [
+            'tbl_karyawan' => $employees,
+            'positions' => $positions,
+            'divisions' => $divisions,
+            'companies' => $companies,
+            'statuses' => $statuses,
+            'dataDivision' => $dataDivision
+        ]);
     }
 
-    public function search_inactive(Request $request)
-    {
+    public function search_inactive(Request $request) {
         $search = $request->input('search');
 
         $employees = Employee::where(function ($query) use ($search) {
@@ -257,30 +256,21 @@ class EmployeeManagementController extends Controller
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
-        if ($employees->count() === 0) {
+        // Jika tidak ada hasil pencarian, ambil semua karyawan tidak aktif
+        if ($employees->isEmpty()) {
             $employees = Employee::where('is_active', false)->get();
-
-            return view('/backend/employee/list_inactive_employee', [
-            'tbl_karyawan' => $employees, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
-
-        } else {
-            return view('/backend/employee/list_inactive_employee', [
-            'tbl_karyawan' => $employees, 
-            'positions' => $positions, 
-            'divisions' => $divisions, 
-            'companies' => $companies, 
-            'statuses' => $statuses
-        ]);
         }
+
+        return view('/backend/employee/list_inactive_employee', [
+            'tbl_karyawan' => $employees,
+            'positions' => $positions,
+            'divisions' => $divisions,
+            'companies' => $companies,
+            'statuses' => $statuses
+        ]);
     }
 
-    public function print(Request $request)
-    {
+    public function print(Request $request) {
         // Mendapatkan dataRow & dataSearch dari permintaan POST
         $dataRow = $request->input('dataRow');
         $dataSearch = $request->input('dataSearch');

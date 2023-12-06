@@ -124,6 +124,7 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::get('leaves-summary-search', [LeaveManagementController::class, 'leave_summary_search']);
     Route::get('/allocation-request', [LeaveManagementController::class, 'allocation'])->middleware('auth');
     Route::get('allocation-request-search', [LeaveManagementController::class, 'allocation_search']);
+    Route::post('allocation-request-status', [LeaveManagementController::class, 'allocation_status']);
     Route::post('leave-request-add', [LeaveManagementController::class, 'store']);
     Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit'])->middleware('auth');
     Route::post('leave-request-update', [LeaveManagementController::class, 'update']);

@@ -31,14 +31,25 @@
                         @if (count($tbl_karyawan) > 0)
                             <form action="{{ url('list-employee-search') }}" method="GET">
                                 @csrf
+                                <label>Display employee data based on search name or ID card</label>
                                 <div class="form-group row">
                                     <div class="col-sm-3 mb-3">
-                                        <label>Display employee data based on search name or ID card</label>
                                         <input type="text" name="search" class="form-control" 
                                         placeholder="Search name or ID card" value="{{ Request::get('search') }}">
-                                        <!-- <span class="input-group-btn">
-                                            <button type="submit" class="btn btn-primary">Search</button>
-                                        </span> -->
+                                    </div>
+                                    <div class="col-sm-3 mb-3">
+                                        <select class="form-control" id="val_division" name="id_divisi">
+                                            <option value="">Select a division...</option>
+                                            @foreach ($dataDivision as $d)
+                                                <option value="{{ $d->id_divisi }}"  
+                                                    {{ old('id_divisi') == $d->id_divisi ? 'selected' : '' }}>
+                                                    {{ $d->nama_divisi }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="submit" class="btn btn-primary">Search</button>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -131,6 +142,19 @@
             // Mengambil semua baris dalam tabel
             var rows = table.querySelectorAll('tbody tr');
             var dataRow = [];
+
+            rows.forEach(function (row) {
+                var statusCell = row.querySelector('td:nth-child(9)');
+                var isVisible = true;
+
+                // Mengumpulkan data-id dari semua baris yang terlihat
+                if (isVisible) {
+                    dataRow.push(row.getAttribute('data-id'));
+                }
+
+                // Menampilkan atau menyembunyikan baris sesuai dengan hasil perbandingan
+                row.style.display = isVisible ? '' : 'none';
+            });
 
             // Event handler untuk checkbox status-filter
             var statusCheckboxes = document.querySelectorAll('.status-filter');

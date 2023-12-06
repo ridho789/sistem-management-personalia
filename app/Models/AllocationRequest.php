@@ -15,6 +15,7 @@ class AllocationRequest extends Model
         'id_karyawan',
         'id_tipe_cuti',
         'sisa_cuti',
+        'status'
     ];
 
     public function employee()

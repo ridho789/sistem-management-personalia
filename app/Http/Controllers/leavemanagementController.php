@@ -559,12 +559,18 @@ class LeaveManagementController extends Controller
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
-        
+
+        $legalLeaveIds = TypeLeave::where(function ($query) {
+            $query->whereRaw('LOWER(nama_tipe_cuti) LIKE ?', ['%legal leave%'])
+                  ->orWhereRaw('LOWER(nama_tipe_cuti) LIKE ?', ['%cuti tahunan%']);})
+            ->get();
+    
         return view('/backend/leave/allocation_request', [
             'allocationRequest' => $allocationRequest,
             'employee' => $employee,
             'idcard' => $idcard,
-            'typeleave' => $typeleave
+            'typeleave' => $typeleave,
+            'legalLeaveIds' => $legalLeaveIds
         ]);
     }
 
@@ -573,12 +579,20 @@ class LeaveManagementController extends Controller
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
         $typeleave = TypeLeave::pluck('nama_tipe_cuti', 'id_tipe_cuti');
+
+        $statusEmployee = StatusEmployee::whereIn('nama_status', ['harian', 'daily'])->first();
+
+        $legalLeaveIds = TypeLeave::where(function ($query) {
+            $query->whereRaw('LOWER(nama_tipe_cuti) LIKE ?', ['%legal leave%'])
+                  ->orWhereRaw('LOWER(nama_tipe_cuti) LIKE ?', ['%cuti tahunan%']);})
+            ->get();
     
         // Cari id karyawan yang sesuai dengan nama karyawan / id card yang dicari
         $id_employee = Employee::where(function($query) use ($search) {
             $query->where('nama_karyawan', 'like', "%$search%")
                   ->orWhere('id_card', 'like', "%$search%");
-        })->where('is_active', true)->pluck('id_karyawan')->toArray();
+        })->where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status])->pluck('id_karyawan')->toArray();
+
 
         // Jika tidak ada hasil pencarian, tampilkan semua AllocationRequest
         if (empty($id_employee)) {
@@ -587,13 +601,28 @@ class LeaveManagementController extends Controller
             })->get();
             
         } else {
-            // Temukan AllocationRequest yang sesuai dengan id karyawan
-            $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->get();
-            if ($allocationRequest->count() === 0) {
-                $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
-                    $query->where('is_active', true);
-                })->get();
-            } 
+            $checkLegalLeave = $request->id_legal_leave;
+            if ($checkLegalLeave == 'all') {
+                // Temukan AllocationRequest yang sesuai dengan id karyawan
+                $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->get();
+                if ($allocationRequest->count() === 0) {
+                    $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+                        $query->where('is_active', true);
+                    })->get();
+                } 
+
+            } else {
+                // Temukan AllocationRequest yang sesuai dengan id karyawan
+                $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)
+                    ->where('id_tipe_cuti', $checkLegalLeave)
+                    ->get();
+                if ($allocationRequest->count() === 0) {
+                    $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
+                        $query->where('is_active', true);
+                    })->get();
+                }
+            }
+
         }
         
         // Temukan DataLeave berdasarkan id karyawan yang ada di AllocationRequest
@@ -604,8 +633,30 @@ class LeaveManagementController extends Controller
             'employee' => $employee,
             'idcard' => $idcard,
             'dataCuti' => $dataCuti,
-            'typeleave' => $typeleave
+            'typeleave' => $typeleave,
+            'legalLeaveIds' => $legalLeaveIds
         ]);
+    }
+
+    public function allocation_status(Request $request) {
+        $ids = $request->allSelectRow;
+        $idArray = explode(',', $ids);
+
+        switch ($request->input('action')) {
+            case 'cashed':
+                AllocationRequest::whereIn('id_alokasi_sisa_cuti', $idArray)
+                    ->where('status', '!=', 'Cashed')
+                    ->update(['status' => 'Cashed']);
+                break;
+
+            case 'default':
+                AllocationRequest::whereIn('id_alokasi_sisa_cuti', $idArray)
+                    ->where('status', 'Cashed')
+                    ->update(['status' => '-']);
+                break;
+        }
+    
+        return redirect('/allocation-request');
     }
 
     public function national_holiday() {
