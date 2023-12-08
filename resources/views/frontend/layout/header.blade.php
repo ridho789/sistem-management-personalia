@@ -25,7 +25,7 @@
                             <div class="pulse-css"></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <ul class="list-unstyled">
+                            <!-- <ul class="list-unstyled">
                                 <li class="media dropdown-item">
                                     <span class="success"><i class="ti-user"></i></span>
                                     <div class="media-body">
@@ -74,9 +74,19 @@
                                     </div>
                                     <span class="notify-time">3:20 am</span>
                                 </li>
+                            </ul> -->
+                            <ul>
+                                <li class="media dropdown-item">
+                                    <span class="success"><i class="ti-image"></i></span>
+                                    <div class="media-body">
+                                        <a href="#">
+                                            <p>Coming Soon Notification</p>
+                                        </a>
+                                    </div>
+                                    <!-- <span class="notify-time">3:20 am</span> -->
+                                </li>
                             </ul>
-                            <a class="all-notification" href="#">See all notifications <i
-                                    class="ti-arrow-right"></i></a>
+                            <span class="all-notification" href="#">Depending on system requirements</span>
                         </div>
                     </li>
                     <li class="nav-item dropdown header-profile">
@@ -84,13 +94,13 @@
                             <i class="mdi mdi-account"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a href="./app-profile.html" class="dropdown-item">
+                            <a href="#" class="dropdown-item">
                                 <i class="icon-user"></i>
-                                <span class="ml-2">Profile </span>
+                                <span class="ml-2">Profile (Delayed)</span>
                             </a>
-                            <a href="./email-inbox.html" class="dropdown-item">
+                            <a href="#" class="dropdown-item">
                                 <i class="icon-envelope-open"></i>
-                                <span class="ml-2">Inbox </span>
+                                <span class="ml-2">Inbox (Delayed)</span>
                             </a>
                             <a href="{{ url('logout') }}" class="dropdown-item">
                                 <i class="icon-key"></i>

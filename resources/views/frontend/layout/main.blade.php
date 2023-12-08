@@ -45,7 +45,8 @@
             <a href="/dashboard" class="brand-logo">
                 <img class="logo-abbr" src="{{ asset('') }}asset/images/logo.png" alt="">
                 <img class="logo-compact" src="{{ asset('') }}asset/images/logo-text.png" alt="">
-                <img class="brand-title" src="{{ asset('') }}asset/images/logo-text.png" alt="">
+                <!-- <img class="brand-title" src="{{ asset('') }}asset/images/logo-text.png" alt=""> -->
+                <span class="brand-title">PERSONALIA</span>
             </a>
 
             <div class="nav-control">
