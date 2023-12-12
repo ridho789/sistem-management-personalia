@@ -145,8 +145,8 @@
                 // Mengambil tanggal dan nama libur dari hasil filter
                 var holidayInfo = nationalHolidays.map(holiday => {
                     return {
-                        holiday_date: holiday.holiday_date,
-                        holiday_name: holiday.holiday_name
+                        holiday_date: holiday.tanggal,
+                        holiday_name: holiday.keterangan
                     };
                 });
 
@@ -160,7 +160,7 @@
             // Function untuk cek apakah tanggal yang diinput termasuk hari libur nasional?
             async function fetchHolidaysData() {
                 try {
-                    const apiUrl = 'https://api-harilibur.vercel.app/api';
+                    const apiUrl = 'https://dayoffapi.vercel.app/api';
                     const response = await fetch(apiUrl);
                     holidaysData = await response.json();
 
@@ -171,12 +171,12 @@
 
             function checkIfNationalHoliday(date) {
                 // Cek apakah tanggal termasuk dalam data libur nasional
-                return holidaysData.some(holiday => holiday.holiday_date === date && holiday.is_national_holiday);
+                return holidaysData.some(holiday => holiday.tanggal === date && holiday.is_cuti);
             }
 
             function getNationalHolidays(date) {
                 // Mengambil libur nasional sesuai dengan tanggal
-                return holidaysData.filter(holiday => holiday.holiday_date === date && holiday.is_national_holiday);
+                return holidaysData.filter(holiday => holiday.tanggal === date && holiday.is_cuti);
             }
 
             var table = document.getElementById('data-table-national-holiday');

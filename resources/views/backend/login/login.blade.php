@@ -25,25 +25,25 @@
                                     <form action="{{ url('login-auth') }}" method="GET">
                                         <div class="form-group">
                                             <label><strong>Email</strong></label>
-                                            <input type="email" class="form-control" name="email">
+                                            <input type="email" class="form-control" name="email" required>
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Password</strong></label>
-                                            <input type="password" class="form-control" name="password">
+                                            <input type="password" class="form-control" name="password" required>
                                         </div>
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary btn-block">Sign me in</button>
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Don't have an account? <a class="text-primary" href="{{ url('/register') }}">Sign up</a></p>
+                                        <!-- <p>Don't have an account? <a class="text-primary" href="{{ url('/register') }}">Sign up</a></p> -->
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>  
         </div>
     </div>
 

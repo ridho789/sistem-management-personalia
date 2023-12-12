@@ -397,8 +397,7 @@ class LeaveManagementController extends Controller
             }
 
             // Hapus attendance, jika berkaitan dengan data cuti
-            Attendance::where('id_data_cuti', $dataLeave->id_data_cuti )
-                ->where('information', $typeLeave->nama_tipe_cuti)
+            Attendance::where('id_data_cuti', $dataLeave->id_data_cuti)
                 ->delete();
 
             // Ubah status
@@ -774,8 +773,11 @@ class LeaveManagementController extends Controller
 
         if (empty($logError)) {
             foreach ($idArray as $id) {
-                DataLeave::insert([
-                    'id_karyawan'=> $id,
+                // Data Employee
+                $dataEmployee = Employee::where('id_karyawan', $id)->first();
+
+                $id_data_cuti = DataLeave::insertGetId([
+                    'id_karyawan'=> $dataEmployee->id_karyawan,
                     'id_penangung_jawab'=> $responsible->id_karyawan,
                     'deskripsi'=> $request->descNationalHoliday,
                     'id_tipe_cuti'=> $typeLeave->id_tipe_cuti,
@@ -788,12 +790,12 @@ class LeaveManagementController extends Controller
                 ]);
 
                 // Update sisa cuti
-                $allocationRequest = AllocationRequest::where('id_karyawan', $id)
+                $allocationRequest = AllocationRequest::where('id_karyawan', $dataEmployee->id_karyawan)
                     ->where('id_tipe_cuti', $typeLeave->id_tipe_cuti)->first();
     
                 if (empty($allocationRequest)) {
                     AllocationRequest::insert([
-                        'id_karyawan' => $id,
+                        'id_karyawan' => $dataEmployee->id_karyawan,
                         'id_tipe_cuti' => $typeLeave->id_tipe_cuti,
                         'sisa_cuti' => 12 - 1
                     ]);
@@ -802,6 +804,21 @@ class LeaveManagementController extends Controller
                     $currentRemainingLeave = $allocationRequest->sisa_cuti;
                     $resultRemainingLeave = $currentRemainingLeave - 1;
                     $allocationRequest->update(['sisa_cuti' => $resultRemainingLeave]);
+                }
+
+                // Check attendance
+                $checkAttendance = Attendance::where('employee', $dataEmployee->id_karyawan)
+                    ->where('attendance_date', $carbonDateStart)
+                    ->first();
+
+                if (empty($checkAttendance)) {
+                    Attendance::insert([
+                        'id_data_cuti' => $id_data_cuti,
+                        'employee' => $dataEmployee->id_karyawan,
+                        'id_card' => $dataEmployee->id_card,
+                        'information' => $request->descNationalHoliday,
+                        'attendance_date' => $carbonDateStart,
+                    ]);
                 }
             }
 
