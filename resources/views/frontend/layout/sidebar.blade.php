@@ -56,7 +56,7 @@
                             <li><a href="{{ url('/allocation-request') }}">Allocation Requests</a></li>
                             <li><a href="{{ url('/leave-request') }}">Leave Request</a></li>
                             <li><a href="{{ url('/leaves-summary') }}">Leaves Summary</a></li>
-                            <li><a href="{{ url('/national-holiday-leave') }}">National Holiday Leave</a></li>
+                            <li><a href="{{ url('/collective-leave') }}">Collective Leave</a></li>
                         </ul>
                     </li>
                     <li>

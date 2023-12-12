@@ -1,18 +1,18 @@
 @extends('frontend.layout.main')
-<!-- @section('title', 'National Holiday Leave') -->
+<!-- @section('title', 'Collective Leave') -->
 @section('content')
     <div class="container-fluid">
         <div class="row page-titles mx-0">
             <div class="col-sm-6 p-md-0">
                 <div class="welcome-text">
                     <h4>Hi, welcome back!</h4>
-                    <span class="ml-1">National Holiday Leave</span>
+                    <span class="ml-1">Collective Leave</span>
                 </div>
             </div>
             <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="javascript:void(0)">Management</a></li>
-                    <li class="breadcrumb-item active"><a href="javascript:void(0)">National Holiday Leave</a></li>
+                    <li class="breadcrumb-item active"><a href="javascript:void(0)">Collective Leave</a></li>
                 </ol>
             </div>
         </div>
@@ -21,12 +21,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">                           
-                        <h4 class="card-title">National Holiday Leave</h4>
+                        <h4 class="card-title">Collective Leave</h4>
                     </div>
                     <div class="card-body">
-                        <form action="{{ url('national-holiday-leave-search') }}" method="GET">
+                        <form action="{{ url('collective-leave-search') }}" method="GET">
                             @csrf
-                            <label>Set filter base on division and date national holiday</label>
+                            <label>Set filter base on division and date collective leave</label>
                             <input type="hidden" name="information" id="information" value="">
                             <div class="form-group row">
                                 <div class="col-sm-3 mb-2">
@@ -43,8 +43,8 @@
                                 </div>
                                 <div class="col-sm-2 mb-2">
                                         <input type="date" class="form-control" 
-                                            id="val_date_national_holiday" min="2022-01-01" name="val_date_national_holiday" 
-                                            value="{{ old('val_date_national_holiday') }}" required>
+                                            id="val_date_collective_leave" min="2022-01-01" name="val_date_collective_leave" 
+                                            value="{{ old('val_date_collective_leave') }}" required>
                                     </div>
                                 <div class="col-sm-3">
                                     <button type="submit" class="btn btn-primary" id="searchButton" disabled>Search</button>
@@ -55,7 +55,7 @@
                     @if (count($employee) > 0)
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-responsive-sm" id="data-table-national-holiday">
+                                <table class="table table-responsive-sm" id="data-table-collective">
                                     <thead>
                                         <tr>
                                             <th width=5%>
@@ -84,12 +84,12 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="{{ url('national-holiday-leave-add') }}" method="POST">
+                            <form action="{{ url('collective-leave-add') }}" method="POST">
                                 @csrf
-                                <label>Create leave for {{ $informationNationalHoliday }}</label>
+                                <label>Create leave for {{ $informationcollective }}</label>
                                 <input type="hidden" id="allSelectRow" name="allSelectRow" value="">
-                                <input type="hidden" id="dateNationalHolday" name="dateNationalHolday" value="{{ $nationalHolidayDate }}">
-                                <input type="hidden" id="descNationalHoliday" name="descNationalHoliday" value="{{ $nationalHolidayName }}">
+                                <input type="hidden" id="dateCollective" name="dateCollective" value="{{ $collectiveDate }}">
+                                <input type="hidden" id="descCollective" name="descCollective" value="{{ $collectiveName }}">
                                 <div class="form-group row">
                                     <div class="col-sm-3">
                                         <button type="submit" class="btn btn-secondary" id="searchButtonCreate" disabled>Create</button>
@@ -116,15 +116,15 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var dateNationalHoliday = document.getElementById('val_date_national_holiday');
+            var dateCollective = document.getElementById('val_date_collective_leave');
             var searchButton = document.getElementById('searchButton');
-            var holidaysData;
+            var collectivesData;
 
             // Ambil data libur nasional saat halaman dimuat
-            fetchHolidaysData();
+            fetchcollectivesData();
 
-            dateNationalHoliday.addEventListener('input', function () {
-                var selectedDate = dateNationalHoliday.value;
+            dateCollective.addEventListener('input', function () {
+                var selectedDate = dateCollective.value;
 
                 // Memisahkan tahun, bulan, dan hari
                 var parts = selectedDate.split("-");
@@ -139,47 +139,47 @@
                 var formattedDate = year + "-" + month + "-" + day;
 
                 // Validasi apakah tanggal tersebut merupakan hari libur nasional
-                var isNationalHoliday = checkIfNationalHoliday(formattedDate);
-                var nationalHolidays = getNationalHolidays(formattedDate);
+                var isCollective = checkIfCollective(formattedDate);
+                var collectives = getCollectives(formattedDate);
 
                 // Mengambil tanggal dan nama libur dari hasil filter
-                var holidayInfo = nationalHolidays.map(holiday => {
+                var collectiveInfo = collectives.map(collective => {
                     return {
-                        holiday_date: holiday.tanggal,
-                        holiday_name: holiday.keterangan
+                        collective_date: collective.tanggal,
+                        collective_name: collective.keterangan
                     };
                 });
 
                 // Mengatur nilai input hidden
-                document.getElementById("information").value = JSON.stringify(holidayInfo);
+                document.getElementById("information").value = JSON.stringify(collectiveInfo);
 
                 // Aktifkan atau nonaktifkan tombol berdasarkan hasil validasi
-                searchButton.disabled = !isNationalHoliday;
+                searchButton.disabled = !isCollective;
             });
 
             // Function untuk cek apakah tanggal yang diinput termasuk hari libur nasional?
-            async function fetchHolidaysData() {
+            async function fetchcollectivesData() {
                 try {
                     const apiUrl = 'https://dayoffapi.vercel.app/api';
                     const response = await fetch(apiUrl);
-                    holidaysData = await response.json();
+                    collectivesData = await response.json();
 
                 } catch (error) {
-                    console.error('Error fetching holidays data:', error);
+                    console.error('Error fetching collectives data:', error);
                 }
             }
 
-            function checkIfNationalHoliday(date) {
+            function checkIfCollective(date) {
                 // Cek apakah tanggal termasuk dalam data libur nasional
-                return holidaysData.some(holiday => holiday.tanggal === date && holiday.is_cuti);
+                return collectivesData.some(collective => collective.tanggal === date && collective.is_cuti);
             }
 
-            function getNationalHolidays(date) {
+            function getCollectives(date) {
                 // Mengambil libur nasional sesuai dengan tanggal
-                return holidaysData.filter(holiday => holiday.tanggal === date && holiday.is_cuti);
+                return collectivesData.filter(collective => collective.tanggal === date && collective.is_cuti);
             }
 
-            var table = document.getElementById('data-table-national-holiday');
+            var table = document.getElementById('data-table-collective');
             var checkboxes;
             var selectAllCheckbox = document.getElementById('selectAllCheckbox');
             var searchButtonCreate = document.getElementById('searchButtonCreate');

@@ -658,31 +658,31 @@ class LeaveManagementController extends Controller
         return redirect('/allocation-request');
     }
 
-    public function national_holiday() {
+    public function collective() {
         $employee = [];
         $division = Divisi::all();
         $logError = '';
 
-        return view('/backend/leave/national_holiday_leave', [
+        return view('/backend/leave/collective_leave', [
             'employee' => $employee,
             'division' => $division,
             'logError' => $logError
         ]);
     }
 
-    public function national_holiday_search(Request $request) {
+    public function collective_search(Request $request) {
         // Inisiasi variabel
         $logError = '';
 
-        $nationalHoliday = $request->information;
-        $nationalHolidayArray = json_decode($nationalHoliday, true);
+        $collective = $request->information;
+        $collectiveArray = json_decode($collective, true);
 
-        $nationalHolidayDate = $nationalHolidayArray[0]['holiday_date'];
-        $nationalHolidayName = $nationalHolidayArray[0]['holiday_name'];
+        $collectiveDate = $collectiveArray[0]['collective_date'];
+        $collectiveName = $collectiveArray[0]['collective_name'];
 
         // Format tanggal
-        $formatNationalHolidayDate = date("j F Y", strtotime($nationalHolidayDate));
-        $informationNationalHoliday = $nationalHolidayName . ' - ' . $formatNationalHolidayDate;
+        $formatCollectiveDate = date("j F Y", strtotime($collectiveDate));
+        $informationCollective = $collectiveName . ' - ' . $formatCollectiveDate;
 
         $statusEmployee = StatusEmployee::where(function ($query) {
             $query->whereRaw("LOWER(nama_status) = LOWER('daily')")
@@ -690,12 +690,12 @@ class LeaveManagementController extends Controller
         })->value('id_status');
 
         // Check data cuti
-        $checkDataCuti = DataLeave::whereRaw('DATE(mulai_cuti) = ?', [$nationalHolidayDate])
+        $checkDataCuti = DataLeave::whereRaw('DATE(mulai_cuti) = ?', [$collectiveDate])
             ->where('status_cuti', '!=', 'Cancelled')
             ->pluck('id_karyawan');
 
         // Check attendance
-        $checkAttendance = Attendance::whereRaw('attendance_date = ?', [$nationalHolidayDate])
+        $checkAttendance = Attendance::whereRaw('attendance_date = ?', [$collectiveDate])
             ->pluck('employee');
 
         if ($request->id_divisi == 'all') {
@@ -719,27 +719,27 @@ class LeaveManagementController extends Controller
         $nameDivision = Divisi::pluck('nama_divisi', 'id_divisi');
         $nameStatus =StatusEmployee::pluck('nama_status', 'id_status');
 
-        return view('/backend/leave/national_holiday_leave', [
+        return view('/backend/leave/collective_leave', [
             'logError' => $logError,
             'employee' => $employee,
             'division' => $division,
             'namePosistion' => $namePosistion,
             'nameDivision' => $nameDivision,
             'nameStatus' => $nameStatus,
-            'nationalHolidayDate' => $nationalHolidayDate,
-            'nationalHolidayName' => $nationalHolidayName,
-            'informationNationalHoliday' => $informationNationalHoliday
+            'collectiveDate' => $collectiveDate,
+            'collectiveName' => $collectiveName,
+            'informationcollective' => $informationCollective
         ]);
     }
     
-    public function national_holiday_store(Request $request) {
+    public function collective_store(Request $request) {
         // Inisiasi variabel
         $logError = '';
 
         $ids = $request->allSelectRow;
         $idArray = explode(',', $ids);
 
-        $date = $request->dateNationalHolday;
+        $date = $request->dateCollective;
         $carbonDateStart = Carbon::parse($date)->setTime(8, 0, 0);
         $carbonDateEnd = Carbon::parse($date)->setTime(17, 0, 0);
 
@@ -779,7 +779,7 @@ class LeaveManagementController extends Controller
                 $id_data_cuti = DataLeave::insertGetId([
                     'id_karyawan'=> $dataEmployee->id_karyawan,
                     'id_penangung_jawab'=> $responsible->id_karyawan,
-                    'deskripsi'=> $request->descNationalHoliday,
+                    'deskripsi'=> $request->descCollective,
                     'id_tipe_cuti'=> $typeLeave->id_tipe_cuti,
                     'mulai_cuti'=> $carbonDateStart,
                     'selesai_cuti'=> $carbonDateEnd,
@@ -816,7 +816,7 @@ class LeaveManagementController extends Controller
                         'id_data_cuti' => $id_data_cuti,
                         'employee' => $dataEmployee->id_karyawan,
                         'id_card' => $dataEmployee->id_card,
-                        'information' => $request->descNationalHoliday,
+                        'information' => $request->descCollective,
                         'attendance_date' => $carbonDateStart,
                     ]);
                 }
@@ -828,7 +828,7 @@ class LeaveManagementController extends Controller
             $employee = [];
             $division = Divisi::all();
 
-            return view('/backend/leave/national_holiday_leave', [
+            return view('/backend/leave/collective_leave', [
                 'employee' => $employee,
                 'division' => $division,
                 'logError' => $logError
