@@ -66,7 +66,7 @@
                     <div class="card-header">
                         <h4 class="card-title">leave type</h4>
                         @if (count($tbl_tipe_cuti) > 0)
-                            <button type="submit" class="btn btn-primary" id="new-type-leave">+ Add leave type</button>
+                            <button type="submit" class="btn btn-primary" id="new-type-leave">+ Add new leave</button>
                         @endif
                     </div>
                     <div class="card-body">

@@ -45,7 +45,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="floatingPassword"><strong>Password</strong></label>
-                                                <input type="password" name="password" class="form-control" id="Password" placeholder="" required>
+                                                <input type="password" name="password" class="form-control @error('password')
+                                                is-invalid @enderror" id="Password" placeholder="" required>
                                                 @error('password')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -63,6 +64,15 @@
                                                 <div id="passwordMismatch" class="invalid-feedback" style="display: none;">
                                                     Passwords do not match
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="level"><strong>Level</strong></label>
+                                                <select class="form-control" name="level" id="level" required>
+                                                    <option value="">Please select level</option>
+                                                    <option value="1">Level 1</option>
+                                                    <option value="2">Level 2</option>
+                                                    <option value="3">Level 3</option>
+                                                </select>
                                             </div>
                                             <div class="text-center mt-4">
                                                 <button type="submit" class="btn btn-primary btn-block">Sign me up</button>

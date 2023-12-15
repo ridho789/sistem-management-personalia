@@ -24,6 +24,7 @@
                             <li><a href="{{ url('/position') }}">Position</a></li>
                             <li><a href="{{ url('/employee-status') }}">Employee Status</a></li>
                             <li><a href="{{ url('/type-leave') }}">Type Leave</a></li>
+                            <li><a href="{{ url('/users') }}">Users</a></li>
                         </ul>
                     </li> 
 

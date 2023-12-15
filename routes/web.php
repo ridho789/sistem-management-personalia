@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeStatusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\UsersController;
 
 use App\Http\Controllers\AssetManagementController;
 use App\Http\Controllers\EmployeeManagementController;
@@ -88,6 +89,11 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('type-leave-add', [LeaveTypeController::class, 'store']);
     Route::get('type-leave-delete/{id_tipe_cuti}', [LeaveTypeController::class, 'delete']);
     Route::post('type-leave-update', [LeaveTypeController::class, 'update']);
+
+    Route::get('/users', [UsersController::class, 'index'])->middleware('auth');
+    Route::post('users-add', [UsersController::class, 'store']);
+    Route::post('users-update', [UsersController::class, 'update']);
+    Route::get('users-delete/{id}', [UsersController::class, 'delete']);
 
     // management - employee
     Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
