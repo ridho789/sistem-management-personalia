@@ -47,14 +47,15 @@ Route::get('login-auth', [LoginController::class, 'authenticate']);
 Route::get('logout', [LoginController::class, 'logout']);
 
 // register
-Route::get('/register', [RegisterController::class, 'index']);
-Route::post('register-add', [RegisterController::class, 'store']);
+// Route::get('/register', [RegisterController::class, 'index']);
+// Route::post('register-add', [RegisterController::class, 'store']);
 
-// dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
 
 Route::group(['middleware' => ['auth', 'check.role.user:1']], function () 
 {
+    // dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+
     // master data
     Route::get('/devision', [DivisionController::class, 'index'])->middleware('auth');
     Route::post('division-add', [DivisionController::class, 'store']);
@@ -164,29 +165,50 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('import-excel-daily-report', [ImportDailyReport::class, 'ImportDailyReport']);
 });
 
-// management - employee
-Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
-Route::get('/form-employee', [EmployeeManagementController::class, 'create'])->middleware('auth');
-Route::post('form-employee-add', [EmployeeManagementController::class, 'store']);
-Route::get('list-employee-delete/{id_karyawan}', [EmployeeManagementController::class, 'delete']);
-Route::get('form-employee-edit/{id_karyawan}', [EmployeeManagementController::class, 'edit'])->middleware('auth');
-Route::post('form-employee-update', [EmployeeManagementController::class, 'update']);
-Route::get('list-employee-search', [EmployeeManagementController::class, 'search']);
-Route::post('list-employee-print', [EmployeeManagementController::class, 'print']);
+Route::group(['middleware' => ['auth', 'check.role.user:1,2']], function () 
+{
+    // management - employee
+    Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
+    Route::get('/form-employee', [EmployeeManagementController::class, 'create'])->middleware('auth');
+    Route::post('form-employee-add', [EmployeeManagementController::class, 'store']);
+    Route::get('list-employee-delete/{id_karyawan}', [EmployeeManagementController::class, 'delete']);
+    Route::get('form-employee-edit/{id_karyawan}', [EmployeeManagementController::class, 'edit'])->middleware('auth');
+    Route::post('form-employee-update', [EmployeeManagementController::class, 'update']);
+    Route::get('list-employee-search', [EmployeeManagementController::class, 'search']);
+    Route::post('list-employee-print', [EmployeeManagementController::class, 'print']);
 
-// management employee inactive
-Route::get('/list-inactive-employee', [EmployeeManagementController::class, 'index_inactive'])->middleware('auth');
-Route::get('list-inactive-employee-search', [EmployeeManagementController::class, 'search_inactive']);
+    // import excel
+    Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);
 
-// attendance - leave
-Route::get('/leave-request', [LeaveManagementController::class, 'create'])->middleware('auth');
-Route::get('/leaves-summary', [LeaveManagementController::class, 'index'])->middleware('auth');
-Route::get('leaves-summary-search', [LeaveManagementController::class, 'leave_summary_search']);
-Route::get('/allocation-request', [LeaveManagementController::class, 'allocation'])->middleware('auth');
-Route::get('allocation-request-search', [LeaveManagementController::class, 'allocation_search']);
-Route::post('leave-request-add', [LeaveManagementController::class, 'store']);
-Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit'])->middleware('auth');
-Route::post('leave-request-update', [LeaveManagementController::class, 'update']);
-Route::get('leave-request-delete/{id_data_cuti}', [LeaveManagementController::class, 'delete']);
-Route::post('leave-request-print', [LeaveManagementController::class, 'print']);
-Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
+    // management employee inactive
+    Route::get('/list-inactive-employee', [EmployeeManagementController::class, 'index_inactive'])->middleware('auth');
+    Route::get('list-inactive-employee-search', [EmployeeManagementController::class, 'search_inactive']);
+
+    // attendance - leave
+    Route::get('/leave-request', [LeaveManagementController::class, 'create'])->middleware('auth');
+    Route::get('/leaves-summary', [LeaveManagementController::class, 'index'])->middleware('auth');
+    Route::get('leaves-summary-search', [LeaveManagementController::class, 'leave_summary_search']);
+    Route::get('/allocation-request', [LeaveManagementController::class, 'allocation'])->middleware('auth');
+    Route::get('allocation-request-search', [LeaveManagementController::class, 'allocation_search']);
+    Route::post('leave-request-add', [LeaveManagementController::class, 'store']);
+    Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit'])->middleware('auth');
+    Route::post('leave-request-update', [LeaveManagementController::class, 'update']);
+    Route::get('leave-request-delete/{id_data_cuti}', [LeaveManagementController::class, 'delete']);
+    Route::post('leave-request-print', [LeaveManagementController::class, 'print']);
+    Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
+});
+
+Route::group(['middleware' => ['auth', 'check.role.user:1,3']], function () 
+{
+    // management - daily report
+    Route::get('/list-daily-report', [DailyReportManagementController::class, 'index'])->middleware('auth');
+    Route::get('/form-daily-report', [DailyReportManagementController::class, 'create'])->middleware('auth');
+    Route::post('daily-report-add', [DailyReportManagementController::class, 'store']);
+    Route::get('daily-report-edit/{id_daily_report}', [DailyReportManagementController::class, 'edit']);
+    Route::get('daily-report-delete/{id_daily_report}', [DailyReportManagementController::class, 'delete']);
+    Route::post('daily-report-update', [DailyReportManagementController::class, 'update']);
+    Route::get('daily-report-search', [DailyReportManagementController::class, 'search']);
+
+    // import excel
+    Route::post('import-excel-daily-report', [ImportDailyReport::class, 'ImportDailyReport']);
+});

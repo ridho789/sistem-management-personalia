@@ -23,6 +23,24 @@ class CheckRoleUser
         if (Auth::check() && in_array(Auth::user()->level, $roles)) {
             return $next($request);
         }
+
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // Redirect based on the user's level
+            switch (Auth::user()->level) {
+                case 1:
+                    return redirect('/dashboard');
+                    break;
+                case 2:
+                    return redirect('/list-employee');
+                    break;
+                case 3:
+                    return redirect('/list-daily-report');
+                    break;
+                default:
+                    return redirect('/dashboard');
+            }
+        }
     
         return redirect('/dashboard');
     }

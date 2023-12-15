@@ -102,6 +102,18 @@
                             <li><a href="{{ url('/leaves-summary') }}">Leaves Summary</a></li>
                         </ul>
                     </li>
+
+                @elseif (Auth::user()->level == 3)
+                    <li class="nav-label">Management</li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="{{ url('/list-daily-report') }}">List Daily Report</a></li>
+                            <li><a href="{{ url('/form-daily-report') }}">Form Daily Report</a></li>
+                        </ul>
+                    </li>
                 @endif
             @endif
         </ul>
