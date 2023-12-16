@@ -133,43 +133,55 @@
                 <div class="card">
                     <div class="card-header">                           
                         <h4 class="card-title">Users list</h4>
-                        <button type="submit" class="btn btn-primary" id="new-user">+ Add new user</button>                       
+                        @if (count($users) > 0)
+                            <button type="submit" class="btn btn-primary" id="new-user">+ Add new user</button>
+                        @endif                       
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-responsive-sm" id="data-table-user" class="display" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Password</th>
-                                        <th>Level</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $u)
-                                        <tr data-id="{{$u->id}}">
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td class="name-selected">{{$u->name}}</td>
-                                            <td class="email-selected">{{$u->email}}</td>
-                                            <td class="password-selected">{{$u->password}}</td>
-                                            <td class="level-selected">{{$u->level}}</td>
-                                            <td style="text-align:right;">
-                                                <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button mt-1">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <!-- <a href="{{ url('users-delete/' . $u->id) }}" id="delete-button" class="btn btn-dark btn-sm mt-1" 
-                                                    onclick="return confirm('Are you sure you want to delete this data?');"><i class="fa fa-trash"></i>
-                                                </a> -->
-                                            </td>
+                    @if (count($users) > 0)
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-responsive-sm" id="data-table-user" class="display" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
+                                            <th>Level</th>
+                                            <th></th>
                                         </tr>
-                                    @endforeach 
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($users as $u)
+                                            <tr data-id="{{$u->id}}">
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td class="name-selected">{{$u->name}}</td>
+                                                <td class="email-selected">{{$u->email}}</td>
+                                                <td class="password-selected">{{$u->password}}</td>
+                                                <td class="level-selected">{{$u->level}}</td>
+                                                <td style="text-align:right;">
+                                                    <a href="#" id="edit-button" class="btn btn-secondary btn-sm edit-button mt-1">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <!-- <a href="{{ url('users-delete/' . $u->id) }}" id="delete-button" class="btn btn-dark btn-sm mt-1" 
+                                                        onclick="return confirm('Are you sure you want to delete this data?');"><i class="fa fa-trash"></i>
+                                                    </a> -->
+                                                </td>
+                                            </tr>
+                                        @endforeach 
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="mt-3">
+                            <span style="text-align: center;">
+                                <p>Sorry, no data that can be displayed yet. <br>
+                                    <button type="submit" class="btn btn-light mt-2" id="new-user">click to add new user</button>
+                                </p>
+                            </span>
+                        </div>
+                    @endif
                 </div>
             </div>
 

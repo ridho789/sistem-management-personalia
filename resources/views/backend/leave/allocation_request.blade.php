@@ -23,7 +23,7 @@
                     <div class="card-header">                           
                         <h4 class="card-title">Allocation Request</h4>
                     </div>
-                    @if (count($allocationRequest) > 0)
+                    @if ($allocationRequest)
                         <div class="card-body">
                             <form action="{{ url('allocation-request-search') }}" method="GET">
                             @csrf
@@ -52,7 +52,7 @@
                         </div>
                     @endif
                     <div class="card-body">
-                        @if (count($allocationRequest) > 0)
+                        @if ($allocationRequest)
                             <div class="table-responsive">
                                 <table class="table table-responsive-sm" id="data-table-allocation-request" 
                                     class="display" style="width:100%">
@@ -96,7 +96,7 @@
                             </div>
                         @endif
                     </div>
-                    @if (count($allocationRequest) > 0)
+                    @if ($allocationRequest)
                         <div class="card-body">
                             <form action="{{ url('allocation-request-status') }}" method="POST">
                                 @csrf

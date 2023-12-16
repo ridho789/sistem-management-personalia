@@ -551,9 +551,14 @@ class LeaveManagementController extends Controller
             }
         }
 
-        $allocationRequest = AllocationRequest::whereHas('employee', function ($query) use ($statusEmployee) {
-            $query->where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status]);
-        })->get();
+        if ($statusEmployee && is_object($statusEmployee)) {
+            $allocationRequest = AllocationRequest::whereHas('employee', function ($query) use ($statusEmployee) {
+                $query->where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status]);
+            })->get();
+            
+        } else {
+            $allocationRequest = null;
+        }
 
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
