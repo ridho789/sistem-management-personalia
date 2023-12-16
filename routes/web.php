@@ -50,8 +50,17 @@ Route::get('logout', [LoginController::class, 'logout']);
 // Route::get('/register', [RegisterController::class, 'index']);
 // Route::post('register-add', [RegisterController::class, 'store']);
 
+Route::group(['middleware' => ['auth', 'check.role.user:0']], function () 
+{
+    // users
+    Route::get('/users', [UsersController::class, 'index'])->middleware('auth');
+    Route::post('users-add', [UsersController::class, 'store']);
+    Route::post('users-update', [UsersController::class, 'update']);
+    Route::get('users-delete/{id}', [UsersController::class, 'delete']);
 
-Route::group(['middleware' => ['auth', 'check.role.user:1']], function () 
+});
+
+Route::group(['middleware' => ['auth', 'check.role.user:0,1']], function () 
 {
     // dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
@@ -90,11 +99,6 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('type-leave-add', [LeaveTypeController::class, 'store']);
     Route::get('type-leave-delete/{id_tipe_cuti}', [LeaveTypeController::class, 'delete']);
     Route::post('type-leave-update', [LeaveTypeController::class, 'update']);
-
-    Route::get('/users', [UsersController::class, 'index'])->middleware('auth');
-    Route::post('users-add', [UsersController::class, 'store']);
-    Route::post('users-update', [UsersController::class, 'update']);
-    Route::get('users-delete/{id}', [UsersController::class, 'delete']);
 
     // management - employee
     Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
@@ -165,7 +169,7 @@ Route::group(['middleware' => ['auth', 'check.role.user:1']], function ()
     Route::post('import-excel-daily-report', [ImportDailyReport::class, 'ImportDailyReport']);
 });
 
-Route::group(['middleware' => ['auth', 'check.role.user:1,2']], function () 
+Route::group(['middleware' => ['auth', 'check.role.user:0,1,2']], function () 
 {
     // management - employee
     Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
@@ -198,7 +202,7 @@ Route::group(['middleware' => ['auth', 'check.role.user:1,2']], function ()
     Route::post('leave-request-upload', [LeaveManagementController::class, 'upload']);
 });
 
-Route::group(['middleware' => ['auth', 'check.role.user:1,3']], function () 
+Route::group(['middleware' => ['auth', 'check.role.user:0,1,3']], function () 
 {
     // management - daily report
     Route::get('/list-daily-report', [DailyReportManagementController::class, 'index'])->middleware('auth');
