@@ -19,7 +19,7 @@ class AddColumnForeignTableAllocationRequest extends Migration
             $table->foreign('id_karyawan')->references('id_karyawan')->on('tbl_karyawan');
 
             // table alokasi sisa cuti - tipe cuti (type leave)
-            $table->unsignedBigInteger('id_tipe_cuti')->after('deskripsi');
+            $table->unsignedBigInteger('id_tipe_cuti')->after('id_karyawan');
             $table->foreign('id_tipe_cuti')->references('id_tipe_cuti')->on('tbl_tipe_cuti');
         });
     }
