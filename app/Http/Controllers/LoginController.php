@@ -29,7 +29,7 @@ class LoginController extends Controller
                     return redirect()->intended('/dashboard');
                     break;
                 case 2:
-                    return redirect()->intended('/list-employee');
+                    return redirect()->intended('/leaves-summary');
                     break;
                 case 3:
                     return redirect()->intended('/list-daily-report');

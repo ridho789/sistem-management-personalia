@@ -171,29 +171,10 @@ Route::group(['middleware' => ['auth', 'check.role.user:0,1']], function ()
 
 Route::group(['middleware' => ['auth', 'check.role.user:0,1,2']], function () 
 {
-    // management - employee
-    Route::get('/list-employee', [EmployeeManagementController::class, 'index'])->middleware('auth');
-    Route::get('/form-employee', [EmployeeManagementController::class, 'create'])->middleware('auth');
-    Route::post('form-employee-add', [EmployeeManagementController::class, 'store']);
-    Route::get('list-employee-delete/{id_karyawan}', [EmployeeManagementController::class, 'delete']);
-    Route::get('form-employee-edit/{id_karyawan}', [EmployeeManagementController::class, 'edit'])->middleware('auth');
-    Route::post('form-employee-update', [EmployeeManagementController::class, 'update']);
-    Route::get('list-employee-search', [EmployeeManagementController::class, 'search']);
-    Route::post('list-employee-print', [EmployeeManagementController::class, 'print']);
-
-    // import excel
-    Route::post('import-excel-employee', [ImportEmployeeexcel::class, 'importExcel']);
-
-    // management employee inactive
-    Route::get('/list-inactive-employee', [EmployeeManagementController::class, 'index_inactive'])->middleware('auth');
-    Route::get('list-inactive-employee-search', [EmployeeManagementController::class, 'search_inactive']);
-
     // attendance - leave
     Route::get('/leave-request', [LeaveManagementController::class, 'create'])->middleware('auth');
     Route::get('/leaves-summary', [LeaveManagementController::class, 'index'])->middleware('auth');
     Route::get('leaves-summary-search', [LeaveManagementController::class, 'leave_summary_search']);
-    Route::get('/allocation-request', [LeaveManagementController::class, 'allocation'])->middleware('auth');
-    Route::get('allocation-request-search', [LeaveManagementController::class, 'allocation_search']);
     Route::post('leave-request-add', [LeaveManagementController::class, 'store']);
     Route::get('leave-request-edit/{id_data_cuti}', [LeaveManagementController::class, 'edit'])->middleware('auth');
     Route::post('leave-request-update', [LeaveManagementController::class, 'update']);

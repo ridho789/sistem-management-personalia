@@ -32,7 +32,7 @@ class CheckRoleUser
                     return redirect('/dashboard');
                     break;
                 case 2:
-                    return redirect('/list-employee');
+                    return redirect('/leaves-summary');
                     break;
                 case 3:
                     return redirect('/list-daily-report');
