@@ -13,7 +13,7 @@ class DailyReportManagementController extends Controller
     public function index() {
         $dailyReport = DailyReport::whereHas('employee', function ($query) {
             $query->where('is_active', true);
-        })->orderBy('tanggal_catatan_harian', 'asc')->get();
+        })->orderBy('tanggal_catatan_harian', 'desc')->get();
 
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idCard = Employee::pluck('id_card', 'id_karyawan');

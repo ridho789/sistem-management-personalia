@@ -22,7 +22,7 @@ class LeaveManagementController extends Controller
     public function index() {
         $dataleave = DataLeave::whereHas('employee', function ($query) {
             $query->where('is_active', true);
-        })->orderBy('mulai_cuti', 'asc')->get();
+        })->orderBy('mulai_cuti', 'desc')->get();
         
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
