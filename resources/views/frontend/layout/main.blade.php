@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>@yield('title', 'Sistem Management Personalia')</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('') }}asset/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('') }}asset/images/personalia.png">
     <link rel="stylesheet" href="{{ asset('') }}asset/vendor/owl-carousel/css/owl.carousel.min.css">
     <link rel="stylesheet" href="{{ asset('') }}asset/vendor/owl-carousel/css/owl.theme.default.min.css">
     <link href="{{ asset('') }}asset/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
