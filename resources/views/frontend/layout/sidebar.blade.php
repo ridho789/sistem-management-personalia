@@ -36,7 +36,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ url('/list-employee') }}">List Employee</a></li>
                             <li><a href="{{ url('/list-inactive-employee') }}">List Inactive Employee</a></li>
-                            <li><a href="{{ url('/form-employee') }}">Form Employee</a></li>
+                            <!-- <li><a href="{{ url('/form-employee') }}">Form Employee</a></li> -->
                         </ul>
                     </li>
                     <!-- di hide karena fitur aset akan dipisah -->
@@ -55,7 +55,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('/allocation-request') }}">Allocation Requests</a></li>
-                            <li><a href="{{ url('/leave-request') }}">Leave Request</a></li>
+                            <!-- <li><a href="{{ url('/leave-request') }}">Leave Request</a></li> -->
                             <li><a href="{{ url('/leaves-summary') }}">Leaves Summary</a></li>
                             <li><a href="{{ url('/collective-leave') }}">Collective Leave</a></li>
                         </ul>
@@ -71,13 +71,9 @@
                         </a>
                     </li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <a href="{{ url('/list-daily-report') }}" aria-expanded="false">
                             <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('/list-daily-report') }}">List Daily Report</a></li>
-                            <li><a href="{{ url('/form-daily-report') }}">Form Daily Report</a></li>
-                        </ul>
                     </li>
 
                 @elseif (Auth::user()->level == 1)
@@ -110,7 +106,7 @@
                         <ul aria-expanded="false">
                             <li><a href="{{ url('/list-employee') }}">List Employee</a></li>
                             <li><a href="{{ url('/list-inactive-employee') }}">List Inactive Employee</a></li>
-                            <li><a href="{{ url('/form-employee') }}">Form Employee</a></li>
+                            <!-- <li><a href="{{ url('/form-employee') }}">Form Employee</a></li> -->
                         </ul>
                     </li>
                     <!-- di hide karena fitur aset akan dipisah -->
@@ -129,7 +125,7 @@
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('/allocation-request') }}">Allocation Requests</a></li>
-                            <li><a href="{{ url('/leave-request') }}">Leave Request</a></li>
+                            <!-- <li><a href="{{ url('/leave-request') }}">Leave Request</a></li> -->
                             <li><a href="{{ url('/leaves-summary') }}">Leaves Summary</a></li>
                             <li><a href="{{ url('/collective-leave') }}">Collective Leave</a></li>
                         </ul>
@@ -145,37 +141,25 @@
                         </a>
                     </li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <a href="{{ url('/list-daily-report') }}" aria-expanded="false">
                             <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('/list-daily-report') }}">List Daily Report</a></li>
-                            <li><a href="{{ url('/form-daily-report') }}">Form Daily Report</a></li>
-                        </ul>
                     </li>
                     
                 @elseif (Auth::user()->level == 2)
                     <li class="nav-label">Management</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <a href="{{ url('/leaves-summary') }}" aria-expanded="false">
                             <i class="icon icon-attach-87"></i><span class="nav-text">Leave</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('/leave-request') }}">Leave Request</a></li>
-                            <li><a href="{{ url('/leaves-summary') }}">Leaves Summary</a></li>
-                        </ul>
                     </li>
 
                 @elseif (Auth::user()->level == 3)
                     <li class="nav-label">Management</li>
                     <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                        <a href="{{ url('/list-daily-report') }}" aria-expanded="false">
                             <i class="icon icon-book-open-2"></i><span class="nav-text">Daily Report</span>
                         </a>
-                        <ul aria-expanded="false">
-                            <li><a href="{{ url('/list-daily-report') }}">List Daily Report</a></li>
-                            <li><a href="{{ url('/form-daily-report') }}">Form Daily Report</a></li>
-                        </ul>
                     </li>
                 @endif
             @endif
