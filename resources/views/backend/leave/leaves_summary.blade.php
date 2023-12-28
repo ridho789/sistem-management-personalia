@@ -131,6 +131,28 @@
                                     </tbody>
                                 </table>
 
+                                <div class="mt-5 d-flex justify-content-start">
+                                    <ul class="pagination pagination-sm pagination-gutter">
+                                        <li class="page-item page-indicator {{ $dataleave->onFirstPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $dataleave->previousPageUrl() }}" aria-label="Previous">
+                                                <i class="icon-arrow-left"></i>
+                                            </a>
+                                        </li>
+
+                                        @for ($i = 1; $i <= $dataleave->lastPage(); $i++)
+                                            <li class="page-item {{ $dataleave->currentPage() == $i ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $dataleave->url($i) }}">{{ $i }}</a>
+                                            </li>
+                                        @endfor
+
+                                        <li class="page-item page-indicator {{ $dataleave->hasMorePages() ? '' : 'disabled' }}">
+                                            <a class="page-link" href="{{ $dataleave->nextPageUrl() }}" aria-label="Next">
+                                                <i class="icon-arrow-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <!-- Modal -->
                                 <div class="modal fade" id="cancelledLeave">
                                     <div class="modal-dialog modal-dialog-centered" role="document">

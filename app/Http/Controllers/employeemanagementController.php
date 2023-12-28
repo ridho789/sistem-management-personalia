@@ -14,7 +14,7 @@ use PDF;
 class EmployeeManagementController extends Controller
 {
     public function index() {   
-        $employee = Employee::where('is_active', true)->get();
+        $employee = Employee::where('is_active', true)->paginate(50);
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
@@ -33,7 +33,7 @@ class EmployeeManagementController extends Controller
     }
 
     public function index_inactive() {   
-        $employee = Employee::where('is_active', false)->get();
+        $employee = Employee::where('is_active', false)->paginate(50);
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
@@ -219,7 +219,8 @@ class EmployeeManagementController extends Controller
         $employees = Employee::where(function ($query) use ($search) {
             $query->where('nama_karyawan', 'like', "%$search%")
                 ->orWhere('id_card', 'like', "%$search%");
-        })->where('is_active', true)->where('id_divisi', $id_divisi)->get();
+        })->where('is_active', true)->where('id_divisi', $id_divisi)
+        ->paginate(50)->appends($request->except('page'));
 
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
@@ -230,7 +231,7 @@ class EmployeeManagementController extends Controller
 
         // Jika tidak ada hasil pencarian, ambil semua karyawan aktif
         if ($employees->isEmpty()) {
-            $employees = Employee::where('is_active', true)->get();
+            $employees = Employee::where('is_active', true)->paginate(50);
         }
 
         return view('/backend/employee/list_employee', [
@@ -249,7 +250,7 @@ class EmployeeManagementController extends Controller
         $employees = Employee::where(function ($query) use ($search) {
             $query->where('nama_karyawan', 'like', "%$search%")
                 ->orWhere('id_card', 'like', "%$search%");
-        })->where('is_active', false)->get();
+        })->where('is_active', false)->paginate(50)->appends($request->except('page'));
 
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
@@ -258,7 +259,7 @@ class EmployeeManagementController extends Controller
 
         // Jika tidak ada hasil pencarian, ambil semua karyawan tidak aktif
         if ($employees->isEmpty()) {
-            $employees = Employee::where('is_active', false)->get();
+            $employees = Employee::where('is_active', false)->paginate(50);
         }
 
         return view('/backend/employee/list_inactive_employee', [

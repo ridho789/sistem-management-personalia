@@ -106,7 +106,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="mt-3" id="download-pdf" style="display: block;">
+
+                            <div class="mt-2" id="download-pdf" style="display: block;">
                                 <form action="{{ url('list-employee-print') }}" method="POST" id="pdf-form">
                                     @csrf
                                     <input type="hidden" name="dataSearch" id="dataSearchInput">
@@ -117,6 +118,28 @@
                                         </span>Download PDF
                                     </button>
                                 </form>
+                            </div>
+
+                            <div class="mt-5 d-flex justify-content-start">
+                                <ul class="pagination pagination-sm pagination-gutter">
+                                    <li class="page-item page-indicator {{ $tbl_karyawan->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $tbl_karyawan->previousPageUrl() }}" aria-label="Previous">
+                                            <i class="icon-arrow-left"></i>
+                                        </a>
+                                    </li>
+
+                                    @for ($i = 1; $i <= $tbl_karyawan->lastPage(); $i++)
+                                        <li class="page-item {{ $tbl_karyawan->currentPage() == $i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $tbl_karyawan->url($i) }}">{{ $i }}</a>
+                                        </li>
+                                    @endfor
+
+                                    <li class="page-item page-indicator {{ $tbl_karyawan->hasMorePages() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $tbl_karyawan->nextPageUrl() }}" aria-label="Next">
+                                            <i class="icon-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
 
                         @else

@@ -22,7 +22,7 @@ class LeaveManagementController extends Controller
     public function index() {
         $dataleave = DataLeave::whereHas('employee', function ($query) {
             $query->where('is_active', true);
-        })->orderBy('mulai_cuti', 'desc')->get();
+        })->orderBy('mulai_cuti', 'desc')->paginate(50);
         
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
         $idcard = Employee::pluck('id_card', 'id_karyawan');
@@ -56,7 +56,7 @@ class LeaveManagementController extends Controller
             ->where('id_status', '!=', $statusEmployee)
             ->get();
 
-        $query = DataLeave::query()->orderBy('mulai_cuti', 'asc');
+        $query = DataLeave::query()->orderBy('mulai_cuti', 'desc');
 
         if ($id_karyawan) {
             $query->where('id_karyawan', $id_karyawan);
@@ -71,7 +71,7 @@ class LeaveManagementController extends Controller
             return redirect('/leaves-summary');
 
         } else {
-            $dataleave = $query->get();
+            $dataleave = $query->paginate(50)->appends($request->except('page'));
         }
 
         if (count($dataleave) == 0) {

@@ -104,6 +104,28 @@
                                 </table>
                             </div>
 
+                            <div class="mt-5 d-flex justify-content-start">
+                                <ul class="pagination pagination-sm pagination-gutter">
+                                    <li class="page-item page-indicator {{ $dailyReport->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $dailyReport->previousPageUrl() }}" aria-label="Previous">
+                                            <i class="icon-arrow-left"></i>
+                                        </a>
+                                    </li>
+
+                                    @for ($i = 1; $i <= $dailyReport->lastPage(); $i++)
+                                        <li class="page-item {{ $dailyReport->currentPage() == $i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $dailyReport->url($i) }}">{{ $i }}</a>
+                                        </li>
+                                    @endfor
+
+                                    <li class="page-item page-indicator {{ $dailyReport->hasMorePages() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $dailyReport->nextPageUrl() }}" aria-label="Next">
+                                            <i class="icon-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
                         @else
                             <div class="mt-3">
                                 <span style="text-align: center;">

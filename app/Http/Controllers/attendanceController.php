@@ -310,10 +310,10 @@ class AttendanceController extends Controller
             }
         }
     
-        $allattendance = Attendance::orderBy('attendance_date', 'asc')
+        $allattendance = Attendance::orderBy('attendance_date', 'desc')
             ->whereHas('employee', function ($query) {
                 $query->where('is_active', true);
-            })->get();
+            })->paginate(100);
 
         $nameEmployee = Employee::pluck('nama_karyawan', 'id_karyawan');
 
@@ -330,7 +330,7 @@ class AttendanceController extends Controller
         $start_date_range = $request->start_date;
         $end_date_range = $request->end_date;
 
-        $query = Attendance::query()->orderBy('attendance_date', 'asc');
+        $query = Attendance::query()->orderBy('attendance_date', 'desc');
 
         if ($id_karyawan) {
             $query->where('employee', $id_karyawan);
@@ -342,9 +342,10 @@ class AttendanceController extends Controller
 
         if (!$id_karyawan && (!$start_date_range || !$end_date_range)) {
             // Jika tidak ada filter yang diterapkan, tampilkan semua data
-            $allattendance = $query->get();
+            return redirect('/list-attendance');
+            
         } else {
-            $allattendance = $query->get();
+            $allattendance = $query->paginate(100)->appends($request->except('page'));
         }
 
         $employee = Employee::where('is_active', true)->get();
