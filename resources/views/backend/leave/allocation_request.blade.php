@@ -88,6 +88,43 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <div class="mt-3">
+                                <form action="{{ url('allocation-request-status') }}" method="POST">
+                                    @csrf
+                                    <label>Update status allocation</label>
+                                    <input type="hidden" id="allSelectRow" name="allSelectRow" value="">
+                                    <div class="form-group row">
+                                        <div class="col-sm-3">
+                                            <button type="submit" id="searchButtonCashed" class="btn btn-secondary" name="action" value="cashed" disabled>Cashed</button>
+                                            <button type="submit" id="searchButtonDefault" class="btn btn-dark" name="action" value="default" disabled>Set Default</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-5 d-flex justify-content-start">
+                                <ul class="pagination pagination-sm pagination-gutter">
+                                    <li class="page-item page-indicator {{ $allocationRequest->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $allocationRequest->previousPageUrl() }}" aria-label="Previous">
+                                            <i class="icon-arrow-left"></i>
+                                        </a>
+                                    </li>
+
+                                    @for ($i = 1; $i <= $allocationRequest->lastPage(); $i++)
+                                        <li class="page-item {{ $allocationRequest->currentPage() == $i ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $allocationRequest->url($i) }}">{{ $i }}</a>
+                                        </li>
+                                    @endfor
+
+                                    <li class="page-item page-indicator {{ $allocationRequest->hasMorePages() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $allocationRequest->nextPageUrl() }}" aria-label="Next">
+                                            <i class="icon-arrow-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
                         @else
                             <div class="mt-3">
                                 <span style="text-align: center;">
@@ -96,21 +133,6 @@
                             </div>
                         @endif
                     </div>
-                    @if ($allocationRequest)
-                        <div class="card-body">
-                            <form action="{{ url('allocation-request-status') }}" method="POST">
-                                @csrf
-                                <label>Update status allocation</label>
-                                <input type="hidden" id="allSelectRow" name="allSelectRow" value="">
-                                <div class="form-group row">
-                                    <div class="col-sm-3">
-                                        <button type="submit" id="searchButtonCashed" class="btn btn-secondary" name="action" value="cashed" disabled>Cashed</button>
-                                        <button type="submit" id="searchButtonDefault" class="btn btn-dark" name="action" value="default" disabled>Set Default</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    @endif
                 </div>
             </div>
         </div>

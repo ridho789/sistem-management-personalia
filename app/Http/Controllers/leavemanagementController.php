@@ -554,7 +554,7 @@ class LeaveManagementController extends Controller
         if ($statusEmployee && is_object($statusEmployee)) {
             $allocationRequest = AllocationRequest::whereHas('employee', function ($query) use ($statusEmployee) {
                 $query->where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status]);
-            })->get();
+            })->paginate(50);
             
         } else {
             $allocationRequest = null;
@@ -600,33 +600,28 @@ class LeaveManagementController extends Controller
 
         // Jika tidak ada hasil pencarian, tampilkan semua AllocationRequest
         if (empty($id_employee)) {
-            $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
-                $query->where('is_active', true);
-            })->get();
+            return redirect('/allocation-request');
             
         } else {
             $checkLegalLeave = $request->id_legal_leave;
             if ($checkLegalLeave == 'all') {
                 // Temukan AllocationRequest yang sesuai dengan id karyawan
-                $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->get();
+                $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)->paginate(50)->appends($request->except('page'));
+
                 if ($allocationRequest->count() === 0) {
-                    $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
-                        $query->where('is_active', true);
-                    })->get();
+                    return redirect('/allocation-request');
                 } 
 
             } else {
                 // Temukan AllocationRequest yang sesuai dengan id karyawan
                 $allocationRequest = AllocationRequest::whereIn('id_karyawan', $id_employee)
                     ->where('id_tipe_cuti', $checkLegalLeave)
-                    ->get();
+                    ->paginate(50)->appends($request->except('page'));
+
                 if ($allocationRequest->count() === 0) {
-                    $allocationRequest = AllocationRequest::whereHas('employee', function ($query) {
-                        $query->where('is_active', true);
-                    })->get();
+                    return redirect('/allocation-request');
                 }
             }
-
         }
         
         // Temukan DataLeave berdasarkan id karyawan yang ada di AllocationRequest
