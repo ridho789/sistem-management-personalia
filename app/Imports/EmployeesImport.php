@@ -40,6 +40,10 @@ class EmployeesImport implements ToCollection
             $date = date_create_from_format('Y-m-d', $dateText);
             $date_format = date_format($date, 'Y-m-d');
 
+            if ($date !== false) {
+                $lastTwoDigitsOfYear = date_format($date, 'y');
+            }
+
             // periksa kolom tanggal harus berupa teks
             if (!is_string($row[3])) {
                 // Catat pesan kesalahan jika nilai bukan teks
@@ -73,6 +77,7 @@ class EmployeesImport implements ToCollection
                 $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
                 if ($dateStartJoining !== false) {
                     $dateFormatStartJoining = date_format($dateStartJoining, 'Y-m-d');
+                    $lastTwoDigitsOfYearStartJoining = date_format($dateStartJoining, 'y');
                 }
             }
 
@@ -108,8 +113,13 @@ class EmployeesImport implements ToCollection
                 }                
             }
 
+            
+            // generate id card
+            $randomDigits = rand(1, 999);
+            $formattedRandomDigits = str_pad($randomDigits, 3, '0', STR_PAD_LEFT);
+            $idcard = strval($lastTwoDigitsOfYear) . strval($lastTwoDigitsOfYearStartJoining) . strval($formattedRandomDigits);
+            
             // cek jumlah digit ID card
-            $idcard = $row[17];
             $total_digit = strlen(strval($idcard));
 
             if ($total_digit != 7) {
@@ -117,10 +127,10 @@ class EmployeesImport implements ToCollection
                     $this->logErrors[] = $errorMessage;
             }
 
-            // periksa kolom nik dan id card
-            $key = $row[1]. '-'.$row[17];
+            // periksa kolom nik dan start joining
+            $key = $row[1]. '-'.$row[16];
             if (isset($uniqueValues[$key])){
-                $errorMessage = 'Error importing data: Duplikasi berdasarkan NIK dan ID Card ditemukan di baris ' . $currentRow;
+                $errorMessage = 'Error importing data: Duplikasi berdasarkan NIK ditemukan di baris ' . $currentRow;
                 $this->logErrors[] = $errorMessage;
 
             } else {
@@ -143,7 +153,7 @@ class EmployeesImport implements ToCollection
                     'id_status' => $status->id_status,
                     'awal_bergabung' => $dateFormatStartJoining,
                     'gaji_pokok' => $basic_salary_idr,
-                    'id_card' => $row[17],
+                    'id_card' => $idcard,
                 ];
             
                 if (strtolower($status->nama_status) == 'kontrak') {
