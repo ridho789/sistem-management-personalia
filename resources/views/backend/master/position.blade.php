@@ -187,32 +187,46 @@
             });
         });
 
-        // Fungsi untuk mengubah angka ke format IDR
-        function formatToIDR(amount) {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
-        }
+        // function formatToIDR(amount) {
+        //     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+        // }
 
-        // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
-        function updateIDRFormat(inputElement) {
-            const value = inputElement.value;
-            const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+        // function updateIDRFormat(inputElement) {
+        //     const value = inputElement.value;
+        //     const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
 
-            if (!isNaN(numericValue)) {
-                inputElement.value = formatToIDR(numericValue);
+        //     if (!isNaN(numericValue)) {
+        //         inputElement.value = formatToIDR(numericValue);
+        //     }
+        // }
+
+        // const inputSelectors = [
+        //     '.form-control.input-new-position-allowance',
+        //     '.form-control.input-edit-position-allowance'
+        // ];
+
+        // inputSelectors.forEach(function (selector) {
+        //     const inputElements = document.querySelectorAll(selector);
+        //     inputElements.forEach(function (inputElement) {
+        //         inputElement.addEventListener('blur', function () {
+        //             updateIDRFormat(this);
+        //         });
+        //     });
+        // });
+
+        function formatCurrency(num) {
+            num = num.toString().replace(/\D/g, '');
+            if (num.length > 2) {
+                num = num.slice(0, -2) + ",00";
             }
+            return "Rp " + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // Event listener untuk memanggil fungsi saat input berhenti diedit
-        const inputSelectors = [
-            '.form-control.input-new-position-allowance',
-            '.form-control.input-edit-position-allowance'
-        ];
-
-        inputSelectors.forEach(function (selector) {
-            const inputElements = document.querySelectorAll(selector);
-            inputElements.forEach(function (inputElement) {
-                inputElement.addEventListener('blur', function () {
-                    updateIDRFormat(this);
+        document.addEventListener('DOMContentLoaded', function() {
+            let inputPrices = document.querySelectorAll("#position-allowance, #edit-position-allowance");
+            inputPrices.forEach(function(inputPrice) {
+                inputPrice.addEventListener("input", function() {
+                    this.value = formatCurrency(this.value);
                 });
             });
         });
