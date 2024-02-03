@@ -331,9 +331,10 @@ class PayrollController extends Controller
 
         if (count($checkPayroll) > 0) {
             $payrollId = $checkPayroll->first()->id_gaji;
+            Payroll::where('id_gaji', $payrollId)->delete();
         }
 
-        if (empty($errorInfo) && $checkPayroll->isEmpty()) {
+        if (empty($errorInfo)) {
             $payroll = Payroll::create($payrollData);
             $payrollId = $payroll->id;
             $dataPayroll = Payroll::where('id_gaji', $payrollId)->first();
