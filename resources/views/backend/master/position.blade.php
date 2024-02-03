@@ -216,6 +216,10 @@
 
         function formatCurrency(num) {
             num = num.toString().replace(/\D/g, '');
+            if (num === '') {
+                    num = '0';
+                }
+                
             if (num.length > 2) {
                 num = num.slice(0, -2) + ",00";
             }

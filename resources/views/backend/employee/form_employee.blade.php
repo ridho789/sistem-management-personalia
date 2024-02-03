@@ -856,33 +856,47 @@
             // Set initial state based on the value of val_status on page load
             toggleContractStatus();
             
-            // Fungsi untuk mengubah angka ke format IDR
-            function formatToIDR(amount) {
-                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
-            }
+            // // Fungsi untuk mengubah angka ke format IDR
+            // function formatToIDR(amount) {
+            //     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+            // }
     
-            // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
-            function updateIDRFormat(inputElement) {
-                const value = inputElement.value;
-                const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
+            // // Fungsi untuk mengubah nilai input menjadi format IDR saat selesai mengedit
+            // function updateIDRFormat(inputElement) {
+            //     const value = inputElement.value;
+            //     const numericValue = parseFloat(value.replace(/[^\d.-]/g, ''));
     
-                if (!isNaN(numericValue)) {
-                    inputElement.value = formatToIDR(numericValue);
+            //     if (!isNaN(numericValue)) {
+            //         inputElement.value = formatToIDR(numericValue);
+            //     }
+            // }
+    
+            // // Event listener untuk memanggil fungsi saat input berhenti diedit
+            // const inputSelectors = [
+            //     '.form-control.val_basic_salary',
+            // ];
+    
+            // inputSelectors.forEach(function (selector) {
+            //     const inputElements = document.querySelectorAll(selector);
+            //     inputElements.forEach(function (inputElement) {
+            //         inputElement.addEventListener('blur', function () {
+            //             updateIDRFormat(this);
+            //         });
+            //     });
+            // });
+
+            // format currency
+            function formatCurrency(num) {
+                num = num.toString().replace(/\D/g, '');
+                if (num === '') {
+                    num = '0';
                 }
+                return "Rp " + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             }
-    
-            // Event listener untuk memanggil fungsi saat input berhenti diedit
-            const inputSelectors = [
-                '.form-control.val_basic_salary',
-            ];
-    
-            inputSelectors.forEach(function (selector) {
-                const inputElements = document.querySelectorAll(selector);
-                inputElements.forEach(function (inputElement) {
-                    inputElement.addEventListener('blur', function () {
-                        updateIDRFormat(this);
-                    });
-                });
+
+            let inputPrice = document.getElementById("val_basic_salary");
+            inputPrice.addEventListener("input", function() {
+                this.value = formatCurrency(this.value);
             });
     
             // show/hide form create by excel
