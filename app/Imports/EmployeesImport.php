@@ -35,52 +35,6 @@ class EmployeesImport implements ToCollection
                 continue;
             }
 
-            // date format
-            $dateText =  $row[3];
-            $date = date_create_from_format('Y-m-d', $dateText);
-            $date_format = date_format($date, 'Y-m-d');
-
-            if ($date !== false) {
-                $lastTwoDigitsOfYear = date_format($date, 'y');
-            }
-
-            // periksa kolom tanggal harus berupa teks
-            if (!is_string($row[3])) {
-                // Catat pesan kesalahan jika nilai bukan teks
-                $errorMessage = 'Error importing data: Nilai kolom tanggal bukan teks di baris ' . $currentRow;
-
-                // Tambahkan pesan kesalahan ke dalam array logErrors
-                $this->logErrors[] = $errorMessage;
-            }
-
-            // date format (awal kontrak)
-            $dateTextStartContract =  $row[14];
-            if ($dateTextStartContract) {
-                $dateStartContract = date_create_from_format('Y-m-d', $dateTextStartContract);
-                if ($dateStartContract !== false) {
-                    $dateFormatStartContract = date_format($dateStartContract, 'Y-m-d');
-                }
-            }
-
-            // date format (selesai kontrak)
-            $dateTextEndContract =  $row[15];
-            if ($dateTextEndContract) {
-                $dateEndContract = date_create_from_format('Y-m-d', $dateTextEndContract);
-                if ($dateEndContract !== false) {
-                    $dateFormatEndContract = date_format($dateEndContract, 'Y-m-d');
-                }
-            }
-
-            // date format (awal bergabung)
-            $dateTextStartJoining =  $row[16];
-            if ($dateTextStartJoining) {
-                $dateStartJoining = date_create_from_format('Y-m-d', $dateTextStartJoining);
-                if ($dateStartJoining !== false) {
-                    $dateFormatStartJoining = date_format($dateStartJoining, 'Y-m-d');
-                    $lastTwoDigitsOfYearStartJoining = date_format($dateStartJoining, 'y');
-                }
-            }
-
             $uniqueValues = []; // Array untuk menyimpan nilai unik
 
             $namePosition = $row[8];
@@ -117,7 +71,7 @@ class EmployeesImport implements ToCollection
             // generate id card
             $randomDigits = rand(1, 999);
             $formattedRandomDigits = str_pad($randomDigits, 3, '0', STR_PAD_LEFT);
-            $idcard = strval($lastTwoDigitsOfYear) . strval($lastTwoDigitsOfYearStartJoining) . strval($formattedRandomDigits);
+            $idcard = strval(date_format(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]), 'y')) . strval(date_format(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[16]), 'y')) . strval($formattedRandomDigits);
             
             // cek jumlah digit ID card
             $total_digit = strlen(strval($idcard));
@@ -142,7 +96,7 @@ class EmployeesImport implements ToCollection
                     'nama_karyawan' => $row[0],
                     'nik' => $row[1],
                     'tempat_lahir' => $row[2],
-                    'tanggal_lahir' => $date_format,
+                    'tanggal_lahir' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]),
                     'jenis_kelamin' => $row[4],
                     'no_telp' => $row[5],
                     'lokasi' => $row[6],
@@ -151,15 +105,15 @@ class EmployeesImport implements ToCollection
                     'id_divisi' => $division->id_divisi,
                     'id_perusahaan' => $company->id_perusahaan,
                     'id_status' => $status->id_status,
-                    'awal_bergabung' => $dateFormatStartJoining,
+                    'awal_bergabung' => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[16]),
                     'gaji_pokok' => $basic_salary_idr,
                     'id_card' => $idcard,
                 ];
             
                 if (strtolower($status->nama_status) == 'kontrak') {
                     $employeeData['lama_kontrak'] = $row[13];
-                    $employeeData['awal_masa_kontrak'] = $dateFormatStartContract;
-                    $employeeData['akhir_masa_kontrak'] = $dateFormatEndContract;
+                    $employeeData['awal_masa_kontrak'] = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[14]);
+                    $employeeData['akhir_masa_kontrak'] = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[15]);
 
                 }
 
