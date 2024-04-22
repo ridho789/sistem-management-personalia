@@ -9,7 +9,7 @@ class DivisionController extends Controller
 {
     public function index()
     {   
-        $division = DB::table('tbl_divisi')->get();
+        $division = DB::table('tbl_divisi')->orderBy('nama_divisi')->get();
         return view('/backend/master/division', ['tbl_divisi' => $division]);
     }
 

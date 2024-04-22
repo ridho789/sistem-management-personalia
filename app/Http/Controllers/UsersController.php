@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class UsersController extends Controller
 {
     public function index() {
-        $users = User::where('level', '!=', '0')->get();
+        $users = User::where('level', '!=', '0')->orderBy('name')->get();
 
         return view('backend/master/users', [
             'users' => $users

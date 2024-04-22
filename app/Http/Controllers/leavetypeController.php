@@ -10,7 +10,7 @@ class LeaveTypeController extends Controller
 {
     public function index()
     {   
-        $typeLeave = TypeLeave::all();
+        $typeLeave = TypeLeave::orderBy('nama_tipe_cuti')->get();
         return view('/backend/master/leave_type', ['tbl_tipe_cuti' => $typeLeave]);
     }
 
