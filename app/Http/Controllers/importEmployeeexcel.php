@@ -29,19 +29,21 @@ class ImportEmployeeexcel extends Controller
                 $logErrors = $import->getLogErrors();
 
                 if ($logErrors) {
-                    $employee = '';
-                    $division = Divisi::all();
-                    $position = Position::all();
-                    $company = Company::all();
-                    $statusEmployee = StatusEmployee::all();
-                    return view('/backend/employee/form_employee', [
-                        'employee' => $employee, 
-                        'division' => $division, 
-                        'position' => $position, 
-                        'company' => $company, 
-                        'statusEmployee' => $statusEmployee,
-                        'logErrors' => $logErrors
-                    ]);
+                    // $employee = '';
+                    // $division = Divisi::all();
+                    // $position = Position::all();
+                    // $company = Company::all();
+                    // $statusEmployee = StatusEmployee::all();
+                    // return view('/backend/employee/form_employee', [
+                    //     'employee' => $employee, 
+                    //     'division' => $division, 
+                    //     'position' => $position, 
+                    //     'company' => $company, 
+                    //     'statusEmployee' => $statusEmployee,
+                    //     'logErrors' => $logErrors
+                    // ]);
+
+                    return redirect('/form-employee')->with('logErrors', $logErrors);
 
                 } else {
                     return redirect('/list-employee');
@@ -54,19 +56,21 @@ class ImportEmployeeexcel extends Controller
                     $logErrors = $sqlErrors;
                 }
 
-                $employee = '';
-                $division = Divisi::all();
-                $position = Position::all();
-                $company = Company::all();
-                $statusEmployee = StatusEmployee::all();
-                return view('/backend/employee/form_employee', [
-                    'employee' => $employee, 
-                    'division' => $division, 
-                    'position' => $position, 
-                    'company' => $company, 
-                    'statusEmployee' => $statusEmployee,
-                    'logErrors' => $logErrors
-                ]);
+                // $employee = '';
+                // $division = Divisi::all();
+                // $position = Position::all();
+                // $company = Company::all();
+                // $statusEmployee = StatusEmployee::all();
+                // return view('/backend/employee/form_employee', [
+                //     'employee' => $employee, 
+                //     'division' => $division, 
+                //     'position' => $position, 
+                //     'company' => $company, 
+                //     'statusEmployee' => $statusEmployee,
+                //     'logErrors' => $logErrors
+                // ]);
+
+                return redirect('/form-employee')->with('logErrors', $logErrors);
             }
         }
     }

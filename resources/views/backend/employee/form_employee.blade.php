@@ -43,18 +43,18 @@
                     </div>
                 </div>
                 <!-- Log Importing Data -->
-                @if($logErrors)
+                @if(session()->has('logErrors'))
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Error Log</h4>
                     </div>
                     <div class="card-body">
-                        <ul>@if(is_array($logErrors))
-                                @foreach($logErrors as $logError)
+                        <ul>@if(is_array(session('logErrors')))
+                                @foreach(session('logErrors') as $logError)
                                     <li>{{ $logError }}</li>
                                 @endforeach
                             @else
-                            {{ $logErrors }}
+                            {{ session('logErrors') }}
                             @endif
                         </ul>
                     </div>

@@ -214,13 +214,20 @@ class EmployeeManagementController extends Controller
 
     public function search(Request $request) {
         $search = $request->input('search');
-        $id_divisi = $request->id_divisi;
+        $id_divisi = $request->input('id_divisi');
 
-        $employees = Employee::where(function ($query) use ($search) {
-            $query->where('nama_karyawan', 'like', "%$search%")
-                ->orWhere('id_card', 'like', "%$search%");
-        })->where('is_active', true)->where('id_divisi', $id_divisi)
-        ->paginate(50)->appends($request->except('page'));
+        $employees = Employee::where(function ($query) use ($search, $id_divisi) {
+            if ($search) {
+                $query->where('nama_karyawan', 'like', "%$search%")
+                    ->orWhere('id_card', 'like', "%$search%");
+            }
+
+            if ($id_divisi) {
+                $query->where('id_divisi', $id_divisi);
+            }
+        })->where('is_active', true)
+        ->paginate(50)
+        ->appends($request->except('page'));
 
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');

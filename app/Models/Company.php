@@ -9,6 +9,11 @@ class Company extends Model
 {
     use HasFactory;
     protected $table = 'tbl_perusahaan';
-
     public $timestamps = true;
+    protected $primaryKey = 'id_perusahaan';
+
+    protected $fillable = [
+        'nama_perusahaan',
+        'alamat_perusahaan'
+    ];
 }
