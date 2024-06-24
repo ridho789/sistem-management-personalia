@@ -108,31 +108,33 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_place_birth">Place of birth
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs">BPJS</label>
+                                            <div class="col-lg-6">
+                                                <input type="number" class="form-control @error('val_bpjs') is-invalid @enderror" 
+                                                id="val_bpjs" name="val_bpjs" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs', $employee->bpjs) }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_place_birth">Place of birth</label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
                                                 id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." 
-                                                value="{{ old('val_place_birth', $employee->tempat_lahir) }}" required>
+                                                value="{{ old('val_place_birth', $employee->tempat_lahir) }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_date_birth">Date of birth
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_date_birth">Date of birth</label>
                                             <div class="col-lg-6">
                                                 <input type="date" class="form-control" 
                                                 id="val_date_birth" min="1980-01-01" name="val_date_birth" 
-                                                value="{{ old('val_date_birth', $employee->tanggal_lahir) }}" required>
+                                                value="{{ old('val_date_birth', $employee->tanggal_lahir) }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_gender">Gender
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_gender">Gender</label>
                                             <div class="col-lg-6">
-                                                <select class="form-control" id="val_gender" name="val_gender" required>
+                                                <select class="form-control" id="val_gender" name="val_gender">
                                                     <option value="">Please select</option>
                                                     <option value="male" {{ old('val_gender', $employee->
                                                         jenis_kelamin) == 'male' ? 'selected' : '' }}>Male
@@ -144,48 +146,41 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_phone">Phone
-                                                <span class="text-danger">*</span>
+                                            <label class="col-lg-4 col-form-label" for="val_phone">Phone</label>
+                                            <div class="col-lg-6">
+                                                <div class="input-group-prepend">
+                                                    <input type="number" class="form-control" 
+                                                    id="val_phone" name="val_phone" placeholder="Enter a phone.." 
+                                                    value="{{ old('val_phone', $employee->no_telp) }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_emergency_contact">Emergency Contact
+                                            <span class="text-danger"> *</span>
                                             </label>
                                             <div class="col-lg-6">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+62</div>
-                                                    <input type="text" class="form-control" 
-                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" 
-                                                    value="{{ old('val_phone', $employee->no_telp) }}" required>
+                                                    <input type="number" class="form-control" 
+                                                    id="val_emergency_contact" name="val_emergency_contact" placeholder="Enter a contact.." 
+                                                    value="{{ old('val_emergency_contact', $employee->kontak_darurat) }}" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_location">Location
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_location">Location</label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
                                                 id="val_location" name="val_location" placeholder="Enter a location.." 
-                                                value="{{ old('val_location', $employee->lokasi) }}" required>
+                                                value="{{ old('val_location', $employee->lokasi) }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_address">Address
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_address">Address</label>
                                             <div class="col-lg-6">
                                                 <textarea class="form-control" id="val_address" name="val_address" rows="5" 
-                                                    placeholder="Enter a address.." required>{{ old('val_address', $employee->alamat) }}
+                                                    placeholder="Enter a address..">{{ old('val_address', $employee->alamat) }}
                                                 </textarea>
-                                            </div>
-                                        </div>
-                                        <div id="column_reason" style="display: none;">
-                                            <div class="form-group row">
-                                                <label class="col-lg-4 col-form-label" for="val_reason">Reason
-                                                    <span class="text-danger">*</span>
-                                                </label>
-                                                <div class="col-lg-6">
-                                                    <textarea class="form-control" id="val_reason" name="val_reason" rows="5" 
-                                                        placeholder="Enter a reason..">{{ old('val_reason', $employee->reason) }}
-                                                    </textarea>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -340,6 +335,20 @@
                                                 @enderror
                                             </div>
                                         </div>
+
+                                        <div id="column_reason" style="display: none;">
+                                            <div class="form-group row">
+                                                <label class="col-lg-4 col-form-label" for="val_reason">Reason for Deactivation
+                                                    <span class="text-danger">*</span>
+                                                </label>
+                                                <div class="col-lg-6">
+                                                    <textarea class="form-control" id="val_reason" name="val_reason" rows="5" 
+                                                        placeholder="Enter a reason..">{{ old('val_reason', $employee->reason) }}
+                                                    </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group row">
                                             <div class="col-lg-8 ml-auto">
                                                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -366,7 +375,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_nik">NIK<span
+                                            <label class="col-lg-4 col-form-label" for="val_nik">NIK <span
                                                     class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
@@ -379,31 +388,33 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_place_birth">Place of birth
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs">BPJS</label>
+                                            <div class="col-lg-6">
+                                                <input type="number" class="form-control @error('val_bpjs') is-invalid @enderror" 
+                                                id="val_bpjs" name="val_bpjs" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs') }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_place_birth">Place of birth</label>
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" 
                                                 id="val_place_birth" name="val_place_birth" placeholder="Enter a place of birth.." 
-                                                value="{{ old('val_place_birth') }}" required>
+                                                value="{{ old('val_place_birth') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_date_birth">Date of birth
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_date_birth">Date of birth</label>
                                             <div class="col-lg-6">
                                                 <input type="date" class="form-control" 
                                                 id="val_date_birth" min="1980-01-01" name="val_date_birth" 
-                                                value="{{ old('val_date_birth') }}" required>
+                                                value="{{ old('val_date_birth') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_gender">Gender
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_gender">Gender</label>
                                             <div class="col-lg-6">
-                                                <select class="form-control" id="val_gender" name="val_gender" required>
+                                                <select class="form-control" id="val_gender" name="val_gender">
                                                     <option value="">Please select</option>
                                                     <option value="male" {{ old('val_gender') == 'male' ? 'selected' : '' }}>Male</option>
                                                     <option value="female" {{ old('val_gender') == 'female' ? 'selected' : '' }}>Female</option>
@@ -411,35 +422,40 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_phone">Phone
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_phone">Phone</label>
                                             <div class="col-lg-6">
                                                 <div class="input-group-prepend">
-                                                    <div class="input-group-text">+62</div>
-                                                    <input type="text" class="form-control" 
-                                                    id="val_phone" name="val_phone" placeholder="000-0000-0000" 
-                                                    value="{{ old('val_phone') }}" required>
+                                                    <input type="number" class="form-control" 
+                                                    id="val_phone" name="val_phone" placeholder="Enter a phone.." 
+                                                    value="{{ old('val_phone') }}">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_location">Location
-                                                <span class="text-danger">*</span>
+                                            <label class="col-lg-4 col-form-label" for="val_emergency_contact">Emergency Contact
+                                            <span class="text-danger"> *</span>
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" 
-                                                id="val_location" name="val_location" placeholder="Enter a location.." 
-                                                value="{{ old('val_location') }}" required>
+                                                <div class="input-group-prepend">
+                                                    <input type="number" class="form-control" 
+                                                    id="val_emergency_contact" name="val_emergency_contact" placeholder="Enter a contact.." 
+                                                    value="{{ old('val_emergency_contact') }}" required>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_address">Address
-                                                <span class="text-danger">*</span>
-                                            </label>
+                                            <label class="col-lg-4 col-form-label" for="val_location">Location</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" 
+                                                id="val_location" name="val_location" placeholder="Enter a location.." 
+                                                value="{{ old('val_location') }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_address">Address</label>
                                             <div class="col-lg-6">
                                                 <textarea class="form-control" id="val_address" name="val_address" rows="5" 
-                                                placeholder="Enter a address.." required>{{ old('val_address') }}</textarea>
+                                                placeholder="Enter a address..">{{ old('val_address') }}</textarea>
                                             </div>
                                         </div>
                                     </div>

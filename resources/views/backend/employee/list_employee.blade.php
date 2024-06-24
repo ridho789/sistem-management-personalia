@@ -89,12 +89,12 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{$k->nama_karyawan}}</td>
                                             <td>{{$k->nik}}</td>
-                                            <td>{{$k->no_telp}}</td>
+                                            <td>{{$k->no_telp ?? '-'}}</td>
                                             <td>{{$k->id_card}}</td>
-                                            <td>{{ $positions[$k->id_jabatan] }}</td>
-                                            <td>{{ $divisions[$k->id_divisi] }}</td>
-                                            <td>{{ $companies[$k->id_perusahaan] }}</td>
-                                            <td>{{ $statuses[$k->id_status] }}</td>
+                                            <td>{{ $positions[$k->id_jabatan] ?? '-' }}</td>
+                                            <td>{{ $divisions[$k->id_divisi] ?? '-' }}</td>
+                                            <td>{{ $companies[$k->id_perusahaan] ?? '-' }}</td>
+                                            <td>{{ $statuses[$k->id_status] ?? '-' }}</td>
                                             <td>
                                                 <a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($k->id_karyawan)]) }}" 
                                                     id="edit-button" class="btn btn-secondary btn-sm edit-button"><i class="fa fa-pencil"></i>
