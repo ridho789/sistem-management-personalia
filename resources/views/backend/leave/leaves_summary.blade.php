@@ -280,7 +280,7 @@
             // Hilangkan space dalam value reason saat pertama kali diakses
             const reason = document.getElementById('reason');
     
-            if (reason.value.trim() === "") {
+            if (reason && reason.value.trim() === "") {
                 reason.value = reason.value.trim();
             }
         });

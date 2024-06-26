@@ -181,7 +181,7 @@ class EmployeesImport implements ToCollection
     {
         $randomDigits = rand(1, 999);
         $formattedRandomDigits = str_pad($randomDigits, 3, '0', STR_PAD_LEFT);
-        if ($row[19]) {
+        if ($row[19] && $row[19] != '-') {
             return $row[19];
         } else {
             if (($row[3] && $row[3] != '-') && ($row[16] && $row[16] != '-')) {
