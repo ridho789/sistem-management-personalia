@@ -9,7 +9,7 @@ class CompanyController extends Controller
 {
     public function index()
     {   
-        $company = DB::table('tbl_perusahaan')->get();
+        $company = DB::table('tbl_perusahaan')->orderBy('nama_perusahaan')->get();
         return view('/backend/master/company', ['tbl_perusahaan' => $company]);
     }
 

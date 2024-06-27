@@ -35,6 +35,7 @@ class DashboardController extends Controller
 
         $employeeExpiredContract = Employee::where('is_active', true)
             ->whereDate('akhir_masa_kontrak', '<=', Carbon::now()->addDays(30))
+            ->orderBy('nama_karyawan', 'asc')
             ->get();
 
         $countEmployeeExpiredContract = $employeeExpiredContract->count();

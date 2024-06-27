@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-header">                           
                         <h4 class="card-title">Leaves Summary</h4>
-                        @if (count($dataleave) > 0)
+                        @if (count($alldataleave) > 0)
                             <a href="{{ url('/leave-request') }}" class="btn btn-primary" 
                                 id="new-data-leave">+ Create request
                             </a>
@@ -65,7 +65,7 @@
                         </form>
                     </div>
                     <div class="card-body">
-                        @if (count($dataleave) > 0)
+                        @if (count($alldataleave) > 0)
                             <div class="table-responsive">
                                 <table class="table table-responsive-sm" id="data-table-data-leave" 
                                 class="display" style="width:100%">
@@ -83,7 +83,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($dataleave as $dl)
+                                        @foreach($alldataleave as $dl)
                                             <tr data-id="{{$dl->id_data_cuti}}">
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td><a href="{{ url('form-employee-edit', ['id' => Crypt::encrypt($dl->id_karyawan)]) }}">
@@ -133,20 +133,20 @@
 
                                 <div class="mt-5 d-flex justify-content-start">
                                     <ul class="pagination pagination-sm pagination-gutter">
-                                        <li class="page-item page-indicator {{ $dataleave->onFirstPage() ? 'disabled' : '' }}">
-                                            <a class="page-link" href="{{ $dataleave->previousPageUrl() }}" aria-label="Previous">
+                                        <li class="page-item page-indicator {{ $alldataleave->onFirstPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $alldataleave->previousPageUrl() }}" aria-label="Previous">
                                                 <i class="icon-arrow-left"></i>
                                             </a>
                                         </li>
 
-                                        @for ($i = 1; $i <= $dataleave->lastPage(); $i++)
-                                            <li class="page-item {{ $dataleave->currentPage() == $i ? 'active' : '' }}">
-                                                <a class="page-link" href="{{ $dataleave->url($i) }}">{{ $i }}</a>
+                                        @for ($i = 1; $i <= $alldataleave->lastPage(); $i++)
+                                            <li class="page-item {{ $alldataleave->currentPage() == $i ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $alldataleave->url($i) }}">{{ $i }}</a>
                                             </li>
                                         @endfor
 
-                                        <li class="page-item page-indicator {{ $dataleave->hasMorePages() ? '' : 'disabled' }}">
-                                            <a class="page-link" href="{{ $dataleave->nextPageUrl() }}" aria-label="Next">
+                                        <li class="page-item page-indicator {{ $alldataleave->hasMorePages() ? '' : 'disabled' }}">
+                                            <a class="page-link" href="{{ $alldataleave->nextPageUrl() }}" aria-label="Next">
                                                 <i class="icon-arrow-right"></i>
                                             </a>
                                         </li>

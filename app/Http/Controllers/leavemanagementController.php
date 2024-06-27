@@ -20,8 +20,8 @@ use Illuminate\Support\Str;
 class LeaveManagementController extends Controller
 {
     public function index() {
-        $dataleave = DataLeave::whereHas('employee', function ($query) {
-            $query->where('is_active', true);
+        $alldataleave = DataLeave::whereHas('employee', function ($query) {
+            $query->where('is_active', true)->orderBy('nama_karyawan', 'asc');
         })->orderBy('mulai_cuti', 'desc')->paginate(50);
         
         $employee = Employee::pluck('nama_karyawan', 'id_karyawan');
@@ -31,10 +31,11 @@ class LeaveManagementController extends Controller
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
         $dataEmployee = Employee::where('is_active', true)
             ->where('id_status', '!=', $statusEmployee)
+            ->orderBy('nama_karyawan', 'asc')
             ->get();
 
         return view('/backend/leave/leaves_summary', [
-            'dataleave' => $dataleave,
+            'alldataleave' => $alldataleave,
             'dataEmployee' => $dataEmployee,
             'employee' => $employee,
             'idcard' => $idcard,
@@ -54,6 +55,7 @@ class LeaveManagementController extends Controller
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
         $dataEmployee = Employee::where('is_active', true)
             ->where('id_status', '!=', $statusEmployee)
+            ->orderBy('nama_karyawan', 'asc')
             ->get();
 
         $query = DataLeave::query()->orderBy('mulai_cuti', 'desc');
@@ -90,18 +92,20 @@ class LeaveManagementController extends Controller
 
     public function create() {
         // Inisiasi variabel
-        $dataleave = '';
+        $dataleave = null;
         $errorInfo = '';
 
         // filter hanya karyawan selain status harian
         $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
         $employee = Employee::where('id_status', '!=', $statusEmployee)
-            ->where('is_active', true)
-            ->get();
-            
+        ->where('is_active', true)->whereNotNull('id_jabatan')->whereNotNull('id_divisi')
+        ->orderBy('nama_karyawan', 'asc')
+        ->get();
+        
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
+
         return view('/backend/leave/leave_request', [
             'dataleave' => $dataleave,
             'employee' => $employee,
@@ -133,13 +137,6 @@ class LeaveManagementController extends Controller
         $date_start = strtotime($request->datetimestart);
         $date_end = strtotime($request->datetimeend);
 
-        while ($date_start <= $date_end) {
-            $resultIntervalDate[] = date('Y-m-d', $date_start);
-            $date_start = strtotime('+1 day', $date_start);
-        }
-
-        $formatresultIntervalDate = implode(", ", $resultIntervalDate);
-
         // Check data cuti
         $employeeData = Employee::where('id_karyawan', $request->id_karyawan)->first();
         $checkDataCuti = DataLeave::where('id_karyawan', $request->id_karyawan)
@@ -156,7 +153,6 @@ class LeaveManagementController extends Controller
                 });
             })
             ->get();
-
 
         $startLeave = Carbon::parse($request->datetimestart);
         $endLeave = Carbon::parse($request->datetimeend);
@@ -180,10 +176,14 @@ class LeaveManagementController extends Controller
             $formatResultDateAttendance = implode(", ", $resultDateAttendance);
 
             $errorInfo .= "Sorry, there is employee " . $employeeData->nama_karyawan . " - " . $employeeData->id_card . 
-                " attendance data made on the following date: " . $formatResultDateAttendance . "<br>";
+                " attendance data made on the following date: " . $formatResultDateAttendance;
         }
 
         if (count($checkDataCuti) > 0) {
+            if (!empty($errorInfo)) {
+                $errorInfo .= "<br>";
+            }
+
             $dateLeaveStart = date("j F Y", strtotime($request->datetimestart));
             $dateLeaveEnd = date("j F Y", strtotime($request->datetimeend));
 
@@ -193,10 +193,19 @@ class LeaveManagementController extends Controller
             }
 
             $errorInfo .= "Sorry, there is already data leave made for the employee " . 
-                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date . "<br>";
+                $employeeData->nama_karyawan . " - " . $employeeData->id_card . " date: " . $range_date;
         }
 
         if (empty($errorInfo)) {
+            
+            // Rentang masa cuti
+            while ($date_start <= $date_end) {
+                $resultIntervalDate[] = date('Y-m-d', $date_start);
+                $date_start = strtotime('+1 day', $date_start);
+            }
+    
+            $formatresultIntervalDate = implode(", ", $resultIntervalDate);
+
             DataLeave::insert([
                 'id_karyawan'=> $request->id_karyawan,
                 'id_penangung_jawab'=> $request->id_penangung_jawab,
@@ -214,24 +223,7 @@ class LeaveManagementController extends Controller
             return redirect('/leaves-summary');
 
         } else {
-            // filter hanya karyawan selain status harian
-            $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
-            $employee = Employee::where('id_status', '!=', $statusEmployee)
-                ->where('is_active', true)
-                ->get();
-                
-            $position = Position::pluck('nama_jabatan', 'id_jabatan');
-            $division = Divisi::pluck('nama_divisi', 'id_divisi');
-            $typeLeave = TypeLeave::all();
-
-            return view('/backend/leave/leave_request', [
-                'dataleave' => $dataleave,
-                'employee' => $employee,
-                'position' => $position,
-                'division' => $division,
-                'typeLeave' => $typeLeave,
-                'errorInfo' => $errorInfo
-            ]);
+            return redirect()->back()->with('errorInfo', $errorInfo);
         }
 
     }
@@ -244,10 +236,14 @@ class LeaveManagementController extends Controller
         $id = Crypt::decrypt($id);
 
         $dataleave = DataLeave::where('id_data_cuti', $id)->first();
-        $employee = Employee::all();
+        $statusEmployee = StatusEmployee::whereRaw("LOWER(nama_status) = LOWER('harian')")->value('id_status');
+        $employee = Employee::where('id_status', '!=', $statusEmployee)
+        ->where('is_active', true)->whereNotNull('id_jabatan')->whereNotNull('id_divisi')
+        ->get();
         $position = Position::pluck('nama_jabatan', 'id_jabatan');
         $division = Divisi::pluck('nama_divisi', 'id_divisi');
         $typeLeave = TypeLeave::all();
+
         return view('/backend/leave/leave_request', [
             'dataleave' => $dataleave,
             'employee' => $employee,
@@ -327,6 +323,10 @@ class LeaveManagementController extends Controller
         }
 
         if (count($checkDataCuti) > 0) {
+            if (!empty($errorInfo)) {
+                $errorInfo .= "<br>";
+            }
+
             $dateLeaveStart = date("j F Y", strtotime($request->datetimestart));
             $dateLeaveEnd = date("j F Y", strtotime($request->datetimeend));
 
@@ -365,7 +365,7 @@ class LeaveManagementController extends Controller
             return redirect()->back();
 
         } else {
-            return redirect()->back()->withErrors(['errorInfo' => $errorInfo]);
+            return redirect()->back()->with('errorInfo', $errorInfo);
         }
     }
 
@@ -533,7 +533,7 @@ class LeaveManagementController extends Controller
 
         if ($statusEmployee) {
             // Cari data karyawan aktif dan status kecuali harian/daily
-            $dataEmployee = Employee::where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status])->get();
+            $dataEmployee = Employee::where('is_active', true)->whereNotIn('id_status', [$statusEmployee->id_status])->orderBy('nama_karyawan', 'asc')->get();
         }
 
         if (count($dataEmployee) > 0 && $typeLeave) {
@@ -660,7 +660,7 @@ class LeaveManagementController extends Controller
 
     public function collective() {
         $employee = [];
-        $division = Divisi::all();
+        $division = Divisi::orderBy('nama_divisi', 'asc')->get();
         $logError = '';
 
         return view('/backend/leave/collective_leave', [
@@ -703,6 +703,7 @@ class LeaveManagementController extends Controller
                 ->where('id_status', '!=', $statusEmployee)
                 ->whereNotIn('id_karyawan', $checkDataCuti)
                 ->whereNotIn('id_karyawan', $checkAttendance)
+                ->orderBy('nama_karyawan', 'asc')
                 ->get();
 
         } else {
@@ -711,6 +712,7 @@ class LeaveManagementController extends Controller
                 ->where('id_status', '!=', $statusEmployee)
                 ->whereNotIn('id_karyawan', $checkDataCuti)
                 ->whereNotIn('id_karyawan', $checkAttendance)
+                ->orderBy('nama_karyawan', 'asc')
                 ->get();
         }
 
@@ -782,6 +784,7 @@ class LeaveManagementController extends Controller
                     'deskripsi'=> $request->descCollective,
                     'id_tipe_cuti'=> $typeLeave->id_tipe_cuti,
                     'mulai_cuti'=> $carbonDateStart,
+                    'rentang_tanggal_cuti' => $carbonDateStart->format('Y-m-d'),
                     'selesai_cuti'=> $carbonDateEnd,
                     'durasi_cuti'=> 1,
                     'file'=> null,

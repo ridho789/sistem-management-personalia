@@ -22,6 +22,7 @@ class DailyReportManagementController extends Controller
         $divisiIds = Divisi::where('is_daily_report', true)->pluck('id_divisi');   
         $employee = Employee::whereIn('id_divisi', $divisiIds)
             ->where('is_active', true)
+            ->orderBy('nama_karyawan', 'asc')
             ->get();
 
         return view('/backend/daily_report/list_daily_report', [
@@ -42,6 +43,7 @@ class DailyReportManagementController extends Controller
         $divisiIds = Divisi::where('is_daily_report', true)->pluck('id_divisi');   
         $employee = Employee::whereIn('id_divisi', $divisiIds)
             ->where('is_active', true)
+            ->orderBy('nama_karyawan', 'asc')
             ->get();
 
         return view('/backend/daily_report/form_daily_report', [

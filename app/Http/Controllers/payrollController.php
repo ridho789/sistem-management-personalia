@@ -19,7 +19,7 @@ class PayrollController extends Controller
 {
     public function index() 
     {
-        $employee = Employee::where('is_active', true)->get();
+        $employee = Employee::where('is_active', true)->orderBy('nama_karyawan', 'asc')->get();
         $selectEmployee = null;
 
         return view('/backend/payroll/data_payroll', [

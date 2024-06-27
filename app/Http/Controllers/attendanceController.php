@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Schema;
 class AttendanceController extends Controller
 {
     public function index() {
-        $employee = Employee::where('is_active', true)->get();
+        $employee = Employee::where('is_active', true)->orderBy('nama_karyawan', 'asc')->get();
         $id_employee = $employee->pluck('id_card');
 
         if (Schema::hasTable('tbl_absensi')) {

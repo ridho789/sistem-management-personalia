@@ -50,12 +50,12 @@
                                     </div>
                                     <div class="col-sm-5">
                                         <select class="form-control" id="val_employee" name="id_karyawan" required>
-                                            <option value="">Select a employee...</option>
+                                            <option value="">Select an employee...</option>
                                             @foreach ($employee as $e)
-                                                <option value="{{ $e->id_karyawan }}" data-position="{{ $position[$e->id_jabatan] }}" 
-                                                    data-division="{{ $division[$e->id_divisi] }}" 
-                                                    {{ old('id_karyawan', $dataleave->id_karyawan) == 
-                                                        $e->id_karyawan ? 'selected' : '' }}>
+                                                <option value="{{ $e->id_karyawan }}"
+                                                    data-position="{{ $position[$e->id_jabatan] ?? '' }}"
+                                                    data-division="{{ $division[$e->id_divisi] ?? '' }}"
+                                                    {{ old('id_karyawan', $dataleave->id_karyawan ?? '') == $e->id_karyawan ? 'selected' : '' }}>
                                                     {{ $e->nama_karyawan }} - {{ $e->id_card }}
                                                 </option>
                                             @endforeach
@@ -192,8 +192,8 @@
                                         <select class="form-control" id="val_employee" name="id_karyawan" required>
                                             <option value="">Select a employee...</option>
                                             @foreach ($employee as $e)
-                                                <option value="{{ $e->id_karyawan }}" data-position="{{ $position[$e->id_jabatan] }}" 
-                                                    data-division="{{ $division[$e->id_divisi] }}" 
+                                                <option value="{{ $e->id_karyawan }}" data-position="{{ $position[$e->id_jabatan] ?? '' }}" 
+                                                    data-division="{{ $division[$e->id_divisi] ?? '' }}" 
                                                     {{ old('id_karyawan') == $e->id_karyawan ? 'selected' : '' }}>
                                                     {{ $e->nama_karyawan }} - {{ $e->id_card }}
                                                 </option>
@@ -298,33 +298,18 @@
                         </div>
                     </div>
                 </div>
-                @if($dataleave)
-                    @if($errors->any())
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Log Information</h4>
-                            </div>
-                            <div class="card-body">
-                                @foreach ($errors->all() as $error)
-                                    <span>{{ $error }}</span><br>
-                                @endforeach
-                            </div>
+
+                @if(session()->has('errorInfo'))
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Log Information</h4>
                         </div>
-                    @endif
-                @else
-                    @if($errorInfo)
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Log Information</h4>
-                            </div>
-                            <div class="card-body">
-                                <span>
-                                    {!! $errorInfo !!}
-                                </span>
-                            </div>
+                        <div class="card-body">
+                            {!! session('errorInfo') !!}
                         </div>
-                    @endif
+                    </div>
                 @endif
+                
                 @if (Auth::check())
                     @if (Auth::user()->level == 1)
                         @if($dataleave)

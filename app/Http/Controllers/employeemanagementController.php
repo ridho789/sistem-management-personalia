@@ -14,13 +14,13 @@ use PDF;
 class EmployeeManagementController extends Controller
 {
     public function index() {   
-        $employee = Employee::where('is_active', true)->paginate(50);
+        $employee = Employee::where('is_active', true)->orderBy('nama_karyawan', 'asc')->paginate(50);
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
-        $dataDivision = Divisi::all();
+        $dataDivision = Divisi::orderBy('nama_divisi', 'asc')->get();
 
         return view('/backend/employee/list_employee', [
             'tbl_karyawan' => $employee, 
@@ -33,13 +33,13 @@ class EmployeeManagementController extends Controller
     }
 
     public function index_inactive() {   
-        $employee = Employee::where('is_active', false)->paginate(50);
+        $employee = Employee::where('is_active', false)->orderBy('nama_karyawan', 'asc')->paginate(50);
         $positions = Position::pluck('nama_jabatan', 'id_jabatan');
         $divisions = Divisi::pluck('nama_divisi', 'id_divisi');
         $companies = Company::pluck('nama_perusahaan', 'id_perusahaan');
         $statuses = StatusEmployee::pluck('nama_status', 'id_status');
 
-        $dataDivision = Divisi::all();
+        $dataDivision = Divisi::orderBy('nama_divisi', 'asc')->get();
 
         return view('/backend/employee/list_inactive_employee', [
             'tbl_karyawan' => $employee, 
@@ -54,10 +54,10 @@ class EmployeeManagementController extends Controller
     public function create() {   
         $logErrors = '';
         $employee = '';
-        $division = Divisi::all();
-        $position = Position::all();
-        $company = Company::all();
-        $statusEmployee = StatusEmployee::all();
+        $division = Divisi::orderBy('nama_divisi', 'asc')->get();
+        $position = Position::orderBy('nama_jabatan', 'asc')->get();
+        $company = Company::orderBy('nama_perusahaan', 'asc')->get();
+        $statusEmployee = StatusEmployee::orderBy('nama_status', 'asc')->get();
         return view('/backend/employee/form_employee', compact(
             'employee', 'division', 'position', 'company', 'statusEmployee', 'logErrors'
         ));
@@ -127,11 +127,10 @@ class EmployeeManagementController extends Controller
 
         // mengambil data karyawan berdasarkan ID
         $employee = Employee::where('id_karyawan', $id)->first();
-
-        $division = Divisi::all();
-        $position = Position::all();
-        $company = Company::all();
-        $statusEmployee = StatusEmployee::all();
+        $division = Divisi::orderBy('nama_divisi', 'asc')->get();
+        $position = Position::orderBy('nama_jabatan', 'asc')->get();
+        $company = Company::orderBy('nama_perusahaan', 'asc')->get();
+        $statusEmployee = StatusEmployee::orderBy('nama_status', 'asc')->get();
         $logErrors = '';
 
         return view('/backend/employee/form_employee', compact(

@@ -9,7 +9,7 @@ class EmployeeStatusController extends Controller
 {
     public function index()
     {   
-        $employee_statue = DB::table('tbl_status_kary')->get();
+        $employee_statue = DB::table('tbl_status_kary')->orderBy('nama_status')->get();
         return view('/backend/master/employee_status', ['tbl_status_kary' => $employee_statue]);
     }
 
