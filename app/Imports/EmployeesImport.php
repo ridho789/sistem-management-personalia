@@ -112,7 +112,7 @@ class EmployeesImport implements ToCollection
             }
 
             // periksa kolom nik dan start joining
-            $key = $row[1] . '-' . $row[19];
+            $key = $row[1] . '-' . $row[20];
             if (isset($uniqueValues[$key])) {
                 $errorMessage = 'Error importing data: Duplikasi berdasarkan NIK ditemukan di baris ' . $currentRow;
                 $this->logErrors[] = $errorMessage;
@@ -136,7 +136,8 @@ class EmployeesImport implements ToCollection
                 'awal_bergabung' => $this->getValidDate($row[16], $currentRow),
                 'gaji_pokok' => $basic_salary_idr,
                 'kontak_darurat' => $row[17],
-                'bpjs' => $row[18],
+                'bpjs_tk' => $row[18],
+                'bpjs_kis' => $row[19],
                 'id_card' => $idcard,
             ];
 
@@ -181,8 +182,8 @@ class EmployeesImport implements ToCollection
     {
         $randomDigits = rand(1, 999);
         $formattedRandomDigits = str_pad($randomDigits, 3, '0', STR_PAD_LEFT);
-        if ($row[19] && $row[19] != '-') {
-            return $row[19];
+        if ($row[20] && $row[20] != '-') {
+            return $row[20];
         } else {
             if (($row[3] && $row[3] != '-') && ($row[16] && $row[16] != '-')) {
                 return strval(date_format(ExcelDate::excelToDateTimeObject($row[3]), 'y')) .

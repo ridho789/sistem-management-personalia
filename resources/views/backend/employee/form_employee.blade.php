@@ -108,11 +108,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_bpjs">BPJS</label>
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs_tk">BPJS TK</label>
                                             <div class="col-lg-6">
-                                                <input type="number" class="form-control @error('val_bpjs') is-invalid @enderror" 
-                                                id="val_bpjs" name="val_bpjs" placeholder="Enter a BPJS.." 
-                                                value="{{ old('val_bpjs', $employee->bpjs) }}">
+                                                <input type="number" class="form-control @error('val_bpjs_tk') is-invalid @enderror" 
+                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs_tk', $employee->bpjs) }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs_kis">BPJS KIS</label>
+                                            <div class="col-lg-6">
+                                                <input type="number" class="form-control @error('val_bpjs_kis') is-invalid @enderror" 
+                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs_kis', $employee->bpjs) }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -388,11 +396,19 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val_bpjs">BPJS</label>
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs_tk">BPJS TK</label>
                                             <div class="col-lg-6">
-                                                <input type="number" class="form-control @error('val_bpjs') is-invalid @enderror" 
-                                                id="val_bpjs" name="val_bpjs" placeholder="Enter a BPJS.." 
-                                                value="{{ old('val_bpjs') }}">
+                                                <input type="number" class="form-control @error('val_bpjs_tk') is-invalid @enderror" 
+                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs_tk') }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-lg-4 col-form-label" for="val_bpjs_kis">BPJS KIS</label>
+                                            <div class="col-lg-6">
+                                                <input type="number" class="form-control @error('val_bpjs_kis') is-invalid @enderror" 
+                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS.." 
+                                                value="{{ old('val_bpjs_kis') }}">
                                             </div>
                                         </div>
                                         <div class="form-group row">

@@ -29,7 +29,8 @@ class Employee extends Model
         'akhir_masa_kontrak',
         'awal_bergabung',
         'kontak_darurat',
-        'bpjs',
+        'bpjs_tk',
+        'bpjs_kis',
         'id_card',
         'foto',
     ];

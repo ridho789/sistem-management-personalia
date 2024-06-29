@@ -73,7 +73,8 @@ class EmployeeManagementController extends Controller
         $employeeData = [
             'nama_karyawan' => $request->val_name,
             'nik' => $request->val_nik,
-            'bpjs' => $request->val_bpjs,
+            'bpjs_tk' => $request->val_bpjs_tk,
+            'bpjs_kis' => $request->val_bpjs_kis,
             'tempat_lahir' => $request->val_place_birth,
             'tanggal_lahir' => $request->val_date_birth,
             'jenis_kelamin' => $request->val_gender,
@@ -166,7 +167,8 @@ class EmployeeManagementController extends Controller
         $employeeData = [
             'nama_karyawan' => $request->val_name,
             'nik' => $request->val_nik,
-            'bpjs' => $request->val_bpjs,
+            'bpjs_tk' => $request->val_bpjs_tk,
+            'bpjs_kis' => $request->val_bpjs_kis,
             'tempat_lahir' => $request->val_place_birth,
             'tanggal_lahir' => $request->val_date_birth,
             'jenis_kelamin' => $request->val_gender,
