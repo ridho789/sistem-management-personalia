@@ -111,7 +111,7 @@
                                             <label class="col-lg-4 col-form-label" for="val_bpjs_tk">BPJS TK</label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_bpjs_tk') is-invalid @enderror" 
-                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS.." 
+                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS TK.." 
                                                 value="{{ old('val_bpjs_tk', $employee->bpjs) }}">
                                             </div>
                                         </div>
@@ -119,7 +119,7 @@
                                             <label class="col-lg-4 col-form-label" for="val_bpjs_kis">BPJS KIS</label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_bpjs_kis') is-invalid @enderror" 
-                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS.." 
+                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS KIS.." 
                                                 value="{{ old('val_bpjs_kis', $employee->bpjs) }}">
                                             </div>
                                         </div>
@@ -399,7 +399,7 @@
                                             <label class="col-lg-4 col-form-label" for="val_bpjs_tk">BPJS TK</label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_bpjs_tk') is-invalid @enderror" 
-                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS.." 
+                                                id="val_bpjs_tk" name="val_bpjs_tk" placeholder="Enter a BPJS TK.." 
                                                 value="{{ old('val_bpjs_tk') }}">
                                             </div>
                                         </div>
@@ -407,7 +407,7 @@
                                             <label class="col-lg-4 col-form-label" for="val_bpjs_kis">BPJS KIS</label>
                                             <div class="col-lg-6">
                                                 <input type="number" class="form-control @error('val_bpjs_kis') is-invalid @enderror" 
-                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS.." 
+                                                id="val_bpjs_kis" name="val_bpjs_kis" placeholder="Enter a BPJS KIS.." 
                                                 value="{{ old('val_bpjs_kis') }}">
                                             </div>
                                         </div>
