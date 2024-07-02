@@ -31,6 +31,18 @@ class EmployeesImport implements ToCollection
                 continue;
             }
 
+            // jenis kelamin
+            $gender = null;
+            if ($row[4] && $row[4] != '-') {
+                if (in_array(strtolower($row[4]), ['l', 'pria', 'laki-laki', 'male'])) {
+                    $gender = 'male';
+                }
+
+                if (in_array(strtolower($row[4]), ['p', 'wanita', 'perempuan', 'female'])) {
+                    $gender = 'female';
+                }
+            }
+
             // Position
             $idPosition = null;
             if ($row[8] && $row[8] != '-') {
@@ -111,7 +123,7 @@ class EmployeesImport implements ToCollection
                 $this->logErrors[] = $errorMessage;
             }
 
-            // periksa kolom nik dan start joining
+            // periksa kolom nik dan kolom lainnya
             $key = $row[1] . '-' . $row[20];
             if (isset($uniqueValues[$key])) {
                 $errorMessage = 'Error importing data: Duplikasi berdasarkan NIK ditemukan di baris ' . $currentRow;
@@ -125,7 +137,7 @@ class EmployeesImport implements ToCollection
                 'nik' => $row[1],
                 'tempat_lahir' => $row[2],
                 'tanggal_lahir' => $this->getValidDate($row[3], $currentRow),
-                'jenis_kelamin' => ($row[4] && $row[4] != '-') ? $row[4] : null,
+                'jenis_kelamin' => $gender,
                 'no_telp' => $row[5],
                 'lokasi' => $row[6],
                 'alamat' => $row[7],
